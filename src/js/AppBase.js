@@ -7,7 +7,7 @@ import SettingsController from 'base/controller/SettingsController';
 import TrackingController from 'base/controller/TrackingController';
 import { getDeviceMetric } from 'utils/deviceDetection';
 
-export default class JGGApp extends Phaser.Game {
+export default class AppBase extends Phaser.Game {
   constructor({ config, gameMode, gameConfig = {}, paths = { base: './', assets: 'assets/' } }) {
     super(config);
 

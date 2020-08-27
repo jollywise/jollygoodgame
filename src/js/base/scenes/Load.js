@@ -1,6 +1,4 @@
 import WebFont from 'webfontloader';
-
-import { isOldDevice } from 'utils/deviceDetection';
 import { KEYS } from 'base/constants/SceneConstants';
 
 class Load extends Phaser.Scene {
