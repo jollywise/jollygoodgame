@@ -5,8 +5,8 @@ export default class SoundController {
     this.game = game;
     this.currentVO = null;
 
-    this.game.settings.emitter.on('settingsAudioChanged', this.handleAudioChanged, this);
-    this.handleAudioChanged();
+    // this.game.settings.emitter.on('settingsAudioChanged', this.handleAudioChanged, this);
+    // this.handleAudioChanged();
   }
 
   handleAudioChanged() {

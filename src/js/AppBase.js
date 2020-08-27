@@ -1,10 +1,4 @@
 import Phaser from 'phaser';
-import GameController from 'base/controller/GameController';
-import SoundController from 'base/controller/SoundController';
-import AppUrls from 'base/constants/AppUrls';
-import ViewportController from 'base/controller/ViewportController';
-import SettingsController from 'base/controller/SettingsController';
-import TrackingController from 'base/controller/TrackingController';
 import { getDeviceMetric } from 'utils/deviceDetection';
 
 export class AppBase extends Phaser.Game {
@@ -12,23 +6,26 @@ export class AppBase extends Phaser.Game {
     super(config);
 
     this._gameConfig = gameConfig;
-    this._appUrls = new AppUrls(this, paths);
-    this._trackingController = new TrackingController({ game: this });
-    this._settingsController = new SettingsController({ game: this });
-    this._soundController = new SoundController({ game: this });
-    this._viewportController = new ViewportController({ game: this });
-    this._gameController = new GameController({ game: this, gameMode });
-
-    this.defaultGameWidth = gameConfig.width;
-    this.defaultGameHeight = gameConfig.height;
-
     this._deviceMetric = getDeviceMetric();
+    // this._appUrls = new AppUrls(this, paths);
+    // this._trackingController = new TrackingController({ game: this });
+    // this._settingsController = new SettingsController({ game: this });
+    // this._soundController = new SoundController({ game: this });
+    // this._viewportController = new ViewportController({ game: this });
+    // this._gameController = new GameController({ game: this, gameMode });
+    //
+    // this.defaultGameWidth = gameConfig.width;
+    // this.defaultGameHeight = gameConfig.height;
   }
 
   init() {}
 
   get gameConfig() {
     return this._gameConfig;
+  }
+
+  get deviceMetric() {
+    return this._deviceMetric;
   }
 
   get appUrls() {
@@ -53,9 +50,5 @@ export class AppBase extends Phaser.Game {
 
   get viewportController() {
     return this._viewportController;
-  }
-
-  get deviceMetric() {
-    return this._deviceMetric;
   }
 }

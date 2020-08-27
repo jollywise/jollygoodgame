@@ -9,7 +9,7 @@ export class Load extends Phaser.Scene {
     this.assetsReady = false;
   }
 
-  init(opts) {
+  init() {
     this.handleLoadProgress = this.loadProgress.bind(this);
     this.handleFileLoadProgress = this.loadFileProgress.bind(this);
     this.handleFileLoadComplete = this.loadFileComplete.bind(this);
