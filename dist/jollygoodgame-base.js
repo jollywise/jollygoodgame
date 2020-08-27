@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("Phaser"));
+		module.exports = factory(require("Phaser"), require("webfontloader"));
 	else if(typeof define === 'function' && define.amd)
-		define(["Phaser"], factory);
+		define(["Phaser", "webfontloader"], factory);
 	else if(typeof exports === 'object')
-		exports["jollygoodgame"] = factory(require("Phaser"));
+		exports["jollygoodgame"] = factory(require("Phaser"), require("webfontloader"));
 	else
-		root["jollygoodgame"] = factory(root["Phaser"]);
-})(window, function(__WEBPACK_EXTERNAL_MODULE_phaser__) {
+		root["jollygoodgame"] = factory(root["Phaser"], root["webfontloader"]);
+})(window, function(__WEBPACK_EXTERNAL_MODULE_phaser__, __WEBPACK_EXTERNAL_MODULE_webfontloader__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -120,6 +120,30 @@ eval("\n\nvar has = Object.prototype.hasOwnProperty\n  , prefix = '~';\n\n/**\n 
 
 /***/ }),
 
+/***/ "./src/js/AppBase.js":
+/*!***************************!*\
+  !*** ./src/js/AppBase.js ***!
+  \***************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return JGGApp; });\n/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phaser */ \"phaser\");\n/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(phaser__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_controller_GameController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/controller/GameController */ \"./src/js/base/controller/GameController.js\");\n/* harmony import */ var base_controller_SoundController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/controller/SoundController */ \"./src/js/base/controller/SoundController.js\");\n/* harmony import */ var base_constants_AppUrls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! base/constants/AppUrls */ \"./src/js/base/constants/AppUrls.js\");\n/* harmony import */ var base_controller_ViewportController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! base/controller/ViewportController */ \"./src/js/base/controller/ViewportController.js\");\n/* harmony import */ var base_controller_SettingsController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! base/controller/SettingsController */ \"./src/js/base/controller/SettingsController.js\");\n/* harmony import */ var base_controller_TrackingController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! base/controller/TrackingController */ \"./src/js/base/controller/TrackingController.js\");\n/* harmony import */ var utils_deviceDetection__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! utils/deviceDetection */ \"./src/js/utils/deviceDetection.js\");\n\n\n\n\n\n\n\n\n\nclass JGGApp extends phaser__WEBPACK_IMPORTED_MODULE_0___default.a.Game {\n  constructor({ config, gameMode, gameConfig = {}, paths = { base: './', assets: 'assets/' } }) {\n    super(config);\n\n    this._gameConfig = gameConfig;\n    this._appUrls = new base_constants_AppUrls__WEBPACK_IMPORTED_MODULE_3__[\"default\"](this, paths);\n    this._trackingController = new base_controller_TrackingController__WEBPACK_IMPORTED_MODULE_6__[\"default\"]({ game: this });\n    this._settingsController = new base_controller_SettingsController__WEBPACK_IMPORTED_MODULE_5__[\"default\"]({ game: this });\n    this._soundController = new base_controller_SoundController__WEBPACK_IMPORTED_MODULE_2__[\"default\"]({ game: this });\n    this._viewportController = new base_controller_ViewportController__WEBPACK_IMPORTED_MODULE_4__[\"default\"]({ game: this });\n    this._gameController = new base_controller_GameController__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({ game: this, gameMode });\n\n    this.defaultGameWidth = gameConfig.width;\n    this.defaultGameHeight = gameConfig.height;\n\n    this._deviceMetric = Object(utils_deviceDetection__WEBPACK_IMPORTED_MODULE_7__[\"getDeviceMetric\"])();\n  }\n\n  init() {}\n\n  get gameConfig() {\n    return this._gameConfig;\n  }\n\n  get appUrls() {\n    return this._appUrls;\n  }\n\n  get gameController() {\n    return this._gameController;\n  }\n\n  get settings() {\n    return this._settingsController;\n  }\n\n  get tracking() {\n    return this._trackingController;\n  }\n\n  get soundController() {\n    return this._soundController;\n  }\n\n  get viewportController() {\n    return this._viewportController;\n  }\n\n  get deviceMetric() {\n    return this._deviceMetric;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/AppBase.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/constants/AppFonts.js":
+/*!*******************************************!*\
+  !*** ./src/js/base/constants/AppFonts.js ***!
+  \*******************************************/
+/*! exports provided: FONT_BALDER, FONT_BARIOL, FONT_CLEARFACE, FONT_FELL_ENGLISH, BOOT_FONTS, APP_FONTS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_BALDER\", function() { return FONT_BALDER; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_BARIOL\", function() { return FONT_BARIOL; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_CLEARFACE\", function() { return FONT_CLEARFACE; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_FELL_ENGLISH\", function() { return FONT_FELL_ENGLISH; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BOOT_FONTS\", function() { return BOOT_FONTS; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"APP_FONTS\", function() { return APP_FONTS; });\nconst FONT_BALDER = {\n  REGULAR: 'balder_ll',\n  CSS: ['balder_ll.css'],\n};\nconst FONT_BARIOL = {\n  REGULAR: 'bariol_serif',\n  BOLD: 'bariol_serif_bold',\n  CSS: ['bariol_serif.css'],\n};\nconst FONT_CLEARFACE = {\n  REGULAR: 'clearface_gothic_roman',\n  LIGHT: 'clearface_gothic_light',\n  CSS: ['clearface_gothic.css', 'clearface_gothic_light.css'],\n};\n\nconst FONT_FELL_ENGLISH = {\n  REGULAR: 'im_fell_english_pro_roman',\n  CSS: ['im_fell_english_pro_roman.css'],\n};\n\nconst BOOT_FONTS = [FONT_BARIOL];\nconst APP_FONTS = [FONT_BALDER, FONT_CLEARFACE, FONT_FELL_ENGLISH];\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/AppFonts.js?");
+
+/***/ }),
+
 /***/ "./src/js/base/constants/AppUrls.js":
 /*!******************************************!*\
   !*** ./src/js/base/constants/AppUrls.js ***!
@@ -153,6 +177,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"KEYS\", function() { return KEYS; });\nconst KEYS = {\n  Boot: 'Boot',\n  Load: 'Load',\n  Welcome: 'Welcome',\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/SceneConstants.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/constants/index.js":
+/*!****************************************!*\
+  !*** ./src/js/base/constants/index.js ***!
+  \****************************************/
+/*! exports provided: FONT_BALDER, FONT_BARIOL, FONT_CLEARFACE, FONT_FELL_ENGLISH, BOOT_FONTS, APP_FONTS, SETTINGS_CHANGED, KEYS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _AppFonts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppFonts */ \"./src/js/base/constants/AppFonts.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BALDER\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BALDER\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BARIOL\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BARIOL\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_CLEARFACE\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_CLEARFACE\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_FELL_ENGLISH\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_FELL_ENGLISH\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BOOT_FONTS\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"BOOT_FONTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"APP_FONTS\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"APP_FONTS\"]; });\n\n/* harmony import */ var _AppUrls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppUrls */ \"./src/js/base/constants/AppUrls.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Events */ \"./src/js/base/constants/Events.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SETTINGS_CHANGED\", function() { return _Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_CHANGED\"]; });\n\n/* harmony import */ var _SceneConstants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SceneConstants */ \"./src/js/base/constants/SceneConstants.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"KEYS\", function() { return _SceneConstants__WEBPACK_IMPORTED_MODULE_3__[\"KEYS\"]; });\n\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/index.js?");
 
 /***/ }),
 
@@ -228,6 +264,42 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./src/js/base/controller/index.js":
+/*!*****************************************!*\
+  !*** ./src/js/base/controller/index.js ***!
+  \*****************************************/
+/*! exports provided: VIEWPORT_EVENTS */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _GameController__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GameController */ \"./src/js/base/controller/GameController.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _SceneController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SceneController */ \"./src/js/base/controller/SceneController.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _SettingsController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SettingsController */ \"./src/js/base/controller/SettingsController.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _SoundController__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SoundController */ \"./src/js/base/controller/SoundController.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _TrackingController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TrackingController */ \"./src/js/base/controller/TrackingController.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _ViewportController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ViewportController */ \"./src/js/base/controller/ViewportController.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"VIEWPORT_EVENTS\", function() { return _ViewportController__WEBPACK_IMPORTED_MODULE_5__[\"VIEWPORT_EVENTS\"]; });\n\n\n\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/index.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/input/TapArea.js":
+/*!**************************************!*\
+  !*** ./src/js/base/input/TapArea.js ***!
+  \**************************************/
+/*! exports provided: default, TAP */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return TapArea; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"TAP\", function() { return TAP; });\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ \"./node_modules/eventemitter3/index.js\");\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);\n\n\nclass TapArea extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {\n  constructor(scene, container, { x, y, w, h }) {\n    super();\n\n    this.scene = scene;\n    this.bindedDown = this.onDown.bind(this);\n    this.bindedUp = this.onUp.bind(this);\n    this.bindedMove = this.onMove.bind(this);\n    // const { width, height } = scene.game.canvas;\n    this.clickbox = scene.add.zone(x, y, w, h).setOrigin(0);\n    this.clickbox.setScrollFactor(0); // phaser 2 fixedToCamera\n    this.clickbox.active = true;\n    this.pointer = false;\n    this.pointerDown = false;\n    this.timeDown = 0;\n    container.add(this.clickbox);\n    this.enable();\n  }\n\n  enable() {\n    this.clickbox.setInteractive({ useHandCursor: true });\n    this.clickbox.on('pointerdown', this.bindedDown, this);\n    this.clickbox.on('pointerup', this.bindedUp, this);\n  }\n\n  disable() {\n    this.clickbox.disableInteractive();\n    this.clickbox.off('pointerdown', this.bindedDown, this);\n    this.clickbox.off('pointermove', this.bindedMove, this);\n    this.clickbox.off('pointerup', this.bindedUp, this);\n  }\n\n  onMove(pointer) {\n    if (this.scene.time.now - this.timeDown > 250) {\n      if (this.pointerDown) {\n        const { x, y } = pointer;\n        this.pointer = { x, y };\n      }\n    }\n  }\n\n  onDown(pointer) {\n    this.timeDown = this.scene.time.now;\n    this.clickbox.on('pointermove', this.bindedMove, this);\n    this.pointerDown = true;\n    const { x, y } = pointer;\n    this.pointer = { x, y };\n  }\n\n  onUp(pointer) {\n    this.clickbox.off('pointermove', this.bindedMove, this);\n    this.pointerDown = false;\n    this.pointer = false;\n    // const { x, y } = pointer;\n    // this.onClick(pointer);\n  }\n\n  onClick(pointer) {\n    const { x, y } = pointer;\n    this.emit(TAP, { x, y });\n  }\n\n  destroy() {\n    this.disable();\n    this.clickbox = null;\n  }\n}\n\nconst TAP = 'TAP';\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/input/TapArea.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/input/index.js":
+/*!************************************!*\
+  !*** ./src/js/base/input/index.js ***!
+  \************************************/
+/*! exports provided: TAP */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _TapArea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TapArea */ \"./src/js/base/input/TapArea.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"TAP\", function() { return _TapArea__WEBPACK_IMPORTED_MODULE_0__[\"TAP\"]; });\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/input/index.js?");
+
+/***/ }),
+
 /***/ "./src/js/base/model/ConfigModel.js":
 /*!******************************************!*\
   !*** ./src/js/base/model/ConfigModel.js ***!
@@ -249,6 +321,42 @@ eval("__webpack_require__.r(__webpack_exports__);\nclass ConfigModel {\n  constr
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\nclass CopyModel {\n  constructor({ xml }) {\n    this.copy = {};\n    const nodes = xml.getElementsByTagName('item');\n    for (let i = 0; i < nodes.length; i++) {\n      this.copy[nodes[i].getAttribute('id')] = nodes[i].childNodes[0].nodeValue;\n    }\n  }\n\n  get(copyId, nodefault = true) {\n    return nodefault ? this.getStringNoDefault(copyId) : this.getString(copyId);\n  }\n\n  getString(copyId) {\n    return this.copy[copyId] || 'copy not found [ ' + copyId + ' ]';\n  }\n\n  getStringNoDefault(copyId) {\n    if (!this.copy[copyId]) {\n      console.warn('copy not found [ ' + copyId + ' ]');\n    }\n    return this.copy[copyId] || null;\n  }\n}\n/* harmony default export */ __webpack_exports__[\"default\"] = (CopyModel);\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/CopyModel.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/model/GameModel.js":
+/*!****************************************!*\
+  !*** ./src/js/base/model/GameModel.js ***!
+  \****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return GameModel; });\nconst SERIALISE_KEYS = [];\nconst MODEL_ID = 'game';\n\nclass GameModel {\n  constructor(saves, { levelDuration }) {\n    this.saves = saves;\n    this.levelDuration = levelDuration;\n    this.load();\n  }\n\n  /*\n   * Save Methods\n   */\n  load() {\n    const data = this.saves.load();\n    this.saves.deserialize(this, data, MODEL_ID);\n    this.save();\n  }\n\n  save() {\n    const data = this.saves.serialize(this, MODEL_ID, SERIALISE_KEYS);\n    this.saves.save({ data });\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/GameModel.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/model/PlayerModel.js":
+/*!******************************************!*\
+  !*** ./src/js/base/model/PlayerModel.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return PlayerModel; });\nconst SERIALISE_KEYS = ['slotid'];\nconst MODEL_ID = 'player';\n\nclass PlayerModel {\n  constructor(saves, id, { playerOptions = {} }) {\n    this.saves = saves;\n    this.id = id;\n    this.slotid = playerOptions.slotid;\n    this.load();\n  }\n\n  /*\n   * Save Methods\n   */\n  load() {\n    const data = this.saves.load();\n    this.saves.deserialize(this, data, MODEL_ID);\n    this.save();\n  }\n\n  save() {\n    const data = this.saves.serialize(this, MODEL_ID, SERIALISE_KEYS);\n    this.saves.save({ data });\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/PlayerModel.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/model/Saves.js":
+/*!************************************!*\
+  !*** ./src/js/base/model/Saves.js ***!
+  \************************************/
+/*! exports provided: NEW_SAVE, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"NEW_SAVE\", function() { return NEW_SAVE; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Saves; });\nconst VERSION = 1;\nconst SAVES_ID = 'saves';\nconst NEW_SAVE = 'NEW_SAVE';\n\nclass Saves {\n  /*\n   * data structure for saves\n   * saveID1 : {game: {}, player: {} ...}\n   * saveID2 : {game: {}, player: {} ...}\n   */\n  constructor({ storage }) {\n    this.storage = storage; // swap out for different storage types\n    this.saveID = null;\n    this.saves = this.loadData(SAVES_ID, {});\n    this.createSaveCount();\n  }\n\n  createSaveID() {\n    this.incrementSaveCount();\n    return new Date().getTime();\n  }\n\n  setSaveID(val) {\n    this.saveID = val === NEW_SAVE ? this.createSaveID() : val;\n  }\n  getSaveID() {\n    return this.saveID;\n  }\n\n  loadData(id, returnVal = {}) {\n    const gameData = this.storage.getGameData();\n    const dataString = gameData[id];\n    if (dataString) {\n      return JSON.parse(dataString);\n    }\n    return returnVal;\n  }\n\n  /*\n  ===================================================================================\n    CREATE AND DELETE\n  ===================================================================================\n  */\n  createSaveCount() {\n    this.saveCount = this.loadData('savecount', 0);\n    const savesString = JSON.stringify(this.saveCount);\n    this.storage.setGameData('savecount', savesString);\n  }\n  incrementSaveCount() {\n    this.saveCount++;\n    const savesString = JSON.stringify(this.saveCount);\n    this.storage.setGameData('savecount', savesString);\n  }\n\n  create({ saveID }) {\n    if (!this.hasSave(saveID)) {\n      const saveNumber = this.saveCount;\n      this.saves[saveID] = { id: saveID, version: VERSION, saveNumber };\n      console.info(`Saves.create ${saveID} #${saveNumber} version ${VERSION}`);\n    } else {\n      console.warn(`Saves.create ${saveID} exists`);\n    }\n    this.saveData();\n    return this.saves[saveID];\n  }\n\n  load(id) {\n    const saveID = id || this.saveID;\n    if (this.hasSave(saveID)) {\n      // console.info(`Saves.load ${saveID}`);\n      const { version } = this.saves[saveID];\n      if (version !== VERSION) {\n        if (\n          window.confirm(\n            'Saved data is incompatible due to development changes.\\n\\nClick OK to delete old saved data and restart'\n          )\n        ) {\n          this.deleteSave(saveID);\n          this.saveID = null;\n          location.reload();\n        }\n      }\n      return this.saves[saveID];\n    }\n  }\n\n  save({ id, data }) {\n    const saveID = id || this.saveID;\n    // console.log('save', saveID, data);\n    if (saveID) {\n      const existing = this.saves[saveID] || this.create({ saveID });\n      const merged = { ...existing, ...data };\n      this.saves[saveID] = merged;\n      this.saveData();\n    }\n  }\n\n  renameSave() {\n    if (this.saveID) {\n      const newSaveID = this.createSaveID();\n      this.saves[newSaveID] = { ...this.saves[this.saveID] };\n      this.saves[newSaveID].id = newSaveID;\n      delete this.saves[this.saveID];\n      this.setSaveID(newSaveID);\n      this.saveData();\n    }\n  }\n\n  deleteSaves() {\n    if (this.playerHasSaves()) {\n      for (const save of Object.keys(this.saves)) {\n        this.deleteSave(save);\n      }\n      return true;\n    } else {\n      return false;\n    }\n  }\n\n  deleteSave(id) {\n    const saveID = id || this.saveID;\n    if (this.hasSave(saveID)) {\n      delete this.saves[saveID];\n      this.saveData();\n      console.info(`Saves.delete slot ${saveID}`);\n    } else {\n      console.warn(`Saves.delete save ${saveID} : doesn't exist`);\n    }\n  }\n\n  hasSave(saveID) {\n    if (this.saves) {\n      return this.saves[saveID] || false;\n    }\n    return false;\n  }\n\n  playerHasSaves() {\n    if (this.saves) {\n      return Object.keys(this.saves).length > 0;\n    }\n    return false;\n  }\n\n  getSaves() {\n    return Object.keys(this.saves).map((key) => {\n      return this.saves[key];\n    });\n  }\n\n  getSaveNumber() {\n    if (this.hasSave(this.saveID)) {\n      return this.saves[this.saveID].saveNumber;\n    } else {\n      return this.saveCount;\n    }\n  }\n\n  getSavesCount() {\n    if (this.saves) {\n      return Object.keys(this.saves).length;\n    } else {\n      return 0;\n    }\n  }\n\n  /*\n  ====================================================================================================\n  LOCALSTORAGE\n  ====================================================================================================\n  */\n  saveData() {\n    const savesString = JSON.stringify(this.saves);\n    this.storage.setGameData(SAVES_ID, savesString);\n  }\n\n  /*\n  ====================================================================================================\n  DATA SERIALIZATION\n  ====================================================================================================\n  */\n  deserialize(object, data, modelID) {\n    const dataSlice = (data && data[modelID]) || null;\n    if (dataSlice) {\n      const keys = Object.keys(dataSlice);\n      for (const key of keys) {\n        if (object[key] !== null || object[key] !== undefined) {\n          object[key] = dataSlice[key];\n        }\n      }\n    }\n  }\n\n  serialize(object, modelID, keys) {\n    const data = {};\n    data[modelID] = keys.reduce((obj, key) => {\n      obj[key] = object[key];\n      return obj;\n    }, {});\n    return data;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/Saves.js?");
 
 /***/ }),
 
@@ -288,6 +396,30 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./src/js/base/model/index.js":
+/*!************************************!*\
+  !*** ./src/js/base/model/index.js ***!
+  \************************************/
+/*! exports provided: NEW_SAVE */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _ConfigModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConfigModel */ \"./src/js/base/model/ConfigModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _CopyModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CopyModel */ \"./src/js/base/model/CopyModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _GameModel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GameModel */ \"./src/js/base/model/GameModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _PlayerModel__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./PlayerModel */ \"./src/js/base/model/PlayerModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _Saves__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Saves */ \"./src/js/base/model/Saves.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"NEW_SAVE\", function() { return _Saves__WEBPACK_IMPORTED_MODULE_4__[\"NEW_SAVE\"]; });\n\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Settings */ \"./src/js/base/model/Settings.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _ShortcutsModel__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ShortcutsModel */ \"./src/js/base/model/ShortcutsModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _UIModel__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./UIModel */ \"./src/js/base/model/UIModel.js\");\n/* empty/unused harmony star reexport */\n\n\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/index.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/objects/BoundsDB.js":
+/*!*****************************************!*\
+  !*** ./src/js/base/objects/BoundsDB.js ***!
+  \*****************************************/
+/*! exports provided: BoundsDBStub, default, CLR */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BoundsDBStub\", function() { return BoundsDBStub; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return BoundsDB; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"CLR\", function() { return CLR; });\nclass BoundsDBStub {\n  constructor() {}\n  clearGraphics() {}\n  drawBounds() {}\n}\n\nclass BoundsDB extends Phaser.GameObjects.Graphics {\n  constructor(scene, shortcutsModel) {\n    super(scene);\n    this.shortcuts = shortcutsModel;\n  }\n\n  clearGraphics() {\n    this.clear();\n  }\n\n  drawBounds({ x, y, width, height }, colour = CLR.GENERAL) {\n    if (this.shortcuts.boundsDebug) {\n      this.lineStyle(2, colour, 1);\n      this.strokeRect(x, y, width, height);\n    }\n  }\n\n  drawLine(sx, sy, ex, ey, colour = 0xffff00) {\n    this.lineStyle(5, colour, 1);\n    this.lineBetween(sx, sy, ex, ey);\n  }\n\n  drawCircle(x, y, radius, colour = CLR.GENERAL) {\n    if (this.shortcuts.boundsDebug) {\n      this.lineStyle(2, colour, 1);\n      this.strokeCircle(x, y, radius);\n    }\n  }\n\n  drawPoints(points, colour = CLR.GENERAL) {\n    this.lineStyle(2, colour, 1);\n    this.moveTo(points[0].x, points[0].y);\n    points.forEach((p, index) => {\n      this.lineTo(p.x, p.y);\n    });\n    this.lineTo(points[0].x, points[0].y);\n    this.stroke();\n  }\n}\nconst CLR = {\n  GENERAL: 0xffff00,\n  GROUND: 0x00ff00,\n  PLAYER: 0xffff00,\n  COLLISION: 0xff0000,\n  SLOT: 0xfcb103,\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/objects/BoundsDB.js?");
+
+/***/ }),
+
 /***/ "./src/js/base/objects/Collision.js":
 /*!******************************************!*\
   !*** ./src/js/base/objects/Collision.js ***!
@@ -297,6 +429,66 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 "use strict";
 eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"checkRects\", function() { return checkRects; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"checkPoint\", function() { return checkPoint; });\nconst checkRects = (rectA, rectB) => {\n  if (\n    rectA.x + rectA.width > rectB.x &&\n    rectA.x < rectB.x + rectB.width &&\n    rectA.y + rectA.height > rectB.y &&\n    rectA.y < rectB.y + rectB.height\n  ) {\n    return true;\n  }\n  return false;\n};\n\nconst checkPoint = (x, y, rect) => {\n  return x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height;\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/objects/Collision.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/objects/index.js":
+/*!**************************************!*\
+  !*** ./src/js/base/objects/index.js ***!
+  \**************************************/
+/*! exports provided: BoundsDBStub, CLR, checkRects, checkPoint */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _BoundsDB__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundsDB */ \"./src/js/base/objects/BoundsDB.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BoundsDBStub\", function() { return _BoundsDB__WEBPACK_IMPORTED_MODULE_0__[\"BoundsDBStub\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"CLR\", function() { return _BoundsDB__WEBPACK_IMPORTED_MODULE_0__[\"CLR\"]; });\n\n/* harmony import */ var _Collision__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Collision */ \"./src/js/base/objects/Collision.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkRects\", function() { return _Collision__WEBPACK_IMPORTED_MODULE_1__[\"checkRects\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkPoint\", function() { return _Collision__WEBPACK_IMPORTED_MODULE_1__[\"checkPoint\"]; });\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/objects/index.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/scenes/Boot.js":
+/*!************************************!*\
+  !*** ./src/js/base/scenes/Boot.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ \"webfontloader\");\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/constants/SceneConstants */ \"./src/js/base/constants/SceneConstants.js\");\n\n\n\nclass Boot extends Phaser.Scene {\n  constructor({ key = base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Boot, active = true, debug = false }) {\n    super({ key, active });\n    this.debug = debug;\n    this.fontsReady = false;\n  }\n\n  init() {\n    this.handleLoadStart = this.loadStart.bind(this);\n    this.handleLoadProgress = this.loadProgress.bind(this);\n    this.handleFileLoadProgress = this.loadFileProgress.bind(this);\n    this.handleLoadError = this.loadError.bind(this);\n    this.handleLoadComplete = this.loadComplete.bind(this);\n    this.errorCount = 0;\n    this.loadHasErrored = false;\n  }\n\n  preload({ fonts }) {\n    const loadFonts = fonts.reduce(\n      (obj, font) => {\n        for (const i in font) {\n          if (i === 'CSS') {\n            obj.urls.push(\n              ...font[i].map((css) => {\n                return this.game.appUrls.getFontsDirectory(css);\n              })\n            );\n          } else {\n            obj.families.push(font[i]);\n          }\n        }\n\n        return obj;\n      },\n      { families: [], urls: [] }\n    );\n\n    webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load({\n      custom: loadFonts,\n      active: this.fontsLoaded.bind(this),\n      inactive: this.fontsLoaded.bind(this),\n    });\n\n    this.load.crossOrigin = 'anonymous';\n    this.load.on('start', this.handleLoadStart);\n    this.load.on('progress', this.handleLoadProgress);\n    this.load.on('fileprogress', this.handleFileLoadProgress);\n    this.load.on('loaderror', this.handleLoadError);\n    this.load.on('complete', this.handleLoadComplete);\n    // override and add implementation\n  }\n\n  loadStart() {\n    this.debug && console.log('Load.handleLoadStart', value);\n  }\n\n  loadProgress(value) {\n    this.debug && console.log('Load.loadProgress', value);\n  }\n\n  loadFileProgress(file) {\n    this.debug && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);\n  }\n\n  loadError(pack) {\n    this.loadHasErrored = true;\n    this.errorCount++;\n    if (pack) {\n      let errorMessage = `Boot.loadError | type ${pack.type} | key ${pack.key} | src ${pack.src}`;\n      errorMessage +=\n        '\\n-- status : ' +\n        pack.xhrLoader.status +\n        ' | -- statusText : ' +\n        pack.xhrLoader.statusText;\n      console.error(errorMessage + ' | -- response :\\n' + pack.xhrLoader.response);\n      this.add.text(30, this.errorCount * 60, errorMessage, {\n        fontFamily: 'Arial',\n        color: '#00ff00',\n        fontSize: '21px',\n      });\n    }\n  }\n\n  loadComplete() {\n    this.load.off('start', this.handleLoadStart);\n    this.load.off('progress', this.handleLoadProgress);\n    this.load.off('fileprogress', this.handleFileLoadProgress);\n    this.load.off('loaderror', this.handleLoadError);\n    this.load.off('complete', this.handleLoadComplete);\n    this.assetsReady = true;\n    this.scene.start(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Load, { booted: true });\n  }\n\n  fontsLoaded() {\n    this.fontsReady = true;\n  }\n\n  create() {}\n\n  update(time, delta) {}\n\n  shutdown() {\n    this.scene.stop(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Boot);\n    this.scene.remove(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Boot);\n  }\n}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Boot);\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/Boot.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/scenes/Load.js":
+/*!************************************!*\
+  !*** ./src/js/base/scenes/Load.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ \"webfontloader\");\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var utils_deviceDetection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils/deviceDetection */ \"./src/js/utils/deviceDetection.js\");\n/* harmony import */ var base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/constants/SceneConstants */ \"./src/js/base/constants/SceneConstants.js\");\n\n\n\n\n\nclass Load extends Phaser.Scene {\n  constructor({ key = base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_2__[\"KEYS\"].Load, active = false, debug = false }) {\n    super({ key, active });\n    this.debug = debug;\n    this.fontsReady = false;\n    this.assetsReady = false;\n  }\n\n  init(opts) {\n    this.handleLoadProgress = this.loadProgress.bind(this);\n    this.handleFileLoadProgress = this.loadFileProgress.bind(this);\n    this.handleFileLoadComplete = this.loadFileComplete.bind(this);\n    this.handleLoadError = this.loadError.bind(this);\n    this.handleLoadComplete = this.loadComplete.bind(this);\n\n    this.events.on('shutdown', this.shutdown, this);\n  }\n\n  renderScene() {}\n\n  preload({ fonts }) {\n    this.renderScene();\n    const loadFonts = fonts.reduce(\n      (obj, font) => {\n        for (const i in font) {\n          if (i === 'CSS') {\n            obj.urls.push(\n              ...font[i].map((css) => {\n                return this.game.appUrls.getFontsDirectory(css);\n              })\n            );\n          } else {\n            obj.families.push(font[i]);\n          }\n        }\n\n        return obj;\n      },\n      { families: [], urls: [] }\n    );\n\n    webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load({\n      custom: loadFonts,\n      active: this.fontsLoaded.bind(this),\n      inactive: this.fontsLoaded.bind(this),\n    });\n\n    this.load.crossOrigin = 'anonymous';\n    this.load.on('progress', this.handleLoadProgress);\n    this.load.on('fileprogress', this.handleFileLoadProgress);\n    this.load.on('filecomplete', this.handleFileLoadComplete);\n    this.load.on('loaderror', this.handleLoadError);\n    this.load.on('complete', this.handleLoadComplete);\n  }\n\n  loadProgress(value) {\n    if (this.loadBar) {\n      this.loadBar.setProgress(value);\n    }\n  }\n\n  loadFileProgress(file) {\n    // file && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);\n  }\n\n  loadFileComplete(key, type) {\n    // console.log('Load.loadFileComplete | type ' + type + ' | key ' + key);\n  }\n\n  loadError(file) {\n    file &&\n      console.log(\n        'Load.loadError | type ' + file.type + ' | key ' + file.key + ' | src ' + file.src\n      );\n  }\n\n  loadComplete() {\n    this.load.off('progress', this.handleLoadProgress);\n    this.load.off('fileprogress', this.handleFileLoadProgress);\n    this.load.off('filecomplete', this.handleFileLoadComplete);\n    this.load.off('loaderror', this.handleLoadError);\n    this.load.off('complete', this.handleLoadComplete);\n    this.assetsReady = true;\n  }\n\n  fontsLoaded() {\n    this.fontsReady = true;\n  }\n\n  create(opts) {\n    this.sys.game.controller.init();\n    this.scene.stop(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_2__[\"KEYS\"].Load);\n  }\n\n  update(time, delta) {}\n\n  shutdown() {\n    this.events.off('shutdown', this.shutdown, this);\n    if (this.loadBar) {\n      this.loadBar.destroy(true);\n      this.loadBar = null;\n    }\n    this.scene.stop(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_2__[\"KEYS\"].Load);\n  }\n}\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (Load);\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/Load.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/scenes/SceneLoad.js":
+/*!*****************************************!*\
+  !*** ./src/js/base/scenes/SceneLoad.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\nconst LOADED_ASSETS = { multiatlas: [], spine: [] };\n\nclass SceneLoad extends Phaser.Scene {\n  constructor(opts) {\n    super(opts);\n    this.debug = opts.debug || false;\n  }\n\n  init() {\n    this.handleLoadStart = this.loadStart.bind(this);\n    this.handleLoadProgress = this.loadProgress.bind(this);\n    this.handleFileLoadProgress = this.loadFileProgress.bind(this);\n    this.handleFileLoadComplete = this.loadFileComplete.bind(this);\n    this.handleLoadError = this.loadError.bind(this);\n    this.handleLoadAssetPackComplete = this.loadAssetPackComplete.bind(this);\n    this.handleLoadComplete = this.loadComplete.bind(this);\n    this.errorCount = 0;\n    this.loadHasErrored = false;\n  }\n\n  renderScene() {}\n\n  preload(path) {\n    this.flushLoadedAssets();\n    this.renderScene();\n\n    this.load.crossOrigin = 'anonymous';\n    this.load.path = path;\n    this.load.on('start', this.handleLoadStart);\n    this.load.on('progress', this.handleLoadProgress);\n    this.load.on('fileprogress', this.handleFileLoadProgress);\n    this.load.on('filecomplete', this.handleFileLoadComplete);\n    this.load.on('loaderror', this.handleLoadError);\n    this.load.on('complete', this.handleLoadAssetPackComplete);\n  }\n\n  loadStart() {\n    this.debug && console.log('Load.handleLoadStart', value);\n  }\n\n  loadProgress(value) {\n    this.debug && console.log('Load.loadProgress', value);\n  }\n\n  loadFileProgress(file) {\n    this.debug && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);\n  }\n\n  loadFileComplete(key, type) {\n    this.debug && console.log('Load.loadFileComplete | type ' + type + ' | key ' + key);\n  }\n\n  loadError(pack) {\n    this.loadHasErrored = true;\n    this.errorCount++;\n    if (pack) {\n      let errorMessage = `SceneLoad.loadError | type ${pack.type} | key ${pack.key} | src ${pack.src}`;\n      errorMessage +=\n        '\\n-- status : ' +\n        pack.xhrLoader.status +\n        ' | -- statusText : ' +\n        pack.xhrLoader.statusText;\n      console.error(errorMessage + ' | -- response :\\n' + pack.xhrLoader.response);\n      this.add.text(30, this.errorCount * 60, errorMessage, {\n        fontFamily: 'Arial',\n        color: '#00ff00',\n        fontSize: '21px',\n      });\n    }\n  }\n\n  loadAssetPackComplete() {\n    this.debug && console.log('Load.loadAssetPackComplete');\n  }\n\n  create() {\n    this.load.off('complete', this.handleLoadAssetPackComplete);\n    this.load.on('complete', this.handleLoadComplete);\n    this.load.start();\n  }\n\n  loadComplete() {\n    this.load.off('progress', this.handleLoadProgress);\n    this.load.off('fileprogress', this.handleFileLoadProgress);\n    this.load.off('filecomplete', this.handleFileLoadComplete);\n    this.load.off('loaderror', this.handleLoadError);\n    this.load.off('complete', this.handleLoadComplete);\n\n    this.start();\n  }\n\n  start() {} // override\n\n  registerLoadedAsset(type, key) {\n    if (!LOADED_ASSETS[type]) {\n      LOADED_ASSETS[type] = [];\n    }\n    LOADED_ASSETS[type].push(key);\n  }\n\n  flushLoadedAssets() {\n    LOADED_ASSETS.multiatlas.forEach((atlas) => {\n      this.debug && console.log('flush multiatlas : ' + atlas);\n      if (this.textures.exists(atlas)) {\n        this.debug && console.log('\\tflush texture');\n        this.textures.remove(atlas);\n      }\n      if (this.cache.json.exists(atlas)) {\n        this.debug && console.log('\\tflush json');\n        this.cache.json.remove(atlas);\n      }\n    });\n    LOADED_ASSETS.multiatlas = [];\n\n    LOADED_ASSETS.spine.forEach((spine) => {\n      if (this.textures.exists(spine + '.png')) {\n        this.textures.remove(spine + '.png');\n      }\n      if (this.cache.json.exists(spine)) {\n        this.cache.json.remove(spine);\n      }\n      if (this.cache.custom.spine.exists(spine)) {\n        this.cache.custom.spine.remove(spine);\n      }\n      if (this.cache.custom.spineTextures.exists(spine)) {\n        this.cache.custom.spineTextures.remove(spine);\n      }\n    });\n\n    if (LOADED_ASSETS.audiosprite) {\n      LOADED_ASSETS.audiosprite.forEach((audiosprite) => {\n        this.debug && console.log('REMOVE AUDIO : ' + audiosprite);\n        if (this.cache.audio.exists(audiosprite)) {\n          this.debug && console.log('\\tREMOVED AUDIO : ' + audiosprite);\n          this.game.sound.removeByKey(audiosprite);\n          this.cache.audio.remove(audiosprite);\n          this.cache.json.remove(audiosprite);\n        }\n      });\n      LOADED_ASSETS.audiosprite = [];\n    }\n\n    LOADED_ASSETS.spine = [];\n  }\n\n  shutdown() {}\n}\n/* harmony default export */ __webpack_exports__[\"default\"] = (SceneLoad);\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/SceneLoad.js?");
+
+/***/ }),
+
+/***/ "./src/js/base/scenes/index.js":
+/*!*************************************!*\
+  !*** ./src/js/base/scenes/index.js ***!
+  \*************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Boot__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Boot */ \"./src/js/base/scenes/Boot.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _Load__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Load */ \"./src/js/base/scenes/Load.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _SceneLoad__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SceneLoad */ \"./src/js/base/scenes/SceneLoad.js\");\n/* empty/unused harmony star reexport */\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/index.js?");
 
 /***/ }),
 
@@ -324,15 +516,27 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 
 /***/ }),
 
+/***/ "./src/js/base/shortcuts/index.js":
+/*!****************************************!*\
+  !*** ./src/js/base/shortcuts/index.js ***!
+  \****************************************/
+/*! exports provided: ShortcutStub */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Shortcuts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Shortcuts */ \"./src/js/base/shortcuts/Shortcuts.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"ShortcutStub\", function() { return _Shortcuts__WEBPACK_IMPORTED_MODULE_0__[\"ShortcutStub\"]; });\n\n/* harmony import */ var _ShortcutTriggers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShortcutTriggers */ \"./src/js/base/shortcuts/ShortcutTriggers.js\");\n/* empty/unused harmony star reexport */\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/shortcuts/index.js?");
+
+/***/ }),
+
 /***/ "./src/js/index.js":
 /*!*************************!*\
   !*** ./src/js/index.js ***!
   \*************************/
-/*! exports provided: default */
+/*! exports provided: FONT_BALDER, FONT_BARIOL, FONT_CLEARFACE, FONT_FELL_ENGLISH, BOOT_FONTS, APP_FONTS, SETTINGS_CHANGED, KEYS, VIEWPORT_EVENTS, TAP, NEW_SAVE, BoundsDBStub, CLR, checkRects, checkPoint, ShortcutStub */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return JGGApp; });\n/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phaser */ \"phaser\");\n/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(phaser__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_controller_GameController__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/controller/GameController */ \"./src/js/base/controller/GameController.js\");\n/* harmony import */ var base_controller_SoundController__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/controller/SoundController */ \"./src/js/base/controller/SoundController.js\");\n/* harmony import */ var base_constants_AppUrls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! base/constants/AppUrls */ \"./src/js/base/constants/AppUrls.js\");\n/* harmony import */ var base_controller_ViewportController__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! base/controller/ViewportController */ \"./src/js/base/controller/ViewportController.js\");\n/* harmony import */ var base_controller_SettingsController__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! base/controller/SettingsController */ \"./src/js/base/controller/SettingsController.js\");\n/* harmony import */ var base_controller_TrackingController__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! base/controller/TrackingController */ \"./src/js/base/controller/TrackingController.js\");\n/* harmony import */ var utils_deviceDetection__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! utils/deviceDetection */ \"./src/js/utils/deviceDetection.js\");\n\n\n\n\n\n\n\n\n\nclass JGGApp extends phaser__WEBPACK_IMPORTED_MODULE_0___default.a.Game {\n  constructor({ config, gameMode, gameConfig = {}, paths = { base: './', assets: 'assets/' } }) {\n    super(config);\n\n    this._gameConfig = gameConfig;\n    this._appUrls = new base_constants_AppUrls__WEBPACK_IMPORTED_MODULE_3__[\"default\"](this, paths);\n    this._trackingController = new base_controller_TrackingController__WEBPACK_IMPORTED_MODULE_6__[\"default\"]({ game: this });\n    this._settingsController = new base_controller_SettingsController__WEBPACK_IMPORTED_MODULE_5__[\"default\"]({ game: this });\n    this._soundController = new base_controller_SoundController__WEBPACK_IMPORTED_MODULE_2__[\"default\"]({ game: this });\n    this._viewportController = new base_controller_ViewportController__WEBPACK_IMPORTED_MODULE_4__[\"default\"]({ game: this });\n    this._gameController = new base_controller_GameController__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({ game: this, gameMode });\n\n    this.defaultGameWidth = gameConfig.width;\n    this.defaultGameHeight = gameConfig.height;\n\n    this._deviceMetric = Object(utils_deviceDetection__WEBPACK_IMPORTED_MODULE_7__[\"getDeviceMetric\"])();\n  }\n\n  init() {}\n\n  get gameConfig() {\n    return this._gameConfig;\n  }\n\n  get appUrls() {\n    return this._appUrls;\n  }\n\n  get gameController() {\n    return this._gameController;\n  }\n\n  get settings() {\n    return this._settingsController;\n  }\n\n  get tracking() {\n    return this._trackingController;\n  }\n\n  get soundController() {\n    return this._soundController;\n  }\n\n  get viewportController() {\n    return this._viewportController;\n  }\n\n  get deviceMetric() {\n    return this._deviceMetric;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _base_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base/constants */ \"./src/js/base/constants/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BALDER\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BALDER\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BARIOL\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BARIOL\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_CLEARFACE\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_CLEARFACE\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_FELL_ENGLISH\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_FELL_ENGLISH\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BOOT_FONTS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"BOOT_FONTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"APP_FONTS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"APP_FONTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SETTINGS_CHANGED\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"SETTINGS_CHANGED\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"KEYS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"KEYS\"]; });\n\n/* harmony import */ var _base_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base/controller */ \"./src/js/base/controller/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"VIEWPORT_EVENTS\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"VIEWPORT_EVENTS\"]; });\n\n/* harmony import */ var _base_input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./base/input */ \"./src/js/base/input/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"TAP\", function() { return _base_input__WEBPACK_IMPORTED_MODULE_2__[\"TAP\"]; });\n\n/* harmony import */ var _base_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base/model */ \"./src/js/base/model/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"NEW_SAVE\", function() { return _base_model__WEBPACK_IMPORTED_MODULE_3__[\"NEW_SAVE\"]; });\n\n/* harmony import */ var _base_objects__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./base/objects */ \"./src/js/base/objects/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BoundsDBStub\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"BoundsDBStub\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"CLR\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"CLR\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkRects\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"checkRects\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkPoint\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"checkPoint\"]; });\n\n/* harmony import */ var _base_scenes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./base/scenes */ \"./src/js/base/scenes/index.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _base_shortcuts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./base/shortcuts */ \"./src/js/base/shortcuts/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"ShortcutStub\", function() { return _base_shortcuts__WEBPACK_IMPORTED_MODULE_6__[\"ShortcutStub\"]; });\n\n/* harmony import */ var _AppBase__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AppBase */ \"./src/js/AppBase.js\");\n/* empty/unused harmony star reexport */\n\n\n\n\n\n\n//\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/index.js?");
 
 /***/ }),
 
@@ -368,6 +572,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, exports) {
 
 eval("module.exports = __WEBPACK_EXTERNAL_MODULE_phaser__;\n\n//# sourceURL=webpack://jollygoodgame/external_%7B%22commonjs%22:%22Phaser%22,%22commonjs2%22:%22Phaser%22,%22amd%22:%22Phaser%22,%22root%22:%22Phaser%22%7D?");
+
+/***/ }),
+
+/***/ "webfontloader":
+/*!**********************************************************************************************************************!*\
+  !*** external {"commonjs":"webfontloader","commonjs2":"webfontloader","amd":"webfontloader","root":"webfontloader"} ***!
+  \**********************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("module.exports = __WEBPACK_EXTERNAL_MODULE_webfontloader__;\n\n//# sourceURL=webpack://jollygoodgame/external_%7B%22commonjs%22:%22webfontloader%22,%22commonjs2%22:%22webfontloader%22,%22amd%22:%22webfontloader%22,%22root%22:%22webfontloader%22%7D?");
 
 /***/ })
 
