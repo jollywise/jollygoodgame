@@ -6,7 +6,7 @@ import Shortcuts, { ShortcutStub } from 'base/shortcuts/Shortcuts';
 import SceneController from 'base/controller/SceneController';
 import { VIEWPORT_EVENTS } from './ViewportController';
 
-class GameController {
+export class GameController {
   constructor({ game, gameMode, shortcutsEnabled = false }) {
     this.game = game;
     this.sceneController = new SceneController(game.scene);
@@ -60,5 +60,3 @@ class GameController {
     }
   }
 }
-
-export default GameController;

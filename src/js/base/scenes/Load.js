@@ -1,7 +1,7 @@
 import WebFont from 'webfontloader';
 import { KEYS } from 'base/constants/SceneConstants';
 
-class Load extends Phaser.Scene {
+export class Load extends Phaser.Scene {
   constructor({ key = KEYS.Load, active = false, debug = false }) {
     super({ key, active });
     this.debug = debug;
@@ -106,5 +106,3 @@ class Load extends Phaser.Scene {
     this.scene.stop(KEYS.Load);
   }
 }
-
-export default Load;
