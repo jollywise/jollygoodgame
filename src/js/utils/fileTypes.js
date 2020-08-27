@@ -1,0 +1,96 @@
+export const getAllowedExtensions = (type) => {
+  let extensions = '';
+  switch (type) {
+    case 'VIDEO':
+      extensions = VIDEO_EXTENSIONS;
+      break;
+    case 'AUDIO':
+      extensions = AUDIO_EXTENSIONS;
+      break;
+    case 'IMAGE':
+      extensions = IMAGE_EXTENSIONS;
+      break;
+    case 'XML':
+      extensions = XML_EXTENSIONS;
+      break;
+    case 'TXT':
+      extensions = TEXT_EXTENSIONS;
+      break;
+    case 'CSV':
+      extensions = CSV_EXTENSIONS;
+      break;
+    case 'XLS':
+      extensions = XLS_EXTENSIONS;
+      break;
+    case 'ZIP':
+      extensions = ZIP_EXTENSIONS;
+      break;
+    case 'JSON':
+      extensions = JSON_EXTENSIONS;
+      break;
+  }
+  return extensions;
+};
+
+export const mediaIsImage = (type) => {
+  return IMAGE_EXTENSIONS.includes(type);
+};
+
+export const mediaIsVideo = (type) => {
+  return VIDEO_EXTENSIONS.includes(type);
+};
+
+export const getMediaType = (type) => {
+  let returnType = MEDIA_NONE;
+  if (VIDEO_EXTENSIONS.includes(type)) {
+    returnType = MEDIA_VIDEO;
+  }
+  if (AUDIO_EXTENSIONS.includes(type)) {
+    returnType = MEDIA_AUDIO;
+  }
+  if (IMAGE_EXTENSIONS.includes(type)) {
+    returnType = MEDIA_IMAGE;
+  }
+  return returnType;
+};
+
+export const isMediaCroppable = (type) => {
+  return CROP_EXTENSIONS.includes(type);
+};
+
+export const bytesToMegaBytes = (bytes) => {
+  return (bytes / (1024 * 1024)).toFixed(2);
+  // return bytes / (1024 * 1024);
+};
+
+export const megaBytesToBytes = (mb) => {
+  return mb * (1024 * 1024);
+};
+
+export const base64fileSize = (data) => {
+  /**
+   * Calculate base64 image size
+   */
+  const base64Length = data.length - (data.indexOf(',') + 1);
+  const padding =
+    data.charAt(data.length - 2) === '=' ? 2 : data.charAt(data.length - 1) === '=' ? 1 : 0;
+  const fileSize = base64Length * 0.75 - padding;
+  return fileSize;
+  // return (fileSize / 1024).toFixed(2);
+};
+
+export const MEDIA_NONE = 'media.NONE';
+export const MEDIA_VIDEO = 'VIDEO';
+export const MEDIA_AUDIO = 'AUDIO';
+export const MEDIA_IMAGE = 'IMAGE';
+
+const VIDEO_EXTENSIONS = '.mp4,video/mp4,.MOV,video/quicktime';
+const AUDIO_EXTENSIONS = '.mp3,audio/mpeg,audio/mp3';
+const IMAGE_EXTENSIONS = '.gif,.jpg,.jpeg,.png,.svg,image/gif,image/jpeg,image/png,image/svg+xml';
+const XML_EXTENSIONS = '.xml,text/xml';
+const TEXT_EXTENSIONS = '.txt,text/plain';
+const CSV_EXTENSIONS = '.csv,text/csv';
+const XLS_EXTENSIONS = '.xls,application/vnd.ms-excel';
+const ZIP_EXTENSIONS = '.zip,application/zip';
+const JSON_EXTENSIONS = '.json,application/json';
+const CROP_EXTENSIONS = '.jpg,.jpeg,.png,image/jpeg,image/png';

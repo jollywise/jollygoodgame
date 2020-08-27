@@ -1,0 +1,40 @@
+{
+  "extends": ["@pbs/eslint-config-pbs-kids", "prettier", "plugin:compat/recommended"],
+  "plugins": ["prettier"],
+  "parser": "babel-eslint",
+  "env": {
+    "browser": true,
+    "node": true,
+    "commonjs": true,
+    "es6": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "modules": true,
+      "arrowFunctions": true,
+      "restParams": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "settings": {
+    "import/resolver": "webpack"
+  },
+  "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
+    "compat/compat": "off",
+    "no-console": "off"
+  },
+  "globals": {
+    "__DEBUG__": false,
+    "Phaser": false,
+    "PIXI": false,
+    "PhaserSpine": false
+  }
+}
