@@ -1,4 +1,4 @@
-export default class TrackingController {
+export class TrackingControllerBase {
   constructor({ game }) {
     this.game = game;
     this._plugin = null;

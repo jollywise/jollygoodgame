@@ -1,3 +1,3 @@
-export * from './Boot';
-export * from './Load';
-export * from './SceneLoad';
+export * from './BootBase';
+export * from './LoadBase';
+export * from './SceneLoadBase';

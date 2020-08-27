@@ -3,19 +3,22 @@ import UIModel from 'base/model/UIModel';
 import CopyModel from 'base/model/CopyModel';
 import ShortcutsModel from 'base/model/ShortcutsModel';
 import Shortcuts, { ShortcutStub } from 'base/shortcuts/Shortcuts';
-import SceneController from 'base/controller/SceneController';
-import { VIEWPORT_EVENTS } from './ViewportController';
+import { VIEWPORT_EVENTS } from './ViewportControllerBase';
 
-class GameController {
+export class GameControllerBase {
   constructor({ game, gameMode, shortcutsEnabled = false }) {
     this.game = game;
-    this.sceneController = new SceneController(game.scene);
     this.gameMode = gameMode;
     this.shortcutsEnabled = shortcutsEnabled;
     this.gamePaused = false;
   }
 
+  addSceneController(sceneController) {
+    this.sceneController = sceneController
+  }
+
   init() {
+    console.log('GameControllerBase.init');
     const appConfig = this.game.cache.json.get('app_config');
     const uiConfig = this.game.cache.json.get('ui_config');
     this.config = new ConfigModel({ config: appConfig });
@@ -44,8 +47,9 @@ class GameController {
   ====================================================================================================
   */
   addShortcuts() {
-    this.shortcutsModel = new ShortcutsModel();
+    console.log('GameControllerBase.addShortcuts | enabled', this.shortcutsEnabled);
     if (this.shortcutsEnabled) {
+      this.shortcutsModel = new ShortcutsModel();
       this.shortcuts = new Shortcuts(this.game, { model: this.shortcutsModel, isVisible: true });
       this.shortcuts.create();
     } else {
@@ -60,5 +64,3 @@ class GameController {
     }
   }
 }
-
-export default GameController;

@@ -1,9 +1,10 @@
 import WebFont from 'webfontloader';
 import { KEYS } from 'base/constants/SceneConstants';
 
-export class Load extends Phaser.Scene {
+export class LoadBase extends Phaser.Scene {
   constructor({ key = KEYS.Load, active = false, debug = false }) {
     super({ key, active });
+    console.log('LoadBase | key', key, '| active', active, '| debug', debug);
     this.debug = debug;
     this.fontsReady = false;
     this.assetsReady = false;
@@ -63,21 +64,22 @@ export class Load extends Phaser.Scene {
   }
 
   loadFileProgress(file) {
-    // file && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+    this.debug && console.log('LoadBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
   }
 
   loadFileComplete(key, type) {
-    // console.log('Load.loadFileComplete | type ' + type + ' | key ' + key);
+    this.debug && console.log('LoadBase.loadFileComplete | type ' + type + ' | key ' + key);
   }
 
   loadError(file) {
-    file &&
-      console.log(
-        'Load.loadError | type ' + file.type + ' | key ' + file.key + ' | src ' + file.src
+    this.debug && file &&
+      console.error(
+        'LoadBase.loadError | type ' + file.type + ' | key ' + file.key + ' | src ' + file.src
       );
   }
 
   loadComplete() {
+    this.debug && console.log('LoadBase.loadComplete');
     this.load.off('progress', this.handleLoadProgress);
     this.load.off('fileprogress', this.handleFileLoadProgress);
     this.load.off('filecomplete', this.handleFileLoadComplete);
@@ -91,7 +93,6 @@ export class Load extends Phaser.Scene {
   }
 
   create(opts) {
-    this.sys.game.controller.init();
     this.scene.stop(KEYS.Load);
   }
 

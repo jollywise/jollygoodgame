@@ -1,4 +1,4 @@
-export default class AppUrls {
+export class AppUrls {
   constructor(game, paths = { base: './', assets: 'assets/' }) {
     this.game = game;
     this.basePath = paths.base;

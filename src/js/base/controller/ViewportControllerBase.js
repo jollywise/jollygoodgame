@@ -5,10 +5,9 @@ export const VIEWPORT_EVENTS = {
   UPDATED: 'UPDATED',
 };
 
-export default class ViewportController extends EventEmitter {
+export class ViewportControllerBase extends EventEmitter {
   constructor({ game }) {
     super();
-
     this.game = game;
     this._viewport = { x: 0, y: 0, width: 0, height: 0, padding: 0, paddingBottom: 0 };
     this.game.scale.on('resize', this.updateViewport, this);
@@ -89,10 +88,10 @@ export default class ViewportController extends EventEmitter {
 
   updateViewport() {
     const windowAspect = this.game.scale.parentSize.aspectRatio;
-    const height = this.game.gameHeightDefault;
-    const width = Math.min(this.game.gameWidthDefault, this.game.gameHeightDefault * windowAspect);
-    const x = Math.max(0, this.game.gameWidthDefault * 0.5 - width * 0.5);
-    const y = Math.max(0, this.game.gameHeightDefault * 0.5 - height * 0.5);
+    const height = this.game.defaultGameHeight;
+    const width = Math.min(this.game.defaultGameWidth, this.game.defaultGameHeight * windowAspect);
+    const x = Math.max(0, this.game.defaultGameWidth * 0.5 - width * 0.5);
+    const y = Math.max(0, this.game.defaultGameHeight * 0.5 - height * 0.5);
     const padding = Math.max(width * 0.02, height * 0.02);
     let paddingBottom = padding;
 

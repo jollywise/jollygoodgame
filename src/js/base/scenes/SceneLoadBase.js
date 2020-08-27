@@ -1,6 +1,6 @@
 const LOADED_ASSETS = { multiatlas: [], spine: [] };
 
-export class SceneLoad extends Phaser.Scene {
+export class SceneLoadBase extends Phaser.Scene {
   constructor(opts) {
     super(opts);
     this.debug = opts.debug || false;

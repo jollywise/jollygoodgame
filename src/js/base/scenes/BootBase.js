@@ -1,9 +1,10 @@
 import WebFont from 'webfontloader';
 import { KEYS } from 'base/constants/SceneConstants';
 
-export class Boot extends Phaser.Scene {
+export class BootBase extends Phaser.Scene {
   constructor({ key = KEYS.Boot, active = true, debug = false }) {
     super({ key, active });
+    console.log('BootBase | key', key, '| active', active, '| debug', debug);
     this.debug = debug;
     this.fontsReady = false;
   }
@@ -54,15 +55,15 @@ export class Boot extends Phaser.Scene {
   }
 
   loadStart() {
-    this.debug && console.log('Load.handleLoadStart', value);
+    this.debug && console.log('BootBase.loadStart');
   }
 
   loadProgress(value) {
-    this.debug && console.log('Load.loadProgress', value);
+    this.debug && console.log('BootBase.loadProgress', value);
   }
 
   loadFileProgress(file) {
-    this.debug && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+    this.debug && console.log('BootBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
   }
 
   loadError(pack) {
@@ -85,6 +86,7 @@ export class Boot extends Phaser.Scene {
   }
 
   loadComplete() {
+    this.debug && console.log('BootBase.loadComplete');
     this.load.off('start', this.handleLoadStart);
     this.load.off('progress', this.handleLoadProgress);
     this.load.off('fileprogress', this.handleFileLoadProgress);

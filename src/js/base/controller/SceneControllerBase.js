@@ -1,6 +1,4 @@
-import { KEYS } from 'base/constants/SceneConstants';
-
-class SceneController {
+export class SceneControllerBase {
   constructor(sceneManager) {
     this.sceneManager = sceneManager;
     this.onOverlayClosed = null;
@@ -11,7 +9,9 @@ class SceneController {
     sceneMap.map(({ key, state }) => {
       if (!this.sceneManager.keys[key]) {
         this.sceneManager.add(key, state);
-        this.sceneManager.getScene(key).scene.setVisible(true);
+        const scene = this.sceneManager.getScene(key);
+        scene && scene.setVisible(true);
+        console.log('Add scene ', key, scene);
       }
     });
   }
@@ -56,55 +56,13 @@ class SceneController {
     this.sceneManager.resume(key);
   }
 
-  showOverlayScene(sceneKey, { data, onOverlayClosed = null } = {}) {
-    console.log('showOverlayScene', sceneKey, onOverlayClosed);
-    if (this.overlaySceneKey) this.removeOverlayScene();
-    this.overlaySceneKey = sceneKey;
-    this.onOverlayClosed = onOverlayClosed;
-    this.pauseScene(this.currentSceneKey);
-    this.startScene(sceneKey, { data });
-  }
-
-  removeOverlayScene() {
-    if (this.overlaySceneKey) {
-      this.stopScene(this.overlaySceneKey);
-      this.resumeScene(this.currentSceneKey);
-      this.overlaySceneKey = null;
-      if (this.onOverlayClosed) {
-        const t = this.onOverlayClosed;
-        this.onOverlayClosed = null;
-        setTimeout(t, 100);
-      }
-    }
-  }
-
   switchScene(sceneKey, { data } = {}) {
     // console.log('switchScene', sceneKey);
-    if (this.overlaySceneKey) {
-      this.removeOverlayScene({});
-    }
-
     if (this.currentSceneKey) {
       this.stopScene(this.currentSceneKey);
     }
     this.currentSceneKey = sceneKey;
     this.startScene(this.currentSceneKey, { data });
-  }
-
-  showRotate() {
-    if (!this.sceneManager.isActive(KEYS.Rotate)) {
-      const pause = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
-      this.pauseScene(pause);
-      this.startScene(KEYS.Rotate, {});
-    }
-  }
-
-  removeRotate() {
-    if (this.sceneManager.isActive(KEYS.Rotate)) {
-      this.stopScene(KEYS.Rotate, {});
-      const resume = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
-      this.resumeScene(resume);
-    }
   }
 
   startScene(scene, data) {
@@ -128,4 +86,3 @@ class SceneController {
   }
 }
 
-export default SceneController;

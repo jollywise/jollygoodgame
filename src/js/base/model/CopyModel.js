@@ -1,9 +1,13 @@
 class CopyModel {
   constructor({ xml }) {
     this.copy = {};
-    const nodes = xml.getElementsByTagName('item');
-    for (let i = 0; i < nodes.length; i++) {
-      this.copy[nodes[i].getAttribute('id')] = nodes[i].childNodes[0].nodeValue;
+    if (xml) {
+      const nodes = xml.getElementsByTagName('item');
+      for (let i = 0; i < nodes.length; i++) {
+        this.copy[nodes[i].getAttribute('id')] = nodes[i].childNodes[0].nodeValue;
+      }
+    } else {
+      console.warn('CopyModel : no xml received')
     }
   }
 

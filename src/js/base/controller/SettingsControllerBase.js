@@ -2,7 +2,7 @@ import EventEmitter from 'eventemitter3';
 import Settings from '../model/Settings';
 import { SETTINGS_CHANGED } from '../constants/Events';
 
-export default class SettingsController extends EventEmitter {
+export class SettingsControllerBase extends EventEmitter {
   constructor({ game }) {
     super();
 

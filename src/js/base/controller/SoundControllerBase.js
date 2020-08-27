@@ -1,6 +1,6 @@
 const SFX_VOLUME = 0.5;
 
-export default class SoundController {
+export class SoundControllerBase {
   constructor({ game }) {
     this.game = game;
     this.currentVO = null;
