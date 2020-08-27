@@ -1,9 +1,6 @@
 import EventEmitter from 'eventemitter3';
-import { checkRects, checkPoint } from '../objects/Collision';
-
-export const VIEWPORT_EVENTS = {
-  UPDATED: 'UPDATED',
-};
+import { checkRects, checkPoint } from 'base/objects/Collision';
+import { VIEWPORT_EVENTS } from 'base/constants/Events'
 
 export class ViewportControllerBase extends EventEmitter {
   constructor({ game }) {

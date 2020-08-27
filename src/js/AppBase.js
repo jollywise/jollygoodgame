@@ -6,14 +6,17 @@ export class AppBase extends Phaser.Game {
     super(config);
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
-    this.defaultGameWidth = config.width;
-    this.defaultGameHeight = config.height;
+    this._defaultDimensions = { width: config.width, height: config.height };
   }
 
   init() {}
 
   get gameConfig() {
     return this._gameConfig;
+  }
+
+  get defaultDimensions() {
+    return this._defaultDimensions;
   }
 
   get deviceMetric() {

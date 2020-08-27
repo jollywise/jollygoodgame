@@ -1,14 +1,9 @@
 import * as dat from 'dat.gui';
 import ShortcutTriggers from 'base/shortcuts/ShortcutTriggers';
 
-export class ShortcutStub {
-  constructor() {}
-  reset() {}
-}
-
 const TRIGGER = '↑ ↑ ↓ ↓ ← →';
 
-export default class Shortcuts {
+export class ShortcutsBase {
   constructor(game, { model: shortcutsModel, isVisible: isVisible = false }) {
     this.game = game;
     this.model = shortcutsModel;
@@ -110,8 +105,6 @@ export default class Shortcuts {
     this.close();
     this.setVisible();
   }
-
-  update() {}
 
   reset() {
     this.levelSettings && this.gui.removeFolder(this.levelSettings);

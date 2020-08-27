@@ -2,7 +2,7 @@ const VERSION = 1;
 const SAVES_ID = 'saves';
 export const NEW_SAVE = 'NEW_SAVE';
 
-export default class Saves {
+export class Saves {
   /*
    * data structure for saves
    * saveID1 : {game: {}, player: {} ...}

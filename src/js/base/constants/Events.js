@@ -1,1 +1,7 @@
-export const SETTINGS_CHANGED = 'SETTINGS_CHANGED';
+export const SETTINGS_EVENTS = {
+  CHANGED: 'CHANGED',
+}
+
+export const VIEWPORT_EVENTS = {
+  UPDATED: 'UPDATED',
+}

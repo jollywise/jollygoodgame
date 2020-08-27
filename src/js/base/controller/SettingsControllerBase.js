@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
-import Settings from '../model/Settings';
-import { SETTINGS_CHANGED } from '../constants/Events';
+import Settings from 'base/model/Settings';
+import { SETTINGS_EVENTS } from 'base/constants/Events';
 
 export class SettingsControllerBase extends EventEmitter {
   constructor({ game }) {
@@ -41,37 +41,37 @@ export class SettingsControllerBase extends EventEmitter {
 
   set audio(audio) {
     this.model._audio = audio;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   set sfx(sfx) {
     this.model._sfx = sfx;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   set music(music) {
     this.model._music = music;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   set vo(vo) {
     this.model._vo = vo;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   set buttonAudio(buttonAudio) {
     this.model._buttonAudio = buttonAudio;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   set motion(motion) {
     this.model._motion = motion;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   set captions(captions) {
     this.model._captions = captions;
-    this.emit(SETTINGS_CHANGED);
+    this.emit(SETTINGS_EVENTS.CHANGED);
   }
 
   getGameData() {

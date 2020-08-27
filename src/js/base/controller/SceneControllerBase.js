@@ -1,24 +1,19 @@
 export class SceneControllerBase {
   constructor(sceneManager) {
     this.sceneManager = sceneManager;
-    this.onOverlayClosed = null;
   }
 
-  init(sceneMap) {
+  addSceneMap(sceneMap) {
     this.currentSceneKey = null;
     sceneMap.map(({ key, state }) => {
       if (!this.sceneManager.keys[key]) {
         this.sceneManager.add(key, state);
-        const scene = this.sceneManager.getScene(key);
-        scene && scene.setVisible(true);
-        console.log('Add scene ', key, scene);
       }
     });
   }
 
   reset() {
     this.currentSceneKey = null;
-    this.onOverlayClosed = null;
   }
 
   getCurrentScene() {
