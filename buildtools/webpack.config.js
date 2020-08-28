@@ -23,6 +23,7 @@ module.exports = {
     library: 'jollygoodgame',
     libraryTarget: 'umd',
   },
+  stats: 'normal', // minimal, none, normal, verbose ::: https://webpack.js.org/configuration/stats/
   externals: {
     phaser: { commonjs: 'Phaser', commonjs2: 'Phaser', amd: 'Phaser', root: 'Phaser' },
     webfontloader: {
@@ -32,7 +33,7 @@ module.exports = {
       root: 'webfontloader',
     },
   },
-  devtool: process.env.NODE_ENV === 'development' ? 'inline-source-map' : 'source-map',
+  devtool: process.env.NODE_ENV === 'development' ? 'none' : 'source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(MODE),
