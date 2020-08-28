@@ -85,10 +85,13 @@ export class ViewportControllerBase extends EventEmitter {
 
   updateViewport() {
     const windowAspect = this.game.scale.parentSize.aspectRatio;
-    const height = this.game.defaultGameHeight;
-    const width = Math.min(this.game.defaultGameWidth, this.game.defaultGameHeight * windowAspect);
-    const x = Math.max(0, this.game.defaultGameWidth * 0.5 - width * 0.5);
-    const y = Math.max(0, this.game.defaultGameHeight * 0.5 - height * 0.5);
+    const height = this.game.defaultDimensions.height;
+    const width = Math.min(
+      this.game.defaultDimensions.width,
+      this.game.defaultDimensions.height * windowAspect
+    );
+    const x = Math.max(0, this.game.defaultDimensions.width * 0.5 - width * 0.5);
+    const y = Math.max(0, this.game.defaultDimensions.height * 0.5 - height * 0.5);
     const padding = Math.max(width * 0.02, height * 0.02);
     let paddingBottom = padding;
 

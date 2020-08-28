@@ -42,26 +42,31 @@ export class SettingsControllerBase extends EventEmitter {
   set audio(audio) {
     this.model._audio = audio;
     this.emit(SETTINGS_EVENTS.CHANGED);
+    this.game.soundController.handleAudioChanged();
   }
 
   set sfx(sfx) {
     this.model._sfx = sfx;
     this.emit(SETTINGS_EVENTS.CHANGED);
+    this.game.soundController.handleAudioChanged();
   }
 
   set music(music) {
     this.model._music = music;
     this.emit(SETTINGS_EVENTS.CHANGED);
+    this.game.soundController.handleAudioChanged();
   }
 
   set vo(vo) {
     this.model._vo = vo;
     this.emit(SETTINGS_EVENTS.CHANGED);
+    this.game.soundController.handleAudioChanged();
   }
 
   set buttonAudio(buttonAudio) {
     this.model._buttonAudio = buttonAudio;
     this.emit(SETTINGS_EVENTS.CHANGED);
+    this.game.soundController.handleAudioChanged();
   }
 
   set motion(motion) {

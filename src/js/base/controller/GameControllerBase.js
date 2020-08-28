@@ -16,7 +16,6 @@ export class GameControllerBase {
 
   assetsLoaded() {
     console.log('GameControllerBase.assetsLoaded');
-    const appConfig = this.game.cache.json.get('app_config');
     const uiConfig = this.game.cache.json.get('ui_config');
     this.uiModel = new UIModel({ config: uiConfig, settings: this.settings });
     this.copyModel = new CopyModel({ xml: this.game.cache.xml.get('copy_xml') });
@@ -36,11 +35,6 @@ export class GameControllerBase {
 
   resumeGame() {}
 
-  /*
-  ====================================================================================================
-  SHORTCUTS
-  ====================================================================================================
-  */
   addShortcuts(shortcuts) {
     this.shortcuts = shortcuts || new ShortcutsStub();
     this.shortcuts.create();
