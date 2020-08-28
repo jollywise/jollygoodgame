@@ -1,11 +1,9 @@
-class TextBox extends Phaser.GameObjects.Text {
+export class TextBox extends Phaser.GameObjects.Text {
   constructor(scene, { x, y, text, style, type = TextBox.COPY } = {}) {
     const fontstyle = { ...TextBox.STYLES[type], ...style };
     super(scene, x, y, text, fontstyle);
   }
 }
-
-export default TextBox;
 
 TextBox.COPY = 'COPY';
 TextBox.TITLE = 'TITLE';

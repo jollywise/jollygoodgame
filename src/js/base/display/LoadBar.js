@@ -1,4 +1,4 @@
-class LoadBar extends Phaser.GameObjects.Container {
+export class LoadBar extends Phaser.GameObjects.Container {
   constructor({
     scene,
     x,
@@ -51,4 +51,3 @@ class LoadBar extends Phaser.GameObjects.Container {
     return shape;
   }
 }
-export default LoadBar;

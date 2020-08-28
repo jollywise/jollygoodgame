@@ -1,4 +1,4 @@
-class ScreenContainer extends Phaser.GameObjects.Container {
+export class ScreenContainer extends Phaser.GameObjects.Container {
   constructor({ scene }) {
     super(scene);
     this.bindedHandleResize = this.resize.bind(this);
@@ -22,5 +22,3 @@ class ScreenContainer extends Phaser.GameObjects.Container {
     this.scene.scale.off('resize', this.bindedHandleResize);
   }
 }
-
-export default ScreenContainer;
