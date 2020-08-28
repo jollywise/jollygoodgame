@@ -1,5 +1,5 @@
 export class SceneBase extends Phaser.Scene {
-  constructor({ key , active = false }) {
+  constructor({ key, active = false }) {
     super({ key, active });
   }
 
@@ -10,6 +10,7 @@ export class SceneBase extends Phaser.Scene {
   }
 
   create(options) {
+    options;
     this.scale.on('resize', this.handleGameResized, this);
     this.events.on('shutdown', this.shutdown, this);
     this.events.on('pause', this.onScenePaused, this);

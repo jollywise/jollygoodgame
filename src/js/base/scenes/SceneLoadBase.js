@@ -35,7 +35,7 @@ export class SceneLoadBase extends Phaser.Scene {
   }
 
   loadStart() {
-    this.debug && console.log('Load.handleLoadStart', value);
+    this.debug && console.log('Load.handleLoadStart');
   }
 
   loadProgress(value) {

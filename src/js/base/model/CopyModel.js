@@ -7,7 +7,7 @@ class CopyModel {
         this.copy[nodes[i].getAttribute('id')] = nodes[i].childNodes[0].nodeValue;
       }
     } else {
-      console.warn('CopyModel : no xml received')
+      console.warn('CopyModel : no xml received');
     }
   }
 

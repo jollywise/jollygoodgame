@@ -63,7 +63,8 @@ export class BootBase extends Phaser.Scene {
   }
 
   loadFileProgress(file) {
-    this.debug && console.log('BootBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+    this.debug &&
+      console.log('BootBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
   }
 
   loadError(pack) {
@@ -102,7 +103,9 @@ export class BootBase extends Phaser.Scene {
 
   create() {}
 
-  update(time, delta) {}
+  update(time, delta) {
+    time, delta;
+  }
 
   shutdown() {
     this.scene.stop(KEYS.Boot);

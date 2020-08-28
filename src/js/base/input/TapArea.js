@@ -50,6 +50,7 @@ export default class TapArea extends EventEmitter {
   }
 
   onUp(pointer) {
+    pointer;
     this.clickbox.off('pointermove', this.bindedMove, this);
     this.pointerDown = false;
     this.pointer = false;

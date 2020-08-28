@@ -1,8 +1,5 @@
 'use strict';
 
-/**
- * Zero pad
- */
 export const zeroPad = (num, length) => {
   const n = Math.abs(num);
   const zeros = Math.max(0, length - Math.floor(n).toString().length);
@@ -28,9 +25,6 @@ export const closestPoint = (x, y, points) => {
   return closestPoint;
 };
 
-/**
- * Android ScreenFull
- */
 export const doScreenfull = () => {
   // const isAndroid = /(android)/i.test(window.navigator.userAgent);
   // if (isAndroid && screenfull.enabled) {

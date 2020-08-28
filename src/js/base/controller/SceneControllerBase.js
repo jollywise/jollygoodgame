@@ -80,4 +80,3 @@ export class SceneControllerBase {
     this.sceneManager.bringToTop(scene);
   }
 }
-

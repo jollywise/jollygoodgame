@@ -64,7 +64,8 @@ export class LoadBase extends Phaser.Scene {
   }
 
   loadFileProgress(file) {
-    this.debug && console.log('LoadBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+    this.debug &&
+      console.log('LoadBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
   }
 
   loadFileComplete(key, type) {
@@ -72,7 +73,8 @@ export class LoadBase extends Phaser.Scene {
   }
 
   loadError(file) {
-    this.debug && file &&
+    this.debug &&
+      file &&
       console.error(
         'LoadBase.loadError | type ' + file.type + ' | key ' + file.key + ' | src ' + file.src
       );
@@ -93,10 +95,13 @@ export class LoadBase extends Phaser.Scene {
   }
 
   create(opts) {
+    opts;
     this.scene.stop(KEYS.Load);
   }
 
-  update(time, delta) {}
+  update(time, delta) {
+    time, delta;
+  }
 
   shutdown() {
     this.events.off('shutdown', this.shutdown, this);

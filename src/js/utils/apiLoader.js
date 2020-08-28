@@ -9,10 +9,8 @@ export const LoadAPIData = (url, onComplete, onError) => {
       if (onComplete) {
         onComplete(data.result);
       }
-    } else {
-      if (onError) {
-        onError(e);
-      }
+    } else if (onError) {
+      onError(e);
     }
   };
   request.send();

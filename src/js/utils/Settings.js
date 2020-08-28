@@ -67,9 +67,6 @@ class Settings {
     return this.getAllSettings().audio === false;
   }
 
-  /**
-   * LOCAL STORAGE API
-   */
   getAllSettings() {
     const settings = JSON.parse(JSON.stringify(this.globalSettings));
     if (storage.canUse()) {
@@ -93,9 +90,6 @@ class Settings {
     }
   }
 
-  /**
-   * LOCAL STORAGE PRIVATE
-   */
   _setAudio(state) {
     this.globalSettings.audio = state;
     this._saveGlobalSettings();
