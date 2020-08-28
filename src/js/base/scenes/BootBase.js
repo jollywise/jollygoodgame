@@ -1,10 +1,10 @@
 import WebFont from 'webfontloader';
-import { KEYS } from 'base/constants/SceneConstants';
 
 export class BootBase extends Phaser.Scene {
-  constructor({ key = KEYS.Boot, active = true, debug = false }) {
+  constructor({ key, active = true, debug = false }) {
     super({ key, active });
     console.log('BootBase | key', key, '| active', active, '| debug', debug);
+    this.key = key;
     this.debug = debug;
     this.fontsReady = false;
   }
@@ -94,7 +94,7 @@ export class BootBase extends Phaser.Scene {
     this.load.off('loaderror', this.handleLoadError);
     this.load.off('complete', this.handleLoadComplete);
     this.assetsReady = true;
-    this.scene.start(KEYS.Load, { booted: true });
+    this.scene.start(this.key, { booted: true });
   }
 
   fontsLoaded() {
@@ -108,7 +108,7 @@ export class BootBase extends Phaser.Scene {
   }
 
   shutdown() {
-    this.scene.stop(KEYS.Boot);
-    this.scene.remove(KEYS.Boot);
+    this.scene.stop(this.key);
+    this.scene.remove(this.key);
   }
 }
