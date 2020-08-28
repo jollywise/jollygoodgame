@@ -104,7 +104,2537 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"color\", function() { return color; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"controllers\", function() { return controllers; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"dom\", function() { return dom$1; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"gui\", function() { return gui; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"GUI\", function() { return GUI$1; });\n/**\n * dat-gui JavaScript Controller Library\n * http://code.google.com/p/dat-gui\n *\n * Copyright 2011 Data Arts Team, Google Creative Lab\n *\n * Licensed under the Apache License, Version 2.0 (the \"License\");\n * you may not use this file except in compliance with the License.\n * You may obtain a copy of the License at\n *\n * http://www.apache.org/licenses/LICENSE-2.0\n */\n\nfunction ___$insertStyle(css) {\n  if (!css) {\n    return;\n  }\n  if (typeof window === 'undefined') {\n    return;\n  }\n\n  var style = document.createElement('style');\n\n  style.setAttribute('type', 'text/css');\n  style.innerHTML = css;\n  document.head.appendChild(style);\n\n  return css;\n}\n\nfunction colorToString (color, forceCSSHex) {\n  var colorFormat = color.__state.conversionName.toString();\n  var r = Math.round(color.r);\n  var g = Math.round(color.g);\n  var b = Math.round(color.b);\n  var a = color.a;\n  var h = Math.round(color.h);\n  var s = color.s.toFixed(1);\n  var v = color.v.toFixed(1);\n  if (forceCSSHex || colorFormat === 'THREE_CHAR_HEX' || colorFormat === 'SIX_CHAR_HEX') {\n    var str = color.hex.toString(16);\n    while (str.length < 6) {\n      str = '0' + str;\n    }\n    return '#' + str;\n  } else if (colorFormat === 'CSS_RGB') {\n    return 'rgb(' + r + ',' + g + ',' + b + ')';\n  } else if (colorFormat === 'CSS_RGBA') {\n    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';\n  } else if (colorFormat === 'HEX') {\n    return '0x' + color.hex.toString(16);\n  } else if (colorFormat === 'RGB_ARRAY') {\n    return '[' + r + ',' + g + ',' + b + ']';\n  } else if (colorFormat === 'RGBA_ARRAY') {\n    return '[' + r + ',' + g + ',' + b + ',' + a + ']';\n  } else if (colorFormat === 'RGB_OBJ') {\n    return '{r:' + r + ',g:' + g + ',b:' + b + '}';\n  } else if (colorFormat === 'RGBA_OBJ') {\n    return '{r:' + r + ',g:' + g + ',b:' + b + ',a:' + a + '}';\n  } else if (colorFormat === 'HSV_OBJ') {\n    return '{h:' + h + ',s:' + s + ',v:' + v + '}';\n  } else if (colorFormat === 'HSVA_OBJ') {\n    return '{h:' + h + ',s:' + s + ',v:' + v + ',a:' + a + '}';\n  }\n  return 'unknown format';\n}\n\nvar ARR_EACH = Array.prototype.forEach;\nvar ARR_SLICE = Array.prototype.slice;\nvar Common = {\n  BREAK: {},\n  extend: function extend(target) {\n    this.each(ARR_SLICE.call(arguments, 1), function (obj) {\n      var keys = this.isObject(obj) ? Object.keys(obj) : [];\n      keys.forEach(function (key) {\n        if (!this.isUndefined(obj[key])) {\n          target[key] = obj[key];\n        }\n      }.bind(this));\n    }, this);\n    return target;\n  },\n  defaults: function defaults(target) {\n    this.each(ARR_SLICE.call(arguments, 1), function (obj) {\n      var keys = this.isObject(obj) ? Object.keys(obj) : [];\n      keys.forEach(function (key) {\n        if (this.isUndefined(target[key])) {\n          target[key] = obj[key];\n        }\n      }.bind(this));\n    }, this);\n    return target;\n  },\n  compose: function compose() {\n    var toCall = ARR_SLICE.call(arguments);\n    return function () {\n      var args = ARR_SLICE.call(arguments);\n      for (var i = toCall.length - 1; i >= 0; i--) {\n        args = [toCall[i].apply(this, args)];\n      }\n      return args[0];\n    };\n  },\n  each: function each(obj, itr, scope) {\n    if (!obj) {\n      return;\n    }\n    if (ARR_EACH && obj.forEach && obj.forEach === ARR_EACH) {\n      obj.forEach(itr, scope);\n    } else if (obj.length === obj.length + 0) {\n      var key = void 0;\n      var l = void 0;\n      for (key = 0, l = obj.length; key < l; key++) {\n        if (key in obj && itr.call(scope, obj[key], key) === this.BREAK) {\n          return;\n        }\n      }\n    } else {\n      for (var _key in obj) {\n        if (itr.call(scope, obj[_key], _key) === this.BREAK) {\n          return;\n        }\n      }\n    }\n  },\n  defer: function defer(fnc) {\n    setTimeout(fnc, 0);\n  },\n  debounce: function debounce(func, threshold, callImmediately) {\n    var timeout = void 0;\n    return function () {\n      var obj = this;\n      var args = arguments;\n      function delayed() {\n        timeout = null;\n        if (!callImmediately) func.apply(obj, args);\n      }\n      var callNow = callImmediately || !timeout;\n      clearTimeout(timeout);\n      timeout = setTimeout(delayed, threshold);\n      if (callNow) {\n        func.apply(obj, args);\n      }\n    };\n  },\n  toArray: function toArray(obj) {\n    if (obj.toArray) return obj.toArray();\n    return ARR_SLICE.call(obj);\n  },\n  isUndefined: function isUndefined(obj) {\n    return obj === undefined;\n  },\n  isNull: function isNull(obj) {\n    return obj === null;\n  },\n  isNaN: function (_isNaN) {\n    function isNaN(_x) {\n      return _isNaN.apply(this, arguments);\n    }\n    isNaN.toString = function () {\n      return _isNaN.toString();\n    };\n    return isNaN;\n  }(function (obj) {\n    return isNaN(obj);\n  }),\n  isArray: Array.isArray || function (obj) {\n    return obj.constructor === Array;\n  },\n  isObject: function isObject(obj) {\n    return obj === Object(obj);\n  },\n  isNumber: function isNumber(obj) {\n    return obj === obj + 0;\n  },\n  isString: function isString(obj) {\n    return obj === obj + '';\n  },\n  isBoolean: function isBoolean(obj) {\n    return obj === false || obj === true;\n  },\n  isFunction: function isFunction(obj) {\n    return obj instanceof Function;\n  }\n};\n\nvar INTERPRETATIONS = [\n{\n  litmus: Common.isString,\n  conversions: {\n    THREE_CHAR_HEX: {\n      read: function read(original) {\n        var test = original.match(/^#([A-F0-9])([A-F0-9])([A-F0-9])$/i);\n        if (test === null) {\n          return false;\n        }\n        return {\n          space: 'HEX',\n          hex: parseInt('0x' + test[1].toString() + test[1].toString() + test[2].toString() + test[2].toString() + test[3].toString() + test[3].toString(), 0)\n        };\n      },\n      write: colorToString\n    },\n    SIX_CHAR_HEX: {\n      read: function read(original) {\n        var test = original.match(/^#([A-F0-9]{6})$/i);\n        if (test === null) {\n          return false;\n        }\n        return {\n          space: 'HEX',\n          hex: parseInt('0x' + test[1].toString(), 0)\n        };\n      },\n      write: colorToString\n    },\n    CSS_RGB: {\n      read: function read(original) {\n        var test = original.match(/^rgb\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\)/);\n        if (test === null) {\n          return false;\n        }\n        return {\n          space: 'RGB',\n          r: parseFloat(test[1]),\n          g: parseFloat(test[2]),\n          b: parseFloat(test[3])\n        };\n      },\n      write: colorToString\n    },\n    CSS_RGBA: {\n      read: function read(original) {\n        var test = original.match(/^rgba\\(\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*,\\s*(.+)\\s*\\)/);\n        if (test === null) {\n          return false;\n        }\n        return {\n          space: 'RGB',\n          r: parseFloat(test[1]),\n          g: parseFloat(test[2]),\n          b: parseFloat(test[3]),\n          a: parseFloat(test[4])\n        };\n      },\n      write: colorToString\n    }\n  }\n},\n{\n  litmus: Common.isNumber,\n  conversions: {\n    HEX: {\n      read: function read(original) {\n        return {\n          space: 'HEX',\n          hex: original,\n          conversionName: 'HEX'\n        };\n      },\n      write: function write(color) {\n        return color.hex;\n      }\n    }\n  }\n},\n{\n  litmus: Common.isArray,\n  conversions: {\n    RGB_ARRAY: {\n      read: function read(original) {\n        if (original.length !== 3) {\n          return false;\n        }\n        return {\n          space: 'RGB',\n          r: original[0],\n          g: original[1],\n          b: original[2]\n        };\n      },\n      write: function write(color) {\n        return [color.r, color.g, color.b];\n      }\n    },\n    RGBA_ARRAY: {\n      read: function read(original) {\n        if (original.length !== 4) return false;\n        return {\n          space: 'RGB',\n          r: original[0],\n          g: original[1],\n          b: original[2],\n          a: original[3]\n        };\n      },\n      write: function write(color) {\n        return [color.r, color.g, color.b, color.a];\n      }\n    }\n  }\n},\n{\n  litmus: Common.isObject,\n  conversions: {\n    RGBA_OBJ: {\n      read: function read(original) {\n        if (Common.isNumber(original.r) && Common.isNumber(original.g) && Common.isNumber(original.b) && Common.isNumber(original.a)) {\n          return {\n            space: 'RGB',\n            r: original.r,\n            g: original.g,\n            b: original.b,\n            a: original.a\n          };\n        }\n        return false;\n      },\n      write: function write(color) {\n        return {\n          r: color.r,\n          g: color.g,\n          b: color.b,\n          a: color.a\n        };\n      }\n    },\n    RGB_OBJ: {\n      read: function read(original) {\n        if (Common.isNumber(original.r) && Common.isNumber(original.g) && Common.isNumber(original.b)) {\n          return {\n            space: 'RGB',\n            r: original.r,\n            g: original.g,\n            b: original.b\n          };\n        }\n        return false;\n      },\n      write: function write(color) {\n        return {\n          r: color.r,\n          g: color.g,\n          b: color.b\n        };\n      }\n    },\n    HSVA_OBJ: {\n      read: function read(original) {\n        if (Common.isNumber(original.h) && Common.isNumber(original.s) && Common.isNumber(original.v) && Common.isNumber(original.a)) {\n          return {\n            space: 'HSV',\n            h: original.h,\n            s: original.s,\n            v: original.v,\n            a: original.a\n          };\n        }\n        return false;\n      },\n      write: function write(color) {\n        return {\n          h: color.h,\n          s: color.s,\n          v: color.v,\n          a: color.a\n        };\n      }\n    },\n    HSV_OBJ: {\n      read: function read(original) {\n        if (Common.isNumber(original.h) && Common.isNumber(original.s) && Common.isNumber(original.v)) {\n          return {\n            space: 'HSV',\n            h: original.h,\n            s: original.s,\n            v: original.v\n          };\n        }\n        return false;\n      },\n      write: function write(color) {\n        return {\n          h: color.h,\n          s: color.s,\n          v: color.v\n        };\n      }\n    }\n  }\n}];\nvar result = void 0;\nvar toReturn = void 0;\nvar interpret = function interpret() {\n  toReturn = false;\n  var original = arguments.length > 1 ? Common.toArray(arguments) : arguments[0];\n  Common.each(INTERPRETATIONS, function (family) {\n    if (family.litmus(original)) {\n      Common.each(family.conversions, function (conversion, conversionName) {\n        result = conversion.read(original);\n        if (toReturn === false && result !== false) {\n          toReturn = result;\n          result.conversionName = conversionName;\n          result.conversion = conversion;\n          return Common.BREAK;\n        }\n      });\n      return Common.BREAK;\n    }\n  });\n  return toReturn;\n};\n\nvar tmpComponent = void 0;\nvar ColorMath = {\n  hsv_to_rgb: function hsv_to_rgb(h, s, v) {\n    var hi = Math.floor(h / 60) % 6;\n    var f = h / 60 - Math.floor(h / 60);\n    var p = v * (1.0 - s);\n    var q = v * (1.0 - f * s);\n    var t = v * (1.0 - (1.0 - f) * s);\n    var c = [[v, t, p], [q, v, p], [p, v, t], [p, q, v], [t, p, v], [v, p, q]][hi];\n    return {\n      r: c[0] * 255,\n      g: c[1] * 255,\n      b: c[2] * 255\n    };\n  },\n  rgb_to_hsv: function rgb_to_hsv(r, g, b) {\n    var min = Math.min(r, g, b);\n    var max = Math.max(r, g, b);\n    var delta = max - min;\n    var h = void 0;\n    var s = void 0;\n    if (max !== 0) {\n      s = delta / max;\n    } else {\n      return {\n        h: NaN,\n        s: 0,\n        v: 0\n      };\n    }\n    if (r === max) {\n      h = (g - b) / delta;\n    } else if (g === max) {\n      h = 2 + (b - r) / delta;\n    } else {\n      h = 4 + (r - g) / delta;\n    }\n    h /= 6;\n    if (h < 0) {\n      h += 1;\n    }\n    return {\n      h: h * 360,\n      s: s,\n      v: max / 255\n    };\n  },\n  rgb_to_hex: function rgb_to_hex(r, g, b) {\n    var hex = this.hex_with_component(0, 2, r);\n    hex = this.hex_with_component(hex, 1, g);\n    hex = this.hex_with_component(hex, 0, b);\n    return hex;\n  },\n  component_from_hex: function component_from_hex(hex, componentIndex) {\n    return hex >> componentIndex * 8 & 0xFF;\n  },\n  hex_with_component: function hex_with_component(hex, componentIndex, value) {\n    return value << (tmpComponent = componentIndex * 8) | hex & ~(0xFF << tmpComponent);\n  }\n};\n\nvar _typeof = typeof Symbol === \"function\" && typeof Symbol.iterator === \"symbol\" ? function (obj) {\n  return typeof obj;\n} : function (obj) {\n  return obj && typeof Symbol === \"function\" && obj.constructor === Symbol && obj !== Symbol.prototype ? \"symbol\" : typeof obj;\n};\n\n\n\n\n\n\n\n\n\n\n\nvar classCallCheck = function (instance, Constructor) {\n  if (!(instance instanceof Constructor)) {\n    throw new TypeError(\"Cannot call a class as a function\");\n  }\n};\n\nvar createClass = function () {\n  function defineProperties(target, props) {\n    for (var i = 0; i < props.length; i++) {\n      var descriptor = props[i];\n      descriptor.enumerable = descriptor.enumerable || false;\n      descriptor.configurable = true;\n      if (\"value\" in descriptor) descriptor.writable = true;\n      Object.defineProperty(target, descriptor.key, descriptor);\n    }\n  }\n\n  return function (Constructor, protoProps, staticProps) {\n    if (protoProps) defineProperties(Constructor.prototype, protoProps);\n    if (staticProps) defineProperties(Constructor, staticProps);\n    return Constructor;\n  };\n}();\n\n\n\n\n\n\n\nvar get = function get(object, property, receiver) {\n  if (object === null) object = Function.prototype;\n  var desc = Object.getOwnPropertyDescriptor(object, property);\n\n  if (desc === undefined) {\n    var parent = Object.getPrototypeOf(object);\n\n    if (parent === null) {\n      return undefined;\n    } else {\n      return get(parent, property, receiver);\n    }\n  } else if (\"value\" in desc) {\n    return desc.value;\n  } else {\n    var getter = desc.get;\n\n    if (getter === undefined) {\n      return undefined;\n    }\n\n    return getter.call(receiver);\n  }\n};\n\nvar inherits = function (subClass, superClass) {\n  if (typeof superClass !== \"function\" && superClass !== null) {\n    throw new TypeError(\"Super expression must either be null or a function, not \" + typeof superClass);\n  }\n\n  subClass.prototype = Object.create(superClass && superClass.prototype, {\n    constructor: {\n      value: subClass,\n      enumerable: false,\n      writable: true,\n      configurable: true\n    }\n  });\n  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;\n};\n\n\n\n\n\n\n\n\n\n\n\nvar possibleConstructorReturn = function (self, call) {\n  if (!self) {\n    throw new ReferenceError(\"this hasn't been initialised - super() hasn't been called\");\n  }\n\n  return call && (typeof call === \"object\" || typeof call === \"function\") ? call : self;\n};\n\nvar Color = function () {\n  function Color() {\n    classCallCheck(this, Color);\n    this.__state = interpret.apply(this, arguments);\n    if (this.__state === false) {\n      throw new Error('Failed to interpret color arguments');\n    }\n    this.__state.a = this.__state.a || 1;\n  }\n  createClass(Color, [{\n    key: 'toString',\n    value: function toString() {\n      return colorToString(this);\n    }\n  }, {\n    key: 'toHexString',\n    value: function toHexString() {\n      return colorToString(this, true);\n    }\n  }, {\n    key: 'toOriginal',\n    value: function toOriginal() {\n      return this.__state.conversion.write(this);\n    }\n  }]);\n  return Color;\n}();\nfunction defineRGBComponent(target, component, componentHexIndex) {\n  Object.defineProperty(target, component, {\n    get: function get$$1() {\n      if (this.__state.space === 'RGB') {\n        return this.__state[component];\n      }\n      Color.recalculateRGB(this, component, componentHexIndex);\n      return this.__state[component];\n    },\n    set: function set$$1(v) {\n      if (this.__state.space !== 'RGB') {\n        Color.recalculateRGB(this, component, componentHexIndex);\n        this.__state.space = 'RGB';\n      }\n      this.__state[component] = v;\n    }\n  });\n}\nfunction defineHSVComponent(target, component) {\n  Object.defineProperty(target, component, {\n    get: function get$$1() {\n      if (this.__state.space === 'HSV') {\n        return this.__state[component];\n      }\n      Color.recalculateHSV(this);\n      return this.__state[component];\n    },\n    set: function set$$1(v) {\n      if (this.__state.space !== 'HSV') {\n        Color.recalculateHSV(this);\n        this.__state.space = 'HSV';\n      }\n      this.__state[component] = v;\n    }\n  });\n}\nColor.recalculateRGB = function (color, component, componentHexIndex) {\n  if (color.__state.space === 'HEX') {\n    color.__state[component] = ColorMath.component_from_hex(color.__state.hex, componentHexIndex);\n  } else if (color.__state.space === 'HSV') {\n    Common.extend(color.__state, ColorMath.hsv_to_rgb(color.__state.h, color.__state.s, color.__state.v));\n  } else {\n    throw new Error('Corrupted color state');\n  }\n};\nColor.recalculateHSV = function (color) {\n  var result = ColorMath.rgb_to_hsv(color.r, color.g, color.b);\n  Common.extend(color.__state, {\n    s: result.s,\n    v: result.v\n  });\n  if (!Common.isNaN(result.h)) {\n    color.__state.h = result.h;\n  } else if (Common.isUndefined(color.__state.h)) {\n    color.__state.h = 0;\n  }\n};\nColor.COMPONENTS = ['r', 'g', 'b', 'h', 's', 'v', 'hex', 'a'];\ndefineRGBComponent(Color.prototype, 'r', 2);\ndefineRGBComponent(Color.prototype, 'g', 1);\ndefineRGBComponent(Color.prototype, 'b', 0);\ndefineHSVComponent(Color.prototype, 'h');\ndefineHSVComponent(Color.prototype, 's');\ndefineHSVComponent(Color.prototype, 'v');\nObject.defineProperty(Color.prototype, 'a', {\n  get: function get$$1() {\n    return this.__state.a;\n  },\n  set: function set$$1(v) {\n    this.__state.a = v;\n  }\n});\nObject.defineProperty(Color.prototype, 'hex', {\n  get: function get$$1() {\n    if (this.__state.space !== 'HEX') {\n      this.__state.hex = ColorMath.rgb_to_hex(this.r, this.g, this.b);\n      this.__state.space = 'HEX';\n    }\n    return this.__state.hex;\n  },\n  set: function set$$1(v) {\n    this.__state.space = 'HEX';\n    this.__state.hex = v;\n  }\n});\n\nvar Controller = function () {\n  function Controller(object, property) {\n    classCallCheck(this, Controller);\n    this.initialValue = object[property];\n    this.domElement = document.createElement('div');\n    this.object = object;\n    this.property = property;\n    this.__onChange = undefined;\n    this.__onFinishChange = undefined;\n  }\n  createClass(Controller, [{\n    key: 'onChange',\n    value: function onChange(fnc) {\n      this.__onChange = fnc;\n      return this;\n    }\n  }, {\n    key: 'onFinishChange',\n    value: function onFinishChange(fnc) {\n      this.__onFinishChange = fnc;\n      return this;\n    }\n  }, {\n    key: 'setValue',\n    value: function setValue(newValue) {\n      this.object[this.property] = newValue;\n      if (this.__onChange) {\n        this.__onChange.call(this, newValue);\n      }\n      this.updateDisplay();\n      return this;\n    }\n  }, {\n    key: 'getValue',\n    value: function getValue() {\n      return this.object[this.property];\n    }\n  }, {\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      return this;\n    }\n  }, {\n    key: 'isModified',\n    value: function isModified() {\n      return this.initialValue !== this.getValue();\n    }\n  }]);\n  return Controller;\n}();\n\nvar EVENT_MAP = {\n  HTMLEvents: ['change'],\n  MouseEvents: ['click', 'mousemove', 'mousedown', 'mouseup', 'mouseover'],\n  KeyboardEvents: ['keydown']\n};\nvar EVENT_MAP_INV = {};\nCommon.each(EVENT_MAP, function (v, k) {\n  Common.each(v, function (e) {\n    EVENT_MAP_INV[e] = k;\n  });\n});\nvar CSS_VALUE_PIXELS = /(\\d+(\\.\\d+)?)px/;\nfunction cssValueToPixels(val) {\n  if (val === '0' || Common.isUndefined(val)) {\n    return 0;\n  }\n  var match = val.match(CSS_VALUE_PIXELS);\n  if (!Common.isNull(match)) {\n    return parseFloat(match[1]);\n  }\n  return 0;\n}\nvar dom = {\n  makeSelectable: function makeSelectable(elem, selectable) {\n    if (elem === undefined || elem.style === undefined) return;\n    elem.onselectstart = selectable ? function () {\n      return false;\n    } : function () {};\n    elem.style.MozUserSelect = selectable ? 'auto' : 'none';\n    elem.style.KhtmlUserSelect = selectable ? 'auto' : 'none';\n    elem.unselectable = selectable ? 'on' : 'off';\n  },\n  makeFullscreen: function makeFullscreen(elem, hor, vert) {\n    var vertical = vert;\n    var horizontal = hor;\n    if (Common.isUndefined(horizontal)) {\n      horizontal = true;\n    }\n    if (Common.isUndefined(vertical)) {\n      vertical = true;\n    }\n    elem.style.position = 'absolute';\n    if (horizontal) {\n      elem.style.left = 0;\n      elem.style.right = 0;\n    }\n    if (vertical) {\n      elem.style.top = 0;\n      elem.style.bottom = 0;\n    }\n  },\n  fakeEvent: function fakeEvent(elem, eventType, pars, aux) {\n    var params = pars || {};\n    var className = EVENT_MAP_INV[eventType];\n    if (!className) {\n      throw new Error('Event type ' + eventType + ' not supported.');\n    }\n    var evt = document.createEvent(className);\n    switch (className) {\n      case 'MouseEvents':\n        {\n          var clientX = params.x || params.clientX || 0;\n          var clientY = params.y || params.clientY || 0;\n          evt.initMouseEvent(eventType, params.bubbles || false, params.cancelable || true, window, params.clickCount || 1, 0,\n          0,\n          clientX,\n          clientY,\n          false, false, false, false, 0, null);\n          break;\n        }\n      case 'KeyboardEvents':\n        {\n          var init = evt.initKeyboardEvent || evt.initKeyEvent;\n          Common.defaults(params, {\n            cancelable: true,\n            ctrlKey: false,\n            altKey: false,\n            shiftKey: false,\n            metaKey: false,\n            keyCode: undefined,\n            charCode: undefined\n          });\n          init(eventType, params.bubbles || false, params.cancelable, window, params.ctrlKey, params.altKey, params.shiftKey, params.metaKey, params.keyCode, params.charCode);\n          break;\n        }\n      default:\n        {\n          evt.initEvent(eventType, params.bubbles || false, params.cancelable || true);\n          break;\n        }\n    }\n    Common.defaults(evt, aux);\n    elem.dispatchEvent(evt);\n  },\n  bind: function bind(elem, event, func, newBool) {\n    var bool = newBool || false;\n    if (elem.addEventListener) {\n      elem.addEventListener(event, func, bool);\n    } else if (elem.attachEvent) {\n      elem.attachEvent('on' + event, func);\n    }\n    return dom;\n  },\n  unbind: function unbind(elem, event, func, newBool) {\n    var bool = newBool || false;\n    if (elem.removeEventListener) {\n      elem.removeEventListener(event, func, bool);\n    } else if (elem.detachEvent) {\n      elem.detachEvent('on' + event, func);\n    }\n    return dom;\n  },\n  addClass: function addClass(elem, className) {\n    if (elem.className === undefined) {\n      elem.className = className;\n    } else if (elem.className !== className) {\n      var classes = elem.className.split(/ +/);\n      if (classes.indexOf(className) === -1) {\n        classes.push(className);\n        elem.className = classes.join(' ').replace(/^\\s+/, '').replace(/\\s+$/, '');\n      }\n    }\n    return dom;\n  },\n  removeClass: function removeClass(elem, className) {\n    if (className) {\n      if (elem.className === className) {\n        elem.removeAttribute('class');\n      } else {\n        var classes = elem.className.split(/ +/);\n        var index = classes.indexOf(className);\n        if (index !== -1) {\n          classes.splice(index, 1);\n          elem.className = classes.join(' ');\n        }\n      }\n    } else {\n      elem.className = undefined;\n    }\n    return dom;\n  },\n  hasClass: function hasClass(elem, className) {\n    return new RegExp('(?:^|\\\\s+)' + className + '(?:\\\\s+|$)').test(elem.className) || false;\n  },\n  getWidth: function getWidth(elem) {\n    var style = getComputedStyle(elem);\n    return cssValueToPixels(style['border-left-width']) + cssValueToPixels(style['border-right-width']) + cssValueToPixels(style['padding-left']) + cssValueToPixels(style['padding-right']) + cssValueToPixels(style.width);\n  },\n  getHeight: function getHeight(elem) {\n    var style = getComputedStyle(elem);\n    return cssValueToPixels(style['border-top-width']) + cssValueToPixels(style['border-bottom-width']) + cssValueToPixels(style['padding-top']) + cssValueToPixels(style['padding-bottom']) + cssValueToPixels(style.height);\n  },\n  getOffset: function getOffset(el) {\n    var elem = el;\n    var offset = { left: 0, top: 0 };\n    if (elem.offsetParent) {\n      do {\n        offset.left += elem.offsetLeft;\n        offset.top += elem.offsetTop;\n        elem = elem.offsetParent;\n      } while (elem);\n    }\n    return offset;\n  },\n  isActive: function isActive(elem) {\n    return elem === document.activeElement && (elem.type || elem.href);\n  }\n};\n\nvar BooleanController = function (_Controller) {\n  inherits(BooleanController, _Controller);\n  function BooleanController(object, property) {\n    classCallCheck(this, BooleanController);\n    var _this2 = possibleConstructorReturn(this, (BooleanController.__proto__ || Object.getPrototypeOf(BooleanController)).call(this, object, property));\n    var _this = _this2;\n    _this2.__prev = _this2.getValue();\n    _this2.__checkbox = document.createElement('input');\n    _this2.__checkbox.setAttribute('type', 'checkbox');\n    function onChange() {\n      _this.setValue(!_this.__prev);\n    }\n    dom.bind(_this2.__checkbox, 'change', onChange, false);\n    _this2.domElement.appendChild(_this2.__checkbox);\n    _this2.updateDisplay();\n    return _this2;\n  }\n  createClass(BooleanController, [{\n    key: 'setValue',\n    value: function setValue(v) {\n      var toReturn = get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'setValue', this).call(this, v);\n      if (this.__onFinishChange) {\n        this.__onFinishChange.call(this, this.getValue());\n      }\n      this.__prev = this.getValue();\n      return toReturn;\n    }\n  }, {\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      if (this.getValue() === true) {\n        this.__checkbox.setAttribute('checked', 'checked');\n        this.__checkbox.checked = true;\n        this.__prev = true;\n      } else {\n        this.__checkbox.checked = false;\n        this.__prev = false;\n      }\n      return get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'updateDisplay', this).call(this);\n    }\n  }]);\n  return BooleanController;\n}(Controller);\n\nvar OptionController = function (_Controller) {\n  inherits(OptionController, _Controller);\n  function OptionController(object, property, opts) {\n    classCallCheck(this, OptionController);\n    var _this2 = possibleConstructorReturn(this, (OptionController.__proto__ || Object.getPrototypeOf(OptionController)).call(this, object, property));\n    var options = opts;\n    var _this = _this2;\n    _this2.__select = document.createElement('select');\n    if (Common.isArray(options)) {\n      var map = {};\n      Common.each(options, function (element) {\n        map[element] = element;\n      });\n      options = map;\n    }\n    Common.each(options, function (value, key) {\n      var opt = document.createElement('option');\n      opt.innerHTML = key;\n      opt.setAttribute('value', value);\n      _this.__select.appendChild(opt);\n    });\n    _this2.updateDisplay();\n    dom.bind(_this2.__select, 'change', function () {\n      var desiredValue = this.options[this.selectedIndex].value;\n      _this.setValue(desiredValue);\n    });\n    _this2.domElement.appendChild(_this2.__select);\n    return _this2;\n  }\n  createClass(OptionController, [{\n    key: 'setValue',\n    value: function setValue(v) {\n      var toReturn = get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'setValue', this).call(this, v);\n      if (this.__onFinishChange) {\n        this.__onFinishChange.call(this, this.getValue());\n      }\n      return toReturn;\n    }\n  }, {\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      if (dom.isActive(this.__select)) return this;\n      this.__select.value = this.getValue();\n      return get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'updateDisplay', this).call(this);\n    }\n  }]);\n  return OptionController;\n}(Controller);\n\nvar StringController = function (_Controller) {\n  inherits(StringController, _Controller);\n  function StringController(object, property) {\n    classCallCheck(this, StringController);\n    var _this2 = possibleConstructorReturn(this, (StringController.__proto__ || Object.getPrototypeOf(StringController)).call(this, object, property));\n    var _this = _this2;\n    function onChange() {\n      _this.setValue(_this.__input.value);\n    }\n    function onBlur() {\n      if (_this.__onFinishChange) {\n        _this.__onFinishChange.call(_this, _this.getValue());\n      }\n    }\n    _this2.__input = document.createElement('input');\n    _this2.__input.setAttribute('type', 'text');\n    dom.bind(_this2.__input, 'keyup', onChange);\n    dom.bind(_this2.__input, 'change', onChange);\n    dom.bind(_this2.__input, 'blur', onBlur);\n    dom.bind(_this2.__input, 'keydown', function (e) {\n      if (e.keyCode === 13) {\n        this.blur();\n      }\n    });\n    _this2.updateDisplay();\n    _this2.domElement.appendChild(_this2.__input);\n    return _this2;\n  }\n  createClass(StringController, [{\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      if (!dom.isActive(this.__input)) {\n        this.__input.value = this.getValue();\n      }\n      return get(StringController.prototype.__proto__ || Object.getPrototypeOf(StringController.prototype), 'updateDisplay', this).call(this);\n    }\n  }]);\n  return StringController;\n}(Controller);\n\nfunction numDecimals(x) {\n  var _x = x.toString();\n  if (_x.indexOf('.') > -1) {\n    return _x.length - _x.indexOf('.') - 1;\n  }\n  return 0;\n}\nvar NumberController = function (_Controller) {\n  inherits(NumberController, _Controller);\n  function NumberController(object, property, params) {\n    classCallCheck(this, NumberController);\n    var _this = possibleConstructorReturn(this, (NumberController.__proto__ || Object.getPrototypeOf(NumberController)).call(this, object, property));\n    var _params = params || {};\n    _this.__min = _params.min;\n    _this.__max = _params.max;\n    _this.__step = _params.step;\n    if (Common.isUndefined(_this.__step)) {\n      if (_this.initialValue === 0) {\n        _this.__impliedStep = 1;\n      } else {\n        _this.__impliedStep = Math.pow(10, Math.floor(Math.log(Math.abs(_this.initialValue)) / Math.LN10)) / 10;\n      }\n    } else {\n      _this.__impliedStep = _this.__step;\n    }\n    _this.__precision = numDecimals(_this.__impliedStep);\n    return _this;\n  }\n  createClass(NumberController, [{\n    key: 'setValue',\n    value: function setValue(v) {\n      var _v = v;\n      if (this.__min !== undefined && _v < this.__min) {\n        _v = this.__min;\n      } else if (this.__max !== undefined && _v > this.__max) {\n        _v = this.__max;\n      }\n      if (this.__step !== undefined && _v % this.__step !== 0) {\n        _v = Math.round(_v / this.__step) * this.__step;\n      }\n      return get(NumberController.prototype.__proto__ || Object.getPrototypeOf(NumberController.prototype), 'setValue', this).call(this, _v);\n    }\n  }, {\n    key: 'min',\n    value: function min(minValue) {\n      this.__min = minValue;\n      return this;\n    }\n  }, {\n    key: 'max',\n    value: function max(maxValue) {\n      this.__max = maxValue;\n      return this;\n    }\n  }, {\n    key: 'step',\n    value: function step(stepValue) {\n      this.__step = stepValue;\n      this.__impliedStep = stepValue;\n      this.__precision = numDecimals(stepValue);\n      return this;\n    }\n  }]);\n  return NumberController;\n}(Controller);\n\nfunction roundToDecimal(value, decimals) {\n  var tenTo = Math.pow(10, decimals);\n  return Math.round(value * tenTo) / tenTo;\n}\nvar NumberControllerBox = function (_NumberController) {\n  inherits(NumberControllerBox, _NumberController);\n  function NumberControllerBox(object, property, params) {\n    classCallCheck(this, NumberControllerBox);\n    var _this2 = possibleConstructorReturn(this, (NumberControllerBox.__proto__ || Object.getPrototypeOf(NumberControllerBox)).call(this, object, property, params));\n    _this2.__truncationSuspended = false;\n    var _this = _this2;\n    var prevY = void 0;\n    function onChange() {\n      var attempted = parseFloat(_this.__input.value);\n      if (!Common.isNaN(attempted)) {\n        _this.setValue(attempted);\n      }\n    }\n    function onFinish() {\n      if (_this.__onFinishChange) {\n        _this.__onFinishChange.call(_this, _this.getValue());\n      }\n    }\n    function onBlur() {\n      onFinish();\n    }\n    function onMouseDrag(e) {\n      var diff = prevY - e.clientY;\n      _this.setValue(_this.getValue() + diff * _this.__impliedStep);\n      prevY = e.clientY;\n    }\n    function onMouseUp() {\n      dom.unbind(window, 'mousemove', onMouseDrag);\n      dom.unbind(window, 'mouseup', onMouseUp);\n      onFinish();\n    }\n    function onMouseDown(e) {\n      dom.bind(window, 'mousemove', onMouseDrag);\n      dom.bind(window, 'mouseup', onMouseUp);\n      prevY = e.clientY;\n    }\n    _this2.__input = document.createElement('input');\n    _this2.__input.setAttribute('type', 'text');\n    dom.bind(_this2.__input, 'change', onChange);\n    dom.bind(_this2.__input, 'blur', onBlur);\n    dom.bind(_this2.__input, 'mousedown', onMouseDown);\n    dom.bind(_this2.__input, 'keydown', function (e) {\n      if (e.keyCode === 13) {\n        _this.__truncationSuspended = true;\n        this.blur();\n        _this.__truncationSuspended = false;\n        onFinish();\n      }\n    });\n    _this2.updateDisplay();\n    _this2.domElement.appendChild(_this2.__input);\n    return _this2;\n  }\n  createClass(NumberControllerBox, [{\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      this.__input.value = this.__truncationSuspended ? this.getValue() : roundToDecimal(this.getValue(), this.__precision);\n      return get(NumberControllerBox.prototype.__proto__ || Object.getPrototypeOf(NumberControllerBox.prototype), 'updateDisplay', this).call(this);\n    }\n  }]);\n  return NumberControllerBox;\n}(NumberController);\n\nfunction map(v, i1, i2, o1, o2) {\n  return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));\n}\nvar NumberControllerSlider = function (_NumberController) {\n  inherits(NumberControllerSlider, _NumberController);\n  function NumberControllerSlider(object, property, min, max, step) {\n    classCallCheck(this, NumberControllerSlider);\n    var _this2 = possibleConstructorReturn(this, (NumberControllerSlider.__proto__ || Object.getPrototypeOf(NumberControllerSlider)).call(this, object, property, { min: min, max: max, step: step }));\n    var _this = _this2;\n    _this2.__background = document.createElement('div');\n    _this2.__foreground = document.createElement('div');\n    dom.bind(_this2.__background, 'mousedown', onMouseDown);\n    dom.bind(_this2.__background, 'touchstart', onTouchStart);\n    dom.addClass(_this2.__background, 'slider');\n    dom.addClass(_this2.__foreground, 'slider-fg');\n    function onMouseDown(e) {\n      document.activeElement.blur();\n      dom.bind(window, 'mousemove', onMouseDrag);\n      dom.bind(window, 'mouseup', onMouseUp);\n      onMouseDrag(e);\n    }\n    function onMouseDrag(e) {\n      e.preventDefault();\n      var bgRect = _this.__background.getBoundingClientRect();\n      _this.setValue(map(e.clientX, bgRect.left, bgRect.right, _this.__min, _this.__max));\n      return false;\n    }\n    function onMouseUp() {\n      dom.unbind(window, 'mousemove', onMouseDrag);\n      dom.unbind(window, 'mouseup', onMouseUp);\n      if (_this.__onFinishChange) {\n        _this.__onFinishChange.call(_this, _this.getValue());\n      }\n    }\n    function onTouchStart(e) {\n      if (e.touches.length !== 1) {\n        return;\n      }\n      dom.bind(window, 'touchmove', onTouchMove);\n      dom.bind(window, 'touchend', onTouchEnd);\n      onTouchMove(e);\n    }\n    function onTouchMove(e) {\n      var clientX = e.touches[0].clientX;\n      var bgRect = _this.__background.getBoundingClientRect();\n      _this.setValue(map(clientX, bgRect.left, bgRect.right, _this.__min, _this.__max));\n    }\n    function onTouchEnd() {\n      dom.unbind(window, 'touchmove', onTouchMove);\n      dom.unbind(window, 'touchend', onTouchEnd);\n      if (_this.__onFinishChange) {\n        _this.__onFinishChange.call(_this, _this.getValue());\n      }\n    }\n    _this2.updateDisplay();\n    _this2.__background.appendChild(_this2.__foreground);\n    _this2.domElement.appendChild(_this2.__background);\n    return _this2;\n  }\n  createClass(NumberControllerSlider, [{\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      var pct = (this.getValue() - this.__min) / (this.__max - this.__min);\n      this.__foreground.style.width = pct * 100 + '%';\n      return get(NumberControllerSlider.prototype.__proto__ || Object.getPrototypeOf(NumberControllerSlider.prototype), 'updateDisplay', this).call(this);\n    }\n  }]);\n  return NumberControllerSlider;\n}(NumberController);\n\nvar FunctionController = function (_Controller) {\n  inherits(FunctionController, _Controller);\n  function FunctionController(object, property, text) {\n    classCallCheck(this, FunctionController);\n    var _this2 = possibleConstructorReturn(this, (FunctionController.__proto__ || Object.getPrototypeOf(FunctionController)).call(this, object, property));\n    var _this = _this2;\n    _this2.__button = document.createElement('div');\n    _this2.__button.innerHTML = text === undefined ? 'Fire' : text;\n    dom.bind(_this2.__button, 'click', function (e) {\n      e.preventDefault();\n      _this.fire();\n      return false;\n    });\n    dom.addClass(_this2.__button, 'button');\n    _this2.domElement.appendChild(_this2.__button);\n    return _this2;\n  }\n  createClass(FunctionController, [{\n    key: 'fire',\n    value: function fire() {\n      if (this.__onChange) {\n        this.__onChange.call(this);\n      }\n      this.getValue().call(this.object);\n      if (this.__onFinishChange) {\n        this.__onFinishChange.call(this, this.getValue());\n      }\n    }\n  }]);\n  return FunctionController;\n}(Controller);\n\nvar ColorController = function (_Controller) {\n  inherits(ColorController, _Controller);\n  function ColorController(object, property) {\n    classCallCheck(this, ColorController);\n    var _this2 = possibleConstructorReturn(this, (ColorController.__proto__ || Object.getPrototypeOf(ColorController)).call(this, object, property));\n    _this2.__color = new Color(_this2.getValue());\n    _this2.__temp = new Color(0);\n    var _this = _this2;\n    _this2.domElement = document.createElement('div');\n    dom.makeSelectable(_this2.domElement, false);\n    _this2.__selector = document.createElement('div');\n    _this2.__selector.className = 'selector';\n    _this2.__saturation_field = document.createElement('div');\n    _this2.__saturation_field.className = 'saturation-field';\n    _this2.__field_knob = document.createElement('div');\n    _this2.__field_knob.className = 'field-knob';\n    _this2.__field_knob_border = '2px solid ';\n    _this2.__hue_knob = document.createElement('div');\n    _this2.__hue_knob.className = 'hue-knob';\n    _this2.__hue_field = document.createElement('div');\n    _this2.__hue_field.className = 'hue-field';\n    _this2.__input = document.createElement('input');\n    _this2.__input.type = 'text';\n    _this2.__input_textShadow = '0 1px 1px ';\n    dom.bind(_this2.__input, 'keydown', function (e) {\n      if (e.keyCode === 13) {\n        onBlur.call(this);\n      }\n    });\n    dom.bind(_this2.__input, 'blur', onBlur);\n    dom.bind(_this2.__selector, 'mousedown', function ()        {\n      dom.addClass(this, 'drag').bind(window, 'mouseup', function ()        {\n        dom.removeClass(_this.__selector, 'drag');\n      });\n    });\n    dom.bind(_this2.__selector, 'touchstart', function ()        {\n      dom.addClass(this, 'drag').bind(window, 'touchend', function ()        {\n        dom.removeClass(_this.__selector, 'drag');\n      });\n    });\n    var valueField = document.createElement('div');\n    Common.extend(_this2.__selector.style, {\n      width: '122px',\n      height: '102px',\n      padding: '3px',\n      backgroundColor: '#222',\n      boxShadow: '0px 1px 3px rgba(0,0,0,0.3)'\n    });\n    Common.extend(_this2.__field_knob.style, {\n      position: 'absolute',\n      width: '12px',\n      height: '12px',\n      border: _this2.__field_knob_border + (_this2.__color.v < 0.5 ? '#fff' : '#000'),\n      boxShadow: '0px 1px 3px rgba(0,0,0,0.5)',\n      borderRadius: '12px',\n      zIndex: 1\n    });\n    Common.extend(_this2.__hue_knob.style, {\n      position: 'absolute',\n      width: '15px',\n      height: '2px',\n      borderRight: '4px solid #fff',\n      zIndex: 1\n    });\n    Common.extend(_this2.__saturation_field.style, {\n      width: '100px',\n      height: '100px',\n      border: '1px solid #555',\n      marginRight: '3px',\n      display: 'inline-block',\n      cursor: 'pointer'\n    });\n    Common.extend(valueField.style, {\n      width: '100%',\n      height: '100%',\n      background: 'none'\n    });\n    linearGradient(valueField, 'top', 'rgba(0,0,0,0)', '#000');\n    Common.extend(_this2.__hue_field.style, {\n      width: '15px',\n      height: '100px',\n      border: '1px solid #555',\n      cursor: 'ns-resize',\n      position: 'absolute',\n      top: '3px',\n      right: '3px'\n    });\n    hueGradient(_this2.__hue_field);\n    Common.extend(_this2.__input.style, {\n      outline: 'none',\n      textAlign: 'center',\n      color: '#fff',\n      border: 0,\n      fontWeight: 'bold',\n      textShadow: _this2.__input_textShadow + 'rgba(0,0,0,0.7)'\n    });\n    dom.bind(_this2.__saturation_field, 'mousedown', fieldDown);\n    dom.bind(_this2.__saturation_field, 'touchstart', fieldDown);\n    dom.bind(_this2.__field_knob, 'mousedown', fieldDown);\n    dom.bind(_this2.__field_knob, 'touchstart', fieldDown);\n    dom.bind(_this2.__hue_field, 'mousedown', fieldDownH);\n    dom.bind(_this2.__hue_field, 'touchstart', fieldDownH);\n    function fieldDown(e) {\n      setSV(e);\n      dom.bind(window, 'mousemove', setSV);\n      dom.bind(window, 'touchmove', setSV);\n      dom.bind(window, 'mouseup', fieldUpSV);\n      dom.bind(window, 'touchend', fieldUpSV);\n    }\n    function fieldDownH(e) {\n      setH(e);\n      dom.bind(window, 'mousemove', setH);\n      dom.bind(window, 'touchmove', setH);\n      dom.bind(window, 'mouseup', fieldUpH);\n      dom.bind(window, 'touchend', fieldUpH);\n    }\n    function fieldUpSV() {\n      dom.unbind(window, 'mousemove', setSV);\n      dom.unbind(window, 'touchmove', setSV);\n      dom.unbind(window, 'mouseup', fieldUpSV);\n      dom.unbind(window, 'touchend', fieldUpSV);\n      onFinish();\n    }\n    function fieldUpH() {\n      dom.unbind(window, 'mousemove', setH);\n      dom.unbind(window, 'touchmove', setH);\n      dom.unbind(window, 'mouseup', fieldUpH);\n      dom.unbind(window, 'touchend', fieldUpH);\n      onFinish();\n    }\n    function onBlur() {\n      var i = interpret(this.value);\n      if (i !== false) {\n        _this.__color.__state = i;\n        _this.setValue(_this.__color.toOriginal());\n      } else {\n        this.value = _this.__color.toString();\n      }\n    }\n    function onFinish() {\n      if (_this.__onFinishChange) {\n        _this.__onFinishChange.call(_this, _this.__color.toOriginal());\n      }\n    }\n    _this2.__saturation_field.appendChild(valueField);\n    _this2.__selector.appendChild(_this2.__field_knob);\n    _this2.__selector.appendChild(_this2.__saturation_field);\n    _this2.__selector.appendChild(_this2.__hue_field);\n    _this2.__hue_field.appendChild(_this2.__hue_knob);\n    _this2.domElement.appendChild(_this2.__input);\n    _this2.domElement.appendChild(_this2.__selector);\n    _this2.updateDisplay();\n    function setSV(e) {\n      if (e.type.indexOf('touch') === -1) {\n        e.preventDefault();\n      }\n      var fieldRect = _this.__saturation_field.getBoundingClientRect();\n      var _ref = e.touches && e.touches[0] || e,\n          clientX = _ref.clientX,\n          clientY = _ref.clientY;\n      var s = (clientX - fieldRect.left) / (fieldRect.right - fieldRect.left);\n      var v = 1 - (clientY - fieldRect.top) / (fieldRect.bottom - fieldRect.top);\n      if (v > 1) {\n        v = 1;\n      } else if (v < 0) {\n        v = 0;\n      }\n      if (s > 1) {\n        s = 1;\n      } else if (s < 0) {\n        s = 0;\n      }\n      _this.__color.v = v;\n      _this.__color.s = s;\n      _this.setValue(_this.__color.toOriginal());\n      return false;\n    }\n    function setH(e) {\n      if (e.type.indexOf('touch') === -1) {\n        e.preventDefault();\n      }\n      var fieldRect = _this.__hue_field.getBoundingClientRect();\n      var _ref2 = e.touches && e.touches[0] || e,\n          clientY = _ref2.clientY;\n      var h = 1 - (clientY - fieldRect.top) / (fieldRect.bottom - fieldRect.top);\n      if (h > 1) {\n        h = 1;\n      } else if (h < 0) {\n        h = 0;\n      }\n      _this.__color.h = h * 360;\n      _this.setValue(_this.__color.toOriginal());\n      return false;\n    }\n    return _this2;\n  }\n  createClass(ColorController, [{\n    key: 'updateDisplay',\n    value: function updateDisplay() {\n      var i = interpret(this.getValue());\n      if (i !== false) {\n        var mismatch = false;\n        Common.each(Color.COMPONENTS, function (component) {\n          if (!Common.isUndefined(i[component]) && !Common.isUndefined(this.__color.__state[component]) && i[component] !== this.__color.__state[component]) {\n            mismatch = true;\n            return {};\n          }\n        }, this);\n        if (mismatch) {\n          Common.extend(this.__color.__state, i);\n        }\n      }\n      Common.extend(this.__temp.__state, this.__color.__state);\n      this.__temp.a = 1;\n      var flip = this.__color.v < 0.5 || this.__color.s > 0.5 ? 255 : 0;\n      var _flip = 255 - flip;\n      Common.extend(this.__field_knob.style, {\n        marginLeft: 100 * this.__color.s - 7 + 'px',\n        marginTop: 100 * (1 - this.__color.v) - 7 + 'px',\n        backgroundColor: this.__temp.toHexString(),\n        border: this.__field_knob_border + 'rgb(' + flip + ',' + flip + ',' + flip + ')'\n      });\n      this.__hue_knob.style.marginTop = (1 - this.__color.h / 360) * 100 + 'px';\n      this.__temp.s = 1;\n      this.__temp.v = 1;\n      linearGradient(this.__saturation_field, 'left', '#fff', this.__temp.toHexString());\n      this.__input.value = this.__color.toString();\n      Common.extend(this.__input.style, {\n        backgroundColor: this.__color.toHexString(),\n        color: 'rgb(' + flip + ',' + flip + ',' + flip + ')',\n        textShadow: this.__input_textShadow + 'rgba(' + _flip + ',' + _flip + ',' + _flip + ',.7)'\n      });\n    }\n  }]);\n  return ColorController;\n}(Controller);\nvar vendors = ['-moz-', '-o-', '-webkit-', '-ms-', ''];\nfunction linearGradient(elem, x, a, b) {\n  elem.style.background = '';\n  Common.each(vendors, function (vendor) {\n    elem.style.cssText += 'background: ' + vendor + 'linear-gradient(' + x + ', ' + a + ' 0%, ' + b + ' 100%); ';\n  });\n}\nfunction hueGradient(elem) {\n  elem.style.background = '';\n  elem.style.cssText += 'background: -moz-linear-gradient(top,  #ff0000 0%, #ff00ff 17%, #0000ff 34%, #00ffff 50%, #00ff00 67%, #ffff00 84%, #ff0000 100%);';\n  elem.style.cssText += 'background: -webkit-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';\n  elem.style.cssText += 'background: -o-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';\n  elem.style.cssText += 'background: -ms-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';\n  elem.style.cssText += 'background: linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';\n}\n\nvar css = {\n  load: function load(url, indoc) {\n    var doc = indoc || document;\n    var link = doc.createElement('link');\n    link.type = 'text/css';\n    link.rel = 'stylesheet';\n    link.href = url;\n    doc.getElementsByTagName('head')[0].appendChild(link);\n  },\n  inject: function inject(cssContent, indoc) {\n    var doc = indoc || document;\n    var injected = document.createElement('style');\n    injected.type = 'text/css';\n    injected.innerHTML = cssContent;\n    var head = doc.getElementsByTagName('head')[0];\n    try {\n      head.appendChild(injected);\n    } catch (e) {\n    }\n  }\n};\n\nvar saveDialogContents = \"<div id=\\\"dg-save\\\" class=\\\"dg dialogue\\\">\\n\\n  Here's the new load parameter for your <code>GUI</code>'s constructor:\\n\\n  <textarea id=\\\"dg-new-constructor\\\"></textarea>\\n\\n  <div id=\\\"dg-save-locally\\\">\\n\\n    <input id=\\\"dg-local-storage\\\" type=\\\"checkbox\\\"/> Automatically save\\n    values to <code>localStorage</code> on exit.\\n\\n    <div id=\\\"dg-local-explain\\\">The values saved to <code>localStorage</code> will\\n      override those passed to <code>dat.GUI</code>'s constructor. This makes it\\n      easier to work incrementally, but <code>localStorage</code> is fragile,\\n      and your friends may not see the same values you do.\\n\\n    </div>\\n\\n  </div>\\n\\n</div>\";\n\nvar ControllerFactory = function ControllerFactory(object, property) {\n  var initialValue = object[property];\n  if (Common.isArray(arguments[2]) || Common.isObject(arguments[2])) {\n    return new OptionController(object, property, arguments[2]);\n  }\n  if (Common.isNumber(initialValue)) {\n    if (Common.isNumber(arguments[2]) && Common.isNumber(arguments[3])) {\n      if (Common.isNumber(arguments[4])) {\n        return new NumberControllerSlider(object, property, arguments[2], arguments[3], arguments[4]);\n      }\n      return new NumberControllerSlider(object, property, arguments[2], arguments[3]);\n    }\n    if (Common.isNumber(arguments[4])) {\n      return new NumberControllerBox(object, property, { min: arguments[2], max: arguments[3], step: arguments[4] });\n    }\n    return new NumberControllerBox(object, property, { min: arguments[2], max: arguments[3] });\n  }\n  if (Common.isString(initialValue)) {\n    return new StringController(object, property);\n  }\n  if (Common.isFunction(initialValue)) {\n    return new FunctionController(object, property, '');\n  }\n  if (Common.isBoolean(initialValue)) {\n    return new BooleanController(object, property);\n  }\n  return null;\n};\n\nfunction requestAnimationFrame(callback) {\n  setTimeout(callback, 1000 / 60);\n}\nvar requestAnimationFrame$1 = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || requestAnimationFrame;\n\nvar CenteredDiv = function () {\n  function CenteredDiv() {\n    classCallCheck(this, CenteredDiv);\n    this.backgroundElement = document.createElement('div');\n    Common.extend(this.backgroundElement.style, {\n      backgroundColor: 'rgba(0,0,0,0.8)',\n      top: 0,\n      left: 0,\n      display: 'none',\n      zIndex: '1000',\n      opacity: 0,\n      WebkitTransition: 'opacity 0.2s linear',\n      transition: 'opacity 0.2s linear'\n    });\n    dom.makeFullscreen(this.backgroundElement);\n    this.backgroundElement.style.position = 'fixed';\n    this.domElement = document.createElement('div');\n    Common.extend(this.domElement.style, {\n      position: 'fixed',\n      display: 'none',\n      zIndex: '1001',\n      opacity: 0,\n      WebkitTransition: '-webkit-transform 0.2s ease-out, opacity 0.2s linear',\n      transition: 'transform 0.2s ease-out, opacity 0.2s linear'\n    });\n    document.body.appendChild(this.backgroundElement);\n    document.body.appendChild(this.domElement);\n    var _this = this;\n    dom.bind(this.backgroundElement, 'click', function () {\n      _this.hide();\n    });\n  }\n  createClass(CenteredDiv, [{\n    key: 'show',\n    value: function show() {\n      var _this = this;\n      this.backgroundElement.style.display = 'block';\n      this.domElement.style.display = 'block';\n      this.domElement.style.opacity = 0;\n      this.domElement.style.webkitTransform = 'scale(1.1)';\n      this.layout();\n      Common.defer(function () {\n        _this.backgroundElement.style.opacity = 1;\n        _this.domElement.style.opacity = 1;\n        _this.domElement.style.webkitTransform = 'scale(1)';\n      });\n    }\n  }, {\n    key: 'hide',\n    value: function hide() {\n      var _this = this;\n      var hide = function hide() {\n        _this.domElement.style.display = 'none';\n        _this.backgroundElement.style.display = 'none';\n        dom.unbind(_this.domElement, 'webkitTransitionEnd', hide);\n        dom.unbind(_this.domElement, 'transitionend', hide);\n        dom.unbind(_this.domElement, 'oTransitionEnd', hide);\n      };\n      dom.bind(this.domElement, 'webkitTransitionEnd', hide);\n      dom.bind(this.domElement, 'transitionend', hide);\n      dom.bind(this.domElement, 'oTransitionEnd', hide);\n      this.backgroundElement.style.opacity = 0;\n      this.domElement.style.opacity = 0;\n      this.domElement.style.webkitTransform = 'scale(1.1)';\n    }\n  }, {\n    key: 'layout',\n    value: function layout() {\n      this.domElement.style.left = window.innerWidth / 2 - dom.getWidth(this.domElement) / 2 + 'px';\n      this.domElement.style.top = window.innerHeight / 2 - dom.getHeight(this.domElement) / 2 + 'px';\n    }\n  }]);\n  return CenteredDiv;\n}();\n\nvar styleSheet = ___$insertStyle(\".dg ul{list-style:none;margin:0;padding:0;width:100%;clear:both}.dg.ac{position:fixed;top:0;left:0;right:0;height:0;z-index:0}.dg:not(.ac) .main{overflow:hidden}.dg.main{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear}.dg.main.taller-than-window{overflow-y:auto}.dg.main.taller-than-window .close-button{opacity:1;margin-top:-1px;border-top:1px solid #2c2c2c}.dg.main ul.closed .close-button{opacity:1 !important}.dg.main:hover .close-button,.dg.main .close-button.drag{opacity:1}.dg.main .close-button{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear;border:0;line-height:19px;height:20px;cursor:pointer;text-align:center;background-color:#000}.dg.main .close-button.close-top{position:relative}.dg.main .close-button.close-bottom{position:absolute}.dg.main .close-button:hover{background-color:#111}.dg.a{float:right;margin-right:15px;overflow-y:visible}.dg.a.has-save>ul.close-top{margin-top:0}.dg.a.has-save>ul.close-bottom{margin-top:27px}.dg.a.has-save>ul.closed{margin-top:0}.dg.a .save-row{top:0;z-index:1002}.dg.a .save-row.close-top{position:relative}.dg.a .save-row.close-bottom{position:fixed}.dg li{-webkit-transition:height .1s ease-out;-o-transition:height .1s ease-out;-moz-transition:height .1s ease-out;transition:height .1s ease-out;-webkit-transition:overflow .1s linear;-o-transition:overflow .1s linear;-moz-transition:overflow .1s linear;transition:overflow .1s linear}.dg li:not(.folder){cursor:auto;height:27px;line-height:27px;padding:0 4px 0 5px}.dg li.folder{padding:0;border-left:4px solid rgba(0,0,0,0)}.dg li.title{cursor:pointer;margin-left:-4px}.dg .closed li:not(.title),.dg .closed ul li,.dg .closed ul li>*{height:0;overflow:hidden;border:0}.dg .cr{clear:both;padding-left:3px;height:27px;overflow:hidden}.dg .property-name{cursor:default;float:left;clear:left;width:40%;overflow:hidden;text-overflow:ellipsis}.dg .c{float:left;width:60%;position:relative}.dg .c input[type=text]{border:0;margin-top:4px;padding:3px;width:100%;float:right}.dg .has-slider input[type=text]{width:30%;margin-left:0}.dg .slider{float:left;width:66%;margin-left:-5px;margin-right:0;height:19px;margin-top:4px}.dg .slider-fg{height:100%}.dg .c input[type=checkbox]{margin-top:7px}.dg .c select{margin-top:5px}.dg .cr.function,.dg .cr.function .property-name,.dg .cr.function *,.dg .cr.boolean,.dg .cr.boolean *{cursor:pointer}.dg .cr.color{overflow:visible}.dg .selector{display:none;position:absolute;margin-left:-9px;margin-top:23px;z-index:10}.dg .c:hover .selector,.dg .selector.drag{display:block}.dg li.save-row{padding:0}.dg li.save-row .button{display:inline-block;padding:0px 6px}.dg.dialogue{background-color:#222;width:460px;padding:15px;font-size:13px;line-height:15px}#dg-new-constructor{padding:10px;color:#222;font-family:Monaco, monospace;font-size:10px;border:0;resize:none;box-shadow:inset 1px 1px 1px #888;word-wrap:break-word;margin:12px 0;display:block;width:440px;overflow-y:scroll;height:100px;position:relative}#dg-local-explain{display:none;font-size:11px;line-height:17px;border-radius:3px;background-color:#333;padding:8px;margin-top:10px}#dg-local-explain code{font-size:10px}#dat-gui-save-locally{display:none}.dg{color:#eee;font:11px 'Lucida Grande', sans-serif;text-shadow:0 -1px 0 #111}.dg.main::-webkit-scrollbar{width:5px;background:#1a1a1a}.dg.main::-webkit-scrollbar-corner{height:0;display:none}.dg.main::-webkit-scrollbar-thumb{border-radius:5px;background:#676767}.dg li:not(.folder){background:#1a1a1a;border-bottom:1px solid #2c2c2c}.dg li.save-row{line-height:25px;background:#dad5cb;border:0}.dg li.save-row select{margin-left:5px;width:108px}.dg li.save-row .button{margin-left:5px;margin-top:1px;border-radius:2px;font-size:9px;line-height:7px;padding:4px 4px 5px 4px;background:#c5bdad;color:#fff;text-shadow:0 1px 0 #b0a58f;box-shadow:0 -1px 0 #b0a58f;cursor:pointer}.dg li.save-row .button.gears{background:#c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;height:7px;width:8px}.dg li.save-row .button:hover{background-color:#bab19e;box-shadow:0 -1px 0 #b0a58f}.dg li.folder{border-bottom:0}.dg li.title{padding-left:16px;background:#000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.2)}.dg .closed li.title{background-image:url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)}.dg .cr.boolean{border-left:3px solid #806787}.dg .cr.color{border-left:3px solid}.dg .cr.function{border-left:3px solid #e61d5f}.dg .cr.number{border-left:3px solid #2FA1D6}.dg .cr.number input[type=text]{color:#2FA1D6}.dg .cr.string{border-left:3px solid #1ed36f}.dg .cr.string input[type=text]{color:#1ed36f}.dg .cr.function:hover,.dg .cr.boolean:hover{background:#111}.dg .c input[type=text]{background:#303030;outline:none}.dg .c input[type=text]:hover{background:#3c3c3c}.dg .c input[type=text]:focus{background:#494949;color:#fff}.dg .c .slider{background:#303030;cursor:ew-resize}.dg .c .slider-fg{background:#2FA1D6;max-width:100%}.dg .c .slider:hover{background:#3c3c3c}.dg .c .slider:hover .slider-fg{background:#44abda}\\n\");\n\ncss.inject(styleSheet);\nvar CSS_NAMESPACE = 'dg';\nvar HIDE_KEY_CODE = 72;\nvar CLOSE_BUTTON_HEIGHT = 20;\nvar DEFAULT_DEFAULT_PRESET_NAME = 'Default';\nvar SUPPORTS_LOCAL_STORAGE = function () {\n  try {\n    return !!window.localStorage;\n  } catch (e) {\n    return false;\n  }\n}();\nvar SAVE_DIALOGUE = void 0;\nvar autoPlaceVirgin = true;\nvar autoPlaceContainer = void 0;\nvar hide = false;\nvar hideableGuis = [];\nvar GUI = function GUI(pars) {\n  var _this = this;\n  var params = pars || {};\n  this.domElement = document.createElement('div');\n  this.__ul = document.createElement('ul');\n  this.domElement.appendChild(this.__ul);\n  dom.addClass(this.domElement, CSS_NAMESPACE);\n  this.__folders = {};\n  this.__controllers = [];\n  this.__rememberedObjects = [];\n  this.__rememberedObjectIndecesToControllers = [];\n  this.__listening = [];\n  params = Common.defaults(params, {\n    closeOnTop: false,\n    autoPlace: true,\n    width: GUI.DEFAULT_WIDTH\n  });\n  params = Common.defaults(params, {\n    resizable: params.autoPlace,\n    hideable: params.autoPlace\n  });\n  if (!Common.isUndefined(params.load)) {\n    if (params.preset) {\n      params.load.preset = params.preset;\n    }\n  } else {\n    params.load = { preset: DEFAULT_DEFAULT_PRESET_NAME };\n  }\n  if (Common.isUndefined(params.parent) && params.hideable) {\n    hideableGuis.push(this);\n  }\n  params.resizable = Common.isUndefined(params.parent) && params.resizable;\n  if (params.autoPlace && Common.isUndefined(params.scrollable)) {\n    params.scrollable = true;\n  }\n  var useLocalStorage = SUPPORTS_LOCAL_STORAGE && localStorage.getItem(getLocalStorageHash(this, 'isLocal')) === 'true';\n  var saveToLocalStorage = void 0;\n  var titleRow = void 0;\n  Object.defineProperties(this,\n  {\n    parent: {\n      get: function get$$1() {\n        return params.parent;\n      }\n    },\n    scrollable: {\n      get: function get$$1() {\n        return params.scrollable;\n      }\n    },\n    autoPlace: {\n      get: function get$$1() {\n        return params.autoPlace;\n      }\n    },\n    closeOnTop: {\n      get: function get$$1() {\n        return params.closeOnTop;\n      }\n    },\n    preset: {\n      get: function get$$1() {\n        if (_this.parent) {\n          return _this.getRoot().preset;\n        }\n        return params.load.preset;\n      },\n      set: function set$$1(v) {\n        if (_this.parent) {\n          _this.getRoot().preset = v;\n        } else {\n          params.load.preset = v;\n        }\n        setPresetSelectIndex(this);\n        _this.revert();\n      }\n    },\n    width: {\n      get: function get$$1() {\n        return params.width;\n      },\n      set: function set$$1(v) {\n        params.width = v;\n        setWidth(_this, v);\n      }\n    },\n    name: {\n      get: function get$$1() {\n        return params.name;\n      },\n      set: function set$$1(v) {\n        params.name = v;\n        if (titleRow) {\n          titleRow.innerHTML = params.name;\n        }\n      }\n    },\n    closed: {\n      get: function get$$1() {\n        return params.closed;\n      },\n      set: function set$$1(v) {\n        params.closed = v;\n        if (params.closed) {\n          dom.addClass(_this.__ul, GUI.CLASS_CLOSED);\n        } else {\n          dom.removeClass(_this.__ul, GUI.CLASS_CLOSED);\n        }\n        this.onResize();\n        if (_this.__closeButton) {\n          _this.__closeButton.innerHTML = v ? GUI.TEXT_OPEN : GUI.TEXT_CLOSED;\n        }\n      }\n    },\n    load: {\n      get: function get$$1() {\n        return params.load;\n      }\n    },\n    useLocalStorage: {\n      get: function get$$1() {\n        return useLocalStorage;\n      },\n      set: function set$$1(bool) {\n        if (SUPPORTS_LOCAL_STORAGE) {\n          useLocalStorage = bool;\n          if (bool) {\n            dom.bind(window, 'unload', saveToLocalStorage);\n          } else {\n            dom.unbind(window, 'unload', saveToLocalStorage);\n          }\n          localStorage.setItem(getLocalStorageHash(_this, 'isLocal'), bool);\n        }\n      }\n    }\n  });\n  if (Common.isUndefined(params.parent)) {\n    this.closed = params.closed || false;\n    dom.addClass(this.domElement, GUI.CLASS_MAIN);\n    dom.makeSelectable(this.domElement, false);\n    if (SUPPORTS_LOCAL_STORAGE) {\n      if (useLocalStorage) {\n        _this.useLocalStorage = true;\n        var savedGui = localStorage.getItem(getLocalStorageHash(this, 'gui'));\n        if (savedGui) {\n          params.load = JSON.parse(savedGui);\n        }\n      }\n    }\n    this.__closeButton = document.createElement('div');\n    this.__closeButton.innerHTML = GUI.TEXT_CLOSED;\n    dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BUTTON);\n    if (params.closeOnTop) {\n      dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_TOP);\n      this.domElement.insertBefore(this.__closeButton, this.domElement.childNodes[0]);\n    } else {\n      dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BOTTOM);\n      this.domElement.appendChild(this.__closeButton);\n    }\n    dom.bind(this.__closeButton, 'click', function () {\n      _this.closed = !_this.closed;\n    });\n  } else {\n    if (params.closed === undefined) {\n      params.closed = true;\n    }\n    var titleRowName = document.createTextNode(params.name);\n    dom.addClass(titleRowName, 'controller-name');\n    titleRow = addRow(_this, titleRowName);\n    var onClickTitle = function onClickTitle(e) {\n      e.preventDefault();\n      _this.closed = !_this.closed;\n      return false;\n    };\n    dom.addClass(this.__ul, GUI.CLASS_CLOSED);\n    dom.addClass(titleRow, 'title');\n    dom.bind(titleRow, 'click', onClickTitle);\n    if (!params.closed) {\n      this.closed = false;\n    }\n  }\n  if (params.autoPlace) {\n    if (Common.isUndefined(params.parent)) {\n      if (autoPlaceVirgin) {\n        autoPlaceContainer = document.createElement('div');\n        dom.addClass(autoPlaceContainer, CSS_NAMESPACE);\n        dom.addClass(autoPlaceContainer, GUI.CLASS_AUTO_PLACE_CONTAINER);\n        document.body.appendChild(autoPlaceContainer);\n        autoPlaceVirgin = false;\n      }\n      autoPlaceContainer.appendChild(this.domElement);\n      dom.addClass(this.domElement, GUI.CLASS_AUTO_PLACE);\n    }\n    if (!this.parent) {\n      setWidth(_this, params.width);\n    }\n  }\n  this.__resizeHandler = function () {\n    _this.onResizeDebounced();\n  };\n  dom.bind(window, 'resize', this.__resizeHandler);\n  dom.bind(this.__ul, 'webkitTransitionEnd', this.__resizeHandler);\n  dom.bind(this.__ul, 'transitionend', this.__resizeHandler);\n  dom.bind(this.__ul, 'oTransitionEnd', this.__resizeHandler);\n  this.onResize();\n  if (params.resizable) {\n    addResizeHandle(this);\n  }\n  saveToLocalStorage = function saveToLocalStorage() {\n    if (SUPPORTS_LOCAL_STORAGE && localStorage.getItem(getLocalStorageHash(_this, 'isLocal')) === 'true') {\n      localStorage.setItem(getLocalStorageHash(_this, 'gui'), JSON.stringify(_this.getSaveObject()));\n    }\n  };\n  this.saveToLocalStorageIfPossible = saveToLocalStorage;\n  function resetWidth() {\n    var root = _this.getRoot();\n    root.width += 1;\n    Common.defer(function () {\n      root.width -= 1;\n    });\n  }\n  if (!params.parent) {\n    resetWidth();\n  }\n};\nGUI.toggleHide = function () {\n  hide = !hide;\n  Common.each(hideableGuis, function (gui) {\n    gui.domElement.style.display = hide ? 'none' : '';\n  });\n};\nGUI.CLASS_AUTO_PLACE = 'a';\nGUI.CLASS_AUTO_PLACE_CONTAINER = 'ac';\nGUI.CLASS_MAIN = 'main';\nGUI.CLASS_CONTROLLER_ROW = 'cr';\nGUI.CLASS_TOO_TALL = 'taller-than-window';\nGUI.CLASS_CLOSED = 'closed';\nGUI.CLASS_CLOSE_BUTTON = 'close-button';\nGUI.CLASS_CLOSE_TOP = 'close-top';\nGUI.CLASS_CLOSE_BOTTOM = 'close-bottom';\nGUI.CLASS_DRAG = 'drag';\nGUI.DEFAULT_WIDTH = 245;\nGUI.TEXT_CLOSED = 'Close Controls';\nGUI.TEXT_OPEN = 'Open Controls';\nGUI._keydownHandler = function (e) {\n  if (document.activeElement.type !== 'text' && (e.which === HIDE_KEY_CODE || e.keyCode === HIDE_KEY_CODE)) {\n    GUI.toggleHide();\n  }\n};\ndom.bind(window, 'keydown', GUI._keydownHandler, false);\nCommon.extend(GUI.prototype,\n{\n  add: function add(object, property) {\n    return _add(this, object, property, {\n      factoryArgs: Array.prototype.slice.call(arguments, 2)\n    });\n  },\n  addColor: function addColor(object, property) {\n    return _add(this, object, property, {\n      color: true\n    });\n  },\n  remove: function remove(controller) {\n    this.__ul.removeChild(controller.__li);\n    this.__controllers.splice(this.__controllers.indexOf(controller), 1);\n    var _this = this;\n    Common.defer(function () {\n      _this.onResize();\n    });\n  },\n  destroy: function destroy() {\n    if (this.parent) {\n      throw new Error('Only the root GUI should be removed with .destroy(). ' + 'For subfolders, use gui.removeFolder(folder) instead.');\n    }\n    if (this.autoPlace) {\n      autoPlaceContainer.removeChild(this.domElement);\n    }\n    var _this = this;\n    Common.each(this.__folders, function (subfolder) {\n      _this.removeFolder(subfolder);\n    });\n    dom.unbind(window, 'keydown', GUI._keydownHandler, false);\n    removeListeners(this);\n  },\n  addFolder: function addFolder(name) {\n    if (this.__folders[name] !== undefined) {\n      throw new Error('You already have a folder in this GUI by the' + ' name \"' + name + '\"');\n    }\n    var newGuiParams = { name: name, parent: this };\n    newGuiParams.autoPlace = this.autoPlace;\n    if (this.load &&\n    this.load.folders &&\n    this.load.folders[name]) {\n      newGuiParams.closed = this.load.folders[name].closed;\n      newGuiParams.load = this.load.folders[name];\n    }\n    var gui = new GUI(newGuiParams);\n    this.__folders[name] = gui;\n    var li = addRow(this, gui.domElement);\n    dom.addClass(li, 'folder');\n    return gui;\n  },\n  removeFolder: function removeFolder(folder) {\n    this.__ul.removeChild(folder.domElement.parentElement);\n    delete this.__folders[folder.name];\n    if (this.load &&\n    this.load.folders &&\n    this.load.folders[folder.name]) {\n      delete this.load.folders[folder.name];\n    }\n    removeListeners(folder);\n    var _this = this;\n    Common.each(folder.__folders, function (subfolder) {\n      folder.removeFolder(subfolder);\n    });\n    Common.defer(function () {\n      _this.onResize();\n    });\n  },\n  open: function open() {\n    this.closed = false;\n  },\n  close: function close() {\n    this.closed = true;\n  },\n  hide: function hide() {\n    this.domElement.style.display = 'none';\n  },\n  show: function show() {\n    this.domElement.style.display = '';\n  },\n  onResize: function onResize() {\n    var root = this.getRoot();\n    if (root.scrollable) {\n      var top = dom.getOffset(root.__ul).top;\n      var h = 0;\n      Common.each(root.__ul.childNodes, function (node) {\n        if (!(root.autoPlace && node === root.__save_row)) {\n          h += dom.getHeight(node);\n        }\n      });\n      if (window.innerHeight - top - CLOSE_BUTTON_HEIGHT < h) {\n        dom.addClass(root.domElement, GUI.CLASS_TOO_TALL);\n        root.__ul.style.height = window.innerHeight - top - CLOSE_BUTTON_HEIGHT + 'px';\n      } else {\n        dom.removeClass(root.domElement, GUI.CLASS_TOO_TALL);\n        root.__ul.style.height = 'auto';\n      }\n    }\n    if (root.__resize_handle) {\n      Common.defer(function () {\n        root.__resize_handle.style.height = root.__ul.offsetHeight + 'px';\n      });\n    }\n    if (root.__closeButton) {\n      root.__closeButton.style.width = root.width + 'px';\n    }\n  },\n  onResizeDebounced: Common.debounce(function () {\n    this.onResize();\n  }, 50),\n  remember: function remember() {\n    if (Common.isUndefined(SAVE_DIALOGUE)) {\n      SAVE_DIALOGUE = new CenteredDiv();\n      SAVE_DIALOGUE.domElement.innerHTML = saveDialogContents;\n    }\n    if (this.parent) {\n      throw new Error('You can only call remember on a top level GUI.');\n    }\n    var _this = this;\n    Common.each(Array.prototype.slice.call(arguments), function (object) {\n      if (_this.__rememberedObjects.length === 0) {\n        addSaveMenu(_this);\n      }\n      if (_this.__rememberedObjects.indexOf(object) === -1) {\n        _this.__rememberedObjects.push(object);\n      }\n    });\n    if (this.autoPlace) {\n      setWidth(this, this.width);\n    }\n  },\n  getRoot: function getRoot() {\n    var gui = this;\n    while (gui.parent) {\n      gui = gui.parent;\n    }\n    return gui;\n  },\n  getSaveObject: function getSaveObject() {\n    var toReturn = this.load;\n    toReturn.closed = this.closed;\n    if (this.__rememberedObjects.length > 0) {\n      toReturn.preset = this.preset;\n      if (!toReturn.remembered) {\n        toReturn.remembered = {};\n      }\n      toReturn.remembered[this.preset] = getCurrentPreset(this);\n    }\n    toReturn.folders = {};\n    Common.each(this.__folders, function (element, key) {\n      toReturn.folders[key] = element.getSaveObject();\n    });\n    return toReturn;\n  },\n  save: function save() {\n    if (!this.load.remembered) {\n      this.load.remembered = {};\n    }\n    this.load.remembered[this.preset] = getCurrentPreset(this);\n    markPresetModified(this, false);\n    this.saveToLocalStorageIfPossible();\n  },\n  saveAs: function saveAs(presetName) {\n    if (!this.load.remembered) {\n      this.load.remembered = {};\n      this.load.remembered[DEFAULT_DEFAULT_PRESET_NAME] = getCurrentPreset(this, true);\n    }\n    this.load.remembered[presetName] = getCurrentPreset(this);\n    this.preset = presetName;\n    addPresetOption(this, presetName, true);\n    this.saveToLocalStorageIfPossible();\n  },\n  revert: function revert(gui) {\n    Common.each(this.__controllers, function (controller) {\n      if (!this.getRoot().load.remembered) {\n        controller.setValue(controller.initialValue);\n      } else {\n        recallSavedValue(gui || this.getRoot(), controller);\n      }\n      if (controller.__onFinishChange) {\n        controller.__onFinishChange.call(controller, controller.getValue());\n      }\n    }, this);\n    Common.each(this.__folders, function (folder) {\n      folder.revert(folder);\n    });\n    if (!gui) {\n      markPresetModified(this.getRoot(), false);\n    }\n  },\n  listen: function listen(controller) {\n    var init = this.__listening.length === 0;\n    this.__listening.push(controller);\n    if (init) {\n      updateDisplays(this.__listening);\n    }\n  },\n  updateDisplay: function updateDisplay() {\n    Common.each(this.__controllers, function (controller) {\n      controller.updateDisplay();\n    });\n    Common.each(this.__folders, function (folder) {\n      folder.updateDisplay();\n    });\n  }\n});\nfunction addRow(gui, newDom, liBefore) {\n  var li = document.createElement('li');\n  if (newDom) {\n    li.appendChild(newDom);\n  }\n  if (liBefore) {\n    gui.__ul.insertBefore(li, liBefore);\n  } else {\n    gui.__ul.appendChild(li);\n  }\n  gui.onResize();\n  return li;\n}\nfunction removeListeners(gui) {\n  dom.unbind(window, 'resize', gui.__resizeHandler);\n  if (gui.saveToLocalStorageIfPossible) {\n    dom.unbind(window, 'unload', gui.saveToLocalStorageIfPossible);\n  }\n}\nfunction markPresetModified(gui, modified) {\n  var opt = gui.__preset_select[gui.__preset_select.selectedIndex];\n  if (modified) {\n    opt.innerHTML = opt.value + '*';\n  } else {\n    opt.innerHTML = opt.value;\n  }\n}\nfunction augmentController(gui, li, controller) {\n  controller.__li = li;\n  controller.__gui = gui;\n  Common.extend(controller,                                   {\n    options: function options(_options) {\n      if (arguments.length > 1) {\n        var nextSibling = controller.__li.nextElementSibling;\n        controller.remove();\n        return _add(gui, controller.object, controller.property, {\n          before: nextSibling,\n          factoryArgs: [Common.toArray(arguments)]\n        });\n      }\n      if (Common.isArray(_options) || Common.isObject(_options)) {\n        var _nextSibling = controller.__li.nextElementSibling;\n        controller.remove();\n        return _add(gui, controller.object, controller.property, {\n          before: _nextSibling,\n          factoryArgs: [_options]\n        });\n      }\n    },\n    name: function name(_name) {\n      controller.__li.firstElementChild.firstElementChild.innerHTML = _name;\n      return controller;\n    },\n    listen: function listen() {\n      controller.__gui.listen(controller);\n      return controller;\n    },\n    remove: function remove() {\n      controller.__gui.remove(controller);\n      return controller;\n    }\n  });\n  if (controller instanceof NumberControllerSlider) {\n    var box = new NumberControllerBox(controller.object, controller.property, { min: controller.__min, max: controller.__max, step: controller.__step });\n    Common.each(['updateDisplay', 'onChange', 'onFinishChange', 'step', 'min', 'max'], function (method) {\n      var pc = controller[method];\n      var pb = box[method];\n      controller[method] = box[method] = function () {\n        var args = Array.prototype.slice.call(arguments);\n        pb.apply(box, args);\n        return pc.apply(controller, args);\n      };\n    });\n    dom.addClass(li, 'has-slider');\n    controller.domElement.insertBefore(box.domElement, controller.domElement.firstElementChild);\n  } else if (controller instanceof NumberControllerBox) {\n    var r = function r(returned) {\n      if (Common.isNumber(controller.__min) && Common.isNumber(controller.__max)) {\n        var oldName = controller.__li.firstElementChild.firstElementChild.innerHTML;\n        var wasListening = controller.__gui.__listening.indexOf(controller) > -1;\n        controller.remove();\n        var newController = _add(gui, controller.object, controller.property, {\n          before: controller.__li.nextElementSibling,\n          factoryArgs: [controller.__min, controller.__max, controller.__step]\n        });\n        newController.name(oldName);\n        if (wasListening) newController.listen();\n        return newController;\n      }\n      return returned;\n    };\n    controller.min = Common.compose(r, controller.min);\n    controller.max = Common.compose(r, controller.max);\n  } else if (controller instanceof BooleanController) {\n    dom.bind(li, 'click', function () {\n      dom.fakeEvent(controller.__checkbox, 'click');\n    });\n    dom.bind(controller.__checkbox, 'click', function (e) {\n      e.stopPropagation();\n    });\n  } else if (controller instanceof FunctionController) {\n    dom.bind(li, 'click', function () {\n      dom.fakeEvent(controller.__button, 'click');\n    });\n    dom.bind(li, 'mouseover', function () {\n      dom.addClass(controller.__button, 'hover');\n    });\n    dom.bind(li, 'mouseout', function () {\n      dom.removeClass(controller.__button, 'hover');\n    });\n  } else if (controller instanceof ColorController) {\n    dom.addClass(li, 'color');\n    controller.updateDisplay = Common.compose(function (val) {\n      li.style.borderLeftColor = controller.__color.toString();\n      return val;\n    }, controller.updateDisplay);\n    controller.updateDisplay();\n  }\n  controller.setValue = Common.compose(function (val) {\n    if (gui.getRoot().__preset_select && controller.isModified()) {\n      markPresetModified(gui.getRoot(), true);\n    }\n    return val;\n  }, controller.setValue);\n}\nfunction recallSavedValue(gui, controller) {\n  var root = gui.getRoot();\n  var matchedIndex = root.__rememberedObjects.indexOf(controller.object);\n  if (matchedIndex !== -1) {\n    var controllerMap = root.__rememberedObjectIndecesToControllers[matchedIndex];\n    if (controllerMap === undefined) {\n      controllerMap = {};\n      root.__rememberedObjectIndecesToControllers[matchedIndex] = controllerMap;\n    }\n    controllerMap[controller.property] = controller;\n    if (root.load && root.load.remembered) {\n      var presetMap = root.load.remembered;\n      var preset = void 0;\n      if (presetMap[gui.preset]) {\n        preset = presetMap[gui.preset];\n      } else if (presetMap[DEFAULT_DEFAULT_PRESET_NAME]) {\n        preset = presetMap[DEFAULT_DEFAULT_PRESET_NAME];\n      } else {\n        return;\n      }\n      if (preset[matchedIndex] && preset[matchedIndex][controller.property] !== undefined) {\n        var value = preset[matchedIndex][controller.property];\n        controller.initialValue = value;\n        controller.setValue(value);\n      }\n    }\n  }\n}\nfunction _add(gui, object, property, params) {\n  if (object[property] === undefined) {\n    throw new Error('Object \"' + object + '\" has no property \"' + property + '\"');\n  }\n  var controller = void 0;\n  if (params.color) {\n    controller = new ColorController(object, property);\n  } else {\n    var factoryArgs = [object, property].concat(params.factoryArgs);\n    controller = ControllerFactory.apply(gui, factoryArgs);\n  }\n  if (params.before instanceof Controller) {\n    params.before = params.before.__li;\n  }\n  recallSavedValue(gui, controller);\n  dom.addClass(controller.domElement, 'c');\n  var name = document.createElement('span');\n  dom.addClass(name, 'property-name');\n  name.innerHTML = controller.property;\n  var container = document.createElement('div');\n  container.appendChild(name);\n  container.appendChild(controller.domElement);\n  var li = addRow(gui, container, params.before);\n  dom.addClass(li, GUI.CLASS_CONTROLLER_ROW);\n  if (controller instanceof ColorController) {\n    dom.addClass(li, 'color');\n  } else {\n    dom.addClass(li, _typeof(controller.getValue()));\n  }\n  augmentController(gui, li, controller);\n  gui.__controllers.push(controller);\n  return controller;\n}\nfunction getLocalStorageHash(gui, key) {\n  return document.location.href + '.' + key;\n}\nfunction addPresetOption(gui, name, setSelected) {\n  var opt = document.createElement('option');\n  opt.innerHTML = name;\n  opt.value = name;\n  gui.__preset_select.appendChild(opt);\n  if (setSelected) {\n    gui.__preset_select.selectedIndex = gui.__preset_select.length - 1;\n  }\n}\nfunction showHideExplain(gui, explain) {\n  explain.style.display = gui.useLocalStorage ? 'block' : 'none';\n}\nfunction addSaveMenu(gui) {\n  var div = gui.__save_row = document.createElement('li');\n  dom.addClass(gui.domElement, 'has-save');\n  gui.__ul.insertBefore(div, gui.__ul.firstChild);\n  dom.addClass(div, 'save-row');\n  var gears = document.createElement('span');\n  gears.innerHTML = '&nbsp;';\n  dom.addClass(gears, 'button gears');\n  var button = document.createElement('span');\n  button.innerHTML = 'Save';\n  dom.addClass(button, 'button');\n  dom.addClass(button, 'save');\n  var button2 = document.createElement('span');\n  button2.innerHTML = 'New';\n  dom.addClass(button2, 'button');\n  dom.addClass(button2, 'save-as');\n  var button3 = document.createElement('span');\n  button3.innerHTML = 'Revert';\n  dom.addClass(button3, 'button');\n  dom.addClass(button3, 'revert');\n  var select = gui.__preset_select = document.createElement('select');\n  if (gui.load && gui.load.remembered) {\n    Common.each(gui.load.remembered, function (value, key) {\n      addPresetOption(gui, key, key === gui.preset);\n    });\n  } else {\n    addPresetOption(gui, DEFAULT_DEFAULT_PRESET_NAME, false);\n  }\n  dom.bind(select, 'change', function () {\n    for (var index = 0; index < gui.__preset_select.length; index++) {\n      gui.__preset_select[index].innerHTML = gui.__preset_select[index].value;\n    }\n    gui.preset = this.value;\n  });\n  div.appendChild(select);\n  div.appendChild(gears);\n  div.appendChild(button);\n  div.appendChild(button2);\n  div.appendChild(button3);\n  if (SUPPORTS_LOCAL_STORAGE) {\n    var explain = document.getElementById('dg-local-explain');\n    var localStorageCheckBox = document.getElementById('dg-local-storage');\n    var saveLocally = document.getElementById('dg-save-locally');\n    saveLocally.style.display = 'block';\n    if (localStorage.getItem(getLocalStorageHash(gui, 'isLocal')) === 'true') {\n      localStorageCheckBox.setAttribute('checked', 'checked');\n    }\n    showHideExplain(gui, explain);\n    dom.bind(localStorageCheckBox, 'change', function () {\n      gui.useLocalStorage = !gui.useLocalStorage;\n      showHideExplain(gui, explain);\n    });\n  }\n  var newConstructorTextArea = document.getElementById('dg-new-constructor');\n  dom.bind(newConstructorTextArea, 'keydown', function (e) {\n    if (e.metaKey && (e.which === 67 || e.keyCode === 67)) {\n      SAVE_DIALOGUE.hide();\n    }\n  });\n  dom.bind(gears, 'click', function () {\n    newConstructorTextArea.innerHTML = JSON.stringify(gui.getSaveObject(), undefined, 2);\n    SAVE_DIALOGUE.show();\n    newConstructorTextArea.focus();\n    newConstructorTextArea.select();\n  });\n  dom.bind(button, 'click', function () {\n    gui.save();\n  });\n  dom.bind(button2, 'click', function () {\n    var presetName = prompt('Enter a new preset name.');\n    if (presetName) {\n      gui.saveAs(presetName);\n    }\n  });\n  dom.bind(button3, 'click', function () {\n    gui.revert();\n  });\n}\nfunction addResizeHandle(gui) {\n  var pmouseX = void 0;\n  gui.__resize_handle = document.createElement('div');\n  Common.extend(gui.__resize_handle.style, {\n    width: '6px',\n    marginLeft: '-3px',\n    height: '200px',\n    cursor: 'ew-resize',\n    position: 'absolute'\n  });\n  function drag(e) {\n    e.preventDefault();\n    gui.width += pmouseX - e.clientX;\n    gui.onResize();\n    pmouseX = e.clientX;\n    return false;\n  }\n  function dragStop() {\n    dom.removeClass(gui.__closeButton, GUI.CLASS_DRAG);\n    dom.unbind(window, 'mousemove', drag);\n    dom.unbind(window, 'mouseup', dragStop);\n  }\n  function dragStart(e) {\n    e.preventDefault();\n    pmouseX = e.clientX;\n    dom.addClass(gui.__closeButton, GUI.CLASS_DRAG);\n    dom.bind(window, 'mousemove', drag);\n    dom.bind(window, 'mouseup', dragStop);\n    return false;\n  }\n  dom.bind(gui.__resize_handle, 'mousedown', dragStart);\n  dom.bind(gui.__closeButton, 'mousedown', dragStart);\n  gui.domElement.insertBefore(gui.__resize_handle, gui.domElement.firstElementChild);\n}\nfunction setWidth(gui, w) {\n  gui.domElement.style.width = w + 'px';\n  if (gui.__save_row && gui.autoPlace) {\n    gui.__save_row.style.width = w + 'px';\n  }\n  if (gui.__closeButton) {\n    gui.__closeButton.style.width = w + 'px';\n  }\n}\nfunction getCurrentPreset(gui, useInitialValues) {\n  var toReturn = {};\n  Common.each(gui.__rememberedObjects, function (val, index) {\n    var savedValues = {};\n    var controllerMap = gui.__rememberedObjectIndecesToControllers[index];\n    Common.each(controllerMap, function (controller, property) {\n      savedValues[property] = useInitialValues ? controller.initialValue : controller.getValue();\n    });\n    toReturn[index] = savedValues;\n  });\n  return toReturn;\n}\nfunction setPresetSelectIndex(gui) {\n  for (var index = 0; index < gui.__preset_select.length; index++) {\n    if (gui.__preset_select[index].value === gui.preset) {\n      gui.__preset_select.selectedIndex = index;\n    }\n  }\n}\nfunction updateDisplays(controllerArray) {\n  if (controllerArray.length !== 0) {\n    requestAnimationFrame$1.call(window, function () {\n      updateDisplays(controllerArray);\n    });\n  }\n  Common.each(controllerArray, function (c) {\n    c.updateDisplay();\n  });\n}\n\nvar color = {\n  Color: Color,\n  math: ColorMath,\n  interpret: interpret\n};\nvar controllers = {\n  Controller: Controller,\n  BooleanController: BooleanController,\n  OptionController: OptionController,\n  StringController: StringController,\n  NumberController: NumberController,\n  NumberControllerBox: NumberControllerBox,\n  NumberControllerSlider: NumberControllerSlider,\n  FunctionController: FunctionController,\n  ColorController: ColorController\n};\nvar dom$1 = { dom: dom };\nvar gui = { GUI: GUI };\nvar GUI$1 = GUI;\nvar index = {\n  color: color,\n  controllers: controllers,\n  dom: dom$1,\n  gui: gui,\n  GUI: GUI$1\n};\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (index);\n//# sourceMappingURL=dat.gui.module.js.map\n\n\n//# sourceURL=webpack://jollygoodgame/./node_modules/dat.gui/build/dat.gui.module.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "color", function() { return color; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "controllers", function() { return controllers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dom", function() { return dom$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gui", function() { return gui; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GUI", function() { return GUI$1; });
+/**
+ * dat-gui JavaScript Controller Library
+ * http://code.google.com/p/dat-gui
+ *
+ * Copyright 2011 Data Arts Team, Google Creative Lab
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ */
+
+function ___$insertStyle(css) {
+  if (!css) {
+    return;
+  }
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  var style = document.createElement('style');
+
+  style.setAttribute('type', 'text/css');
+  style.innerHTML = css;
+  document.head.appendChild(style);
+
+  return css;
+}
+
+function colorToString (color, forceCSSHex) {
+  var colorFormat = color.__state.conversionName.toString();
+  var r = Math.round(color.r);
+  var g = Math.round(color.g);
+  var b = Math.round(color.b);
+  var a = color.a;
+  var h = Math.round(color.h);
+  var s = color.s.toFixed(1);
+  var v = color.v.toFixed(1);
+  if (forceCSSHex || colorFormat === 'THREE_CHAR_HEX' || colorFormat === 'SIX_CHAR_HEX') {
+    var str = color.hex.toString(16);
+    while (str.length < 6) {
+      str = '0' + str;
+    }
+    return '#' + str;
+  } else if (colorFormat === 'CSS_RGB') {
+    return 'rgb(' + r + ',' + g + ',' + b + ')';
+  } else if (colorFormat === 'CSS_RGBA') {
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
+  } else if (colorFormat === 'HEX') {
+    return '0x' + color.hex.toString(16);
+  } else if (colorFormat === 'RGB_ARRAY') {
+    return '[' + r + ',' + g + ',' + b + ']';
+  } else if (colorFormat === 'RGBA_ARRAY') {
+    return '[' + r + ',' + g + ',' + b + ',' + a + ']';
+  } else if (colorFormat === 'RGB_OBJ') {
+    return '{r:' + r + ',g:' + g + ',b:' + b + '}';
+  } else if (colorFormat === 'RGBA_OBJ') {
+    return '{r:' + r + ',g:' + g + ',b:' + b + ',a:' + a + '}';
+  } else if (colorFormat === 'HSV_OBJ') {
+    return '{h:' + h + ',s:' + s + ',v:' + v + '}';
+  } else if (colorFormat === 'HSVA_OBJ') {
+    return '{h:' + h + ',s:' + s + ',v:' + v + ',a:' + a + '}';
+  }
+  return 'unknown format';
+}
+
+var ARR_EACH = Array.prototype.forEach;
+var ARR_SLICE = Array.prototype.slice;
+var Common = {
+  BREAK: {},
+  extend: function extend(target) {
+    this.each(ARR_SLICE.call(arguments, 1), function (obj) {
+      var keys = this.isObject(obj) ? Object.keys(obj) : [];
+      keys.forEach(function (key) {
+        if (!this.isUndefined(obj[key])) {
+          target[key] = obj[key];
+        }
+      }.bind(this));
+    }, this);
+    return target;
+  },
+  defaults: function defaults(target) {
+    this.each(ARR_SLICE.call(arguments, 1), function (obj) {
+      var keys = this.isObject(obj) ? Object.keys(obj) : [];
+      keys.forEach(function (key) {
+        if (this.isUndefined(target[key])) {
+          target[key] = obj[key];
+        }
+      }.bind(this));
+    }, this);
+    return target;
+  },
+  compose: function compose() {
+    var toCall = ARR_SLICE.call(arguments);
+    return function () {
+      var args = ARR_SLICE.call(arguments);
+      for (var i = toCall.length - 1; i >= 0; i--) {
+        args = [toCall[i].apply(this, args)];
+      }
+      return args[0];
+    };
+  },
+  each: function each(obj, itr, scope) {
+    if (!obj) {
+      return;
+    }
+    if (ARR_EACH && obj.forEach && obj.forEach === ARR_EACH) {
+      obj.forEach(itr, scope);
+    } else if (obj.length === obj.length + 0) {
+      var key = void 0;
+      var l = void 0;
+      for (key = 0, l = obj.length; key < l; key++) {
+        if (key in obj && itr.call(scope, obj[key], key) === this.BREAK) {
+          return;
+        }
+      }
+    } else {
+      for (var _key in obj) {
+        if (itr.call(scope, obj[_key], _key) === this.BREAK) {
+          return;
+        }
+      }
+    }
+  },
+  defer: function defer(fnc) {
+    setTimeout(fnc, 0);
+  },
+  debounce: function debounce(func, threshold, callImmediately) {
+    var timeout = void 0;
+    return function () {
+      var obj = this;
+      var args = arguments;
+      function delayed() {
+        timeout = null;
+        if (!callImmediately) func.apply(obj, args);
+      }
+      var callNow = callImmediately || !timeout;
+      clearTimeout(timeout);
+      timeout = setTimeout(delayed, threshold);
+      if (callNow) {
+        func.apply(obj, args);
+      }
+    };
+  },
+  toArray: function toArray(obj) {
+    if (obj.toArray) return obj.toArray();
+    return ARR_SLICE.call(obj);
+  },
+  isUndefined: function isUndefined(obj) {
+    return obj === undefined;
+  },
+  isNull: function isNull(obj) {
+    return obj === null;
+  },
+  isNaN: function (_isNaN) {
+    function isNaN(_x) {
+      return _isNaN.apply(this, arguments);
+    }
+    isNaN.toString = function () {
+      return _isNaN.toString();
+    };
+    return isNaN;
+  }(function (obj) {
+    return isNaN(obj);
+  }),
+  isArray: Array.isArray || function (obj) {
+    return obj.constructor === Array;
+  },
+  isObject: function isObject(obj) {
+    return obj === Object(obj);
+  },
+  isNumber: function isNumber(obj) {
+    return obj === obj + 0;
+  },
+  isString: function isString(obj) {
+    return obj === obj + '';
+  },
+  isBoolean: function isBoolean(obj) {
+    return obj === false || obj === true;
+  },
+  isFunction: function isFunction(obj) {
+    return obj instanceof Function;
+  }
+};
+
+var INTERPRETATIONS = [
+{
+  litmus: Common.isString,
+  conversions: {
+    THREE_CHAR_HEX: {
+      read: function read(original) {
+        var test = original.match(/^#([A-F0-9])([A-F0-9])([A-F0-9])$/i);
+        if (test === null) {
+          return false;
+        }
+        return {
+          space: 'HEX',
+          hex: parseInt('0x' + test[1].toString() + test[1].toString() + test[2].toString() + test[2].toString() + test[3].toString() + test[3].toString(), 0)
+        };
+      },
+      write: colorToString
+    },
+    SIX_CHAR_HEX: {
+      read: function read(original) {
+        var test = original.match(/^#([A-F0-9]{6})$/i);
+        if (test === null) {
+          return false;
+        }
+        return {
+          space: 'HEX',
+          hex: parseInt('0x' + test[1].toString(), 0)
+        };
+      },
+      write: colorToString
+    },
+    CSS_RGB: {
+      read: function read(original) {
+        var test = original.match(/^rgb\(\s*(.+)\s*,\s*(.+)\s*,\s*(.+)\s*\)/);
+        if (test === null) {
+          return false;
+        }
+        return {
+          space: 'RGB',
+          r: parseFloat(test[1]),
+          g: parseFloat(test[2]),
+          b: parseFloat(test[3])
+        };
+      },
+      write: colorToString
+    },
+    CSS_RGBA: {
+      read: function read(original) {
+        var test = original.match(/^rgba\(\s*(.+)\s*,\s*(.+)\s*,\s*(.+)\s*,\s*(.+)\s*\)/);
+        if (test === null) {
+          return false;
+        }
+        return {
+          space: 'RGB',
+          r: parseFloat(test[1]),
+          g: parseFloat(test[2]),
+          b: parseFloat(test[3]),
+          a: parseFloat(test[4])
+        };
+      },
+      write: colorToString
+    }
+  }
+},
+{
+  litmus: Common.isNumber,
+  conversions: {
+    HEX: {
+      read: function read(original) {
+        return {
+          space: 'HEX',
+          hex: original,
+          conversionName: 'HEX'
+        };
+      },
+      write: function write(color) {
+        return color.hex;
+      }
+    }
+  }
+},
+{
+  litmus: Common.isArray,
+  conversions: {
+    RGB_ARRAY: {
+      read: function read(original) {
+        if (original.length !== 3) {
+          return false;
+        }
+        return {
+          space: 'RGB',
+          r: original[0],
+          g: original[1],
+          b: original[2]
+        };
+      },
+      write: function write(color) {
+        return [color.r, color.g, color.b];
+      }
+    },
+    RGBA_ARRAY: {
+      read: function read(original) {
+        if (original.length !== 4) return false;
+        return {
+          space: 'RGB',
+          r: original[0],
+          g: original[1],
+          b: original[2],
+          a: original[3]
+        };
+      },
+      write: function write(color) {
+        return [color.r, color.g, color.b, color.a];
+      }
+    }
+  }
+},
+{
+  litmus: Common.isObject,
+  conversions: {
+    RGBA_OBJ: {
+      read: function read(original) {
+        if (Common.isNumber(original.r) && Common.isNumber(original.g) && Common.isNumber(original.b) && Common.isNumber(original.a)) {
+          return {
+            space: 'RGB',
+            r: original.r,
+            g: original.g,
+            b: original.b,
+            a: original.a
+          };
+        }
+        return false;
+      },
+      write: function write(color) {
+        return {
+          r: color.r,
+          g: color.g,
+          b: color.b,
+          a: color.a
+        };
+      }
+    },
+    RGB_OBJ: {
+      read: function read(original) {
+        if (Common.isNumber(original.r) && Common.isNumber(original.g) && Common.isNumber(original.b)) {
+          return {
+            space: 'RGB',
+            r: original.r,
+            g: original.g,
+            b: original.b
+          };
+        }
+        return false;
+      },
+      write: function write(color) {
+        return {
+          r: color.r,
+          g: color.g,
+          b: color.b
+        };
+      }
+    },
+    HSVA_OBJ: {
+      read: function read(original) {
+        if (Common.isNumber(original.h) && Common.isNumber(original.s) && Common.isNumber(original.v) && Common.isNumber(original.a)) {
+          return {
+            space: 'HSV',
+            h: original.h,
+            s: original.s,
+            v: original.v,
+            a: original.a
+          };
+        }
+        return false;
+      },
+      write: function write(color) {
+        return {
+          h: color.h,
+          s: color.s,
+          v: color.v,
+          a: color.a
+        };
+      }
+    },
+    HSV_OBJ: {
+      read: function read(original) {
+        if (Common.isNumber(original.h) && Common.isNumber(original.s) && Common.isNumber(original.v)) {
+          return {
+            space: 'HSV',
+            h: original.h,
+            s: original.s,
+            v: original.v
+          };
+        }
+        return false;
+      },
+      write: function write(color) {
+        return {
+          h: color.h,
+          s: color.s,
+          v: color.v
+        };
+      }
+    }
+  }
+}];
+var result = void 0;
+var toReturn = void 0;
+var interpret = function interpret() {
+  toReturn = false;
+  var original = arguments.length > 1 ? Common.toArray(arguments) : arguments[0];
+  Common.each(INTERPRETATIONS, function (family) {
+    if (family.litmus(original)) {
+      Common.each(family.conversions, function (conversion, conversionName) {
+        result = conversion.read(original);
+        if (toReturn === false && result !== false) {
+          toReturn = result;
+          result.conversionName = conversionName;
+          result.conversion = conversion;
+          return Common.BREAK;
+        }
+      });
+      return Common.BREAK;
+    }
+  });
+  return toReturn;
+};
+
+var tmpComponent = void 0;
+var ColorMath = {
+  hsv_to_rgb: function hsv_to_rgb(h, s, v) {
+    var hi = Math.floor(h / 60) % 6;
+    var f = h / 60 - Math.floor(h / 60);
+    var p = v * (1.0 - s);
+    var q = v * (1.0 - f * s);
+    var t = v * (1.0 - (1.0 - f) * s);
+    var c = [[v, t, p], [q, v, p], [p, v, t], [p, q, v], [t, p, v], [v, p, q]][hi];
+    return {
+      r: c[0] * 255,
+      g: c[1] * 255,
+      b: c[2] * 255
+    };
+  },
+  rgb_to_hsv: function rgb_to_hsv(r, g, b) {
+    var min = Math.min(r, g, b);
+    var max = Math.max(r, g, b);
+    var delta = max - min;
+    var h = void 0;
+    var s = void 0;
+    if (max !== 0) {
+      s = delta / max;
+    } else {
+      return {
+        h: NaN,
+        s: 0,
+        v: 0
+      };
+    }
+    if (r === max) {
+      h = (g - b) / delta;
+    } else if (g === max) {
+      h = 2 + (b - r) / delta;
+    } else {
+      h = 4 + (r - g) / delta;
+    }
+    h /= 6;
+    if (h < 0) {
+      h += 1;
+    }
+    return {
+      h: h * 360,
+      s: s,
+      v: max / 255
+    };
+  },
+  rgb_to_hex: function rgb_to_hex(r, g, b) {
+    var hex = this.hex_with_component(0, 2, r);
+    hex = this.hex_with_component(hex, 1, g);
+    hex = this.hex_with_component(hex, 0, b);
+    return hex;
+  },
+  component_from_hex: function component_from_hex(hex, componentIndex) {
+    return hex >> componentIndex * 8 & 0xFF;
+  },
+  hex_with_component: function hex_with_component(hex, componentIndex, value) {
+    return value << (tmpComponent = componentIndex * 8) | hex & ~(0xFF << tmpComponent);
+  }
+};
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
+
+
+
+
+
+
+
+
+
+
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+
+
+
+
+
+
+var get = function get(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  var desc = Object.getOwnPropertyDescriptor(object, property);
+
+  if (desc === undefined) {
+    var parent = Object.getPrototypeOf(object);
+
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get(parent, property, receiver);
+    }
+  } else if ("value" in desc) {
+    return desc.value;
+  } else {
+    var getter = desc.get;
+
+    if (getter === undefined) {
+      return undefined;
+    }
+
+    return getter.call(receiver);
+  }
+};
+
+var inherits = function (subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function, not " + typeof superClass);
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      enumerable: false,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass;
+};
+
+
+
+
+
+
+
+
+
+
+
+var possibleConstructorReturn = function (self, call) {
+  if (!self) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return call && (typeof call === "object" || typeof call === "function") ? call : self;
+};
+
+var Color = function () {
+  function Color() {
+    classCallCheck(this, Color);
+    this.__state = interpret.apply(this, arguments);
+    if (this.__state === false) {
+      throw new Error('Failed to interpret color arguments');
+    }
+    this.__state.a = this.__state.a || 1;
+  }
+  createClass(Color, [{
+    key: 'toString',
+    value: function toString() {
+      return colorToString(this);
+    }
+  }, {
+    key: 'toHexString',
+    value: function toHexString() {
+      return colorToString(this, true);
+    }
+  }, {
+    key: 'toOriginal',
+    value: function toOriginal() {
+      return this.__state.conversion.write(this);
+    }
+  }]);
+  return Color;
+}();
+function defineRGBComponent(target, component, componentHexIndex) {
+  Object.defineProperty(target, component, {
+    get: function get$$1() {
+      if (this.__state.space === 'RGB') {
+        return this.__state[component];
+      }
+      Color.recalculateRGB(this, component, componentHexIndex);
+      return this.__state[component];
+    },
+    set: function set$$1(v) {
+      if (this.__state.space !== 'RGB') {
+        Color.recalculateRGB(this, component, componentHexIndex);
+        this.__state.space = 'RGB';
+      }
+      this.__state[component] = v;
+    }
+  });
+}
+function defineHSVComponent(target, component) {
+  Object.defineProperty(target, component, {
+    get: function get$$1() {
+      if (this.__state.space === 'HSV') {
+        return this.__state[component];
+      }
+      Color.recalculateHSV(this);
+      return this.__state[component];
+    },
+    set: function set$$1(v) {
+      if (this.__state.space !== 'HSV') {
+        Color.recalculateHSV(this);
+        this.__state.space = 'HSV';
+      }
+      this.__state[component] = v;
+    }
+  });
+}
+Color.recalculateRGB = function (color, component, componentHexIndex) {
+  if (color.__state.space === 'HEX') {
+    color.__state[component] = ColorMath.component_from_hex(color.__state.hex, componentHexIndex);
+  } else if (color.__state.space === 'HSV') {
+    Common.extend(color.__state, ColorMath.hsv_to_rgb(color.__state.h, color.__state.s, color.__state.v));
+  } else {
+    throw new Error('Corrupted color state');
+  }
+};
+Color.recalculateHSV = function (color) {
+  var result = ColorMath.rgb_to_hsv(color.r, color.g, color.b);
+  Common.extend(color.__state, {
+    s: result.s,
+    v: result.v
+  });
+  if (!Common.isNaN(result.h)) {
+    color.__state.h = result.h;
+  } else if (Common.isUndefined(color.__state.h)) {
+    color.__state.h = 0;
+  }
+};
+Color.COMPONENTS = ['r', 'g', 'b', 'h', 's', 'v', 'hex', 'a'];
+defineRGBComponent(Color.prototype, 'r', 2);
+defineRGBComponent(Color.prototype, 'g', 1);
+defineRGBComponent(Color.prototype, 'b', 0);
+defineHSVComponent(Color.prototype, 'h');
+defineHSVComponent(Color.prototype, 's');
+defineHSVComponent(Color.prototype, 'v');
+Object.defineProperty(Color.prototype, 'a', {
+  get: function get$$1() {
+    return this.__state.a;
+  },
+  set: function set$$1(v) {
+    this.__state.a = v;
+  }
+});
+Object.defineProperty(Color.prototype, 'hex', {
+  get: function get$$1() {
+    if (this.__state.space !== 'HEX') {
+      this.__state.hex = ColorMath.rgb_to_hex(this.r, this.g, this.b);
+      this.__state.space = 'HEX';
+    }
+    return this.__state.hex;
+  },
+  set: function set$$1(v) {
+    this.__state.space = 'HEX';
+    this.__state.hex = v;
+  }
+});
+
+var Controller = function () {
+  function Controller(object, property) {
+    classCallCheck(this, Controller);
+    this.initialValue = object[property];
+    this.domElement = document.createElement('div');
+    this.object = object;
+    this.property = property;
+    this.__onChange = undefined;
+    this.__onFinishChange = undefined;
+  }
+  createClass(Controller, [{
+    key: 'onChange',
+    value: function onChange(fnc) {
+      this.__onChange = fnc;
+      return this;
+    }
+  }, {
+    key: 'onFinishChange',
+    value: function onFinishChange(fnc) {
+      this.__onFinishChange = fnc;
+      return this;
+    }
+  }, {
+    key: 'setValue',
+    value: function setValue(newValue) {
+      this.object[this.property] = newValue;
+      if (this.__onChange) {
+        this.__onChange.call(this, newValue);
+      }
+      this.updateDisplay();
+      return this;
+    }
+  }, {
+    key: 'getValue',
+    value: function getValue() {
+      return this.object[this.property];
+    }
+  }, {
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      return this;
+    }
+  }, {
+    key: 'isModified',
+    value: function isModified() {
+      return this.initialValue !== this.getValue();
+    }
+  }]);
+  return Controller;
+}();
+
+var EVENT_MAP = {
+  HTMLEvents: ['change'],
+  MouseEvents: ['click', 'mousemove', 'mousedown', 'mouseup', 'mouseover'],
+  KeyboardEvents: ['keydown']
+};
+var EVENT_MAP_INV = {};
+Common.each(EVENT_MAP, function (v, k) {
+  Common.each(v, function (e) {
+    EVENT_MAP_INV[e] = k;
+  });
+});
+var CSS_VALUE_PIXELS = /(\d+(\.\d+)?)px/;
+function cssValueToPixels(val) {
+  if (val === '0' || Common.isUndefined(val)) {
+    return 0;
+  }
+  var match = val.match(CSS_VALUE_PIXELS);
+  if (!Common.isNull(match)) {
+    return parseFloat(match[1]);
+  }
+  return 0;
+}
+var dom = {
+  makeSelectable: function makeSelectable(elem, selectable) {
+    if (elem === undefined || elem.style === undefined) return;
+    elem.onselectstart = selectable ? function () {
+      return false;
+    } : function () {};
+    elem.style.MozUserSelect = selectable ? 'auto' : 'none';
+    elem.style.KhtmlUserSelect = selectable ? 'auto' : 'none';
+    elem.unselectable = selectable ? 'on' : 'off';
+  },
+  makeFullscreen: function makeFullscreen(elem, hor, vert) {
+    var vertical = vert;
+    var horizontal = hor;
+    if (Common.isUndefined(horizontal)) {
+      horizontal = true;
+    }
+    if (Common.isUndefined(vertical)) {
+      vertical = true;
+    }
+    elem.style.position = 'absolute';
+    if (horizontal) {
+      elem.style.left = 0;
+      elem.style.right = 0;
+    }
+    if (vertical) {
+      elem.style.top = 0;
+      elem.style.bottom = 0;
+    }
+  },
+  fakeEvent: function fakeEvent(elem, eventType, pars, aux) {
+    var params = pars || {};
+    var className = EVENT_MAP_INV[eventType];
+    if (!className) {
+      throw new Error('Event type ' + eventType + ' not supported.');
+    }
+    var evt = document.createEvent(className);
+    switch (className) {
+      case 'MouseEvents':
+        {
+          var clientX = params.x || params.clientX || 0;
+          var clientY = params.y || params.clientY || 0;
+          evt.initMouseEvent(eventType, params.bubbles || false, params.cancelable || true, window, params.clickCount || 1, 0,
+          0,
+          clientX,
+          clientY,
+          false, false, false, false, 0, null);
+          break;
+        }
+      case 'KeyboardEvents':
+        {
+          var init = evt.initKeyboardEvent || evt.initKeyEvent;
+          Common.defaults(params, {
+            cancelable: true,
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            metaKey: false,
+            keyCode: undefined,
+            charCode: undefined
+          });
+          init(eventType, params.bubbles || false, params.cancelable, window, params.ctrlKey, params.altKey, params.shiftKey, params.metaKey, params.keyCode, params.charCode);
+          break;
+        }
+      default:
+        {
+          evt.initEvent(eventType, params.bubbles || false, params.cancelable || true);
+          break;
+        }
+    }
+    Common.defaults(evt, aux);
+    elem.dispatchEvent(evt);
+  },
+  bind: function bind(elem, event, func, newBool) {
+    var bool = newBool || false;
+    if (elem.addEventListener) {
+      elem.addEventListener(event, func, bool);
+    } else if (elem.attachEvent) {
+      elem.attachEvent('on' + event, func);
+    }
+    return dom;
+  },
+  unbind: function unbind(elem, event, func, newBool) {
+    var bool = newBool || false;
+    if (elem.removeEventListener) {
+      elem.removeEventListener(event, func, bool);
+    } else if (elem.detachEvent) {
+      elem.detachEvent('on' + event, func);
+    }
+    return dom;
+  },
+  addClass: function addClass(elem, className) {
+    if (elem.className === undefined) {
+      elem.className = className;
+    } else if (elem.className !== className) {
+      var classes = elem.className.split(/ +/);
+      if (classes.indexOf(className) === -1) {
+        classes.push(className);
+        elem.className = classes.join(' ').replace(/^\s+/, '').replace(/\s+$/, '');
+      }
+    }
+    return dom;
+  },
+  removeClass: function removeClass(elem, className) {
+    if (className) {
+      if (elem.className === className) {
+        elem.removeAttribute('class');
+      } else {
+        var classes = elem.className.split(/ +/);
+        var index = classes.indexOf(className);
+        if (index !== -1) {
+          classes.splice(index, 1);
+          elem.className = classes.join(' ');
+        }
+      }
+    } else {
+      elem.className = undefined;
+    }
+    return dom;
+  },
+  hasClass: function hasClass(elem, className) {
+    return new RegExp('(?:^|\\s+)' + className + '(?:\\s+|$)').test(elem.className) || false;
+  },
+  getWidth: function getWidth(elem) {
+    var style = getComputedStyle(elem);
+    return cssValueToPixels(style['border-left-width']) + cssValueToPixels(style['border-right-width']) + cssValueToPixels(style['padding-left']) + cssValueToPixels(style['padding-right']) + cssValueToPixels(style.width);
+  },
+  getHeight: function getHeight(elem) {
+    var style = getComputedStyle(elem);
+    return cssValueToPixels(style['border-top-width']) + cssValueToPixels(style['border-bottom-width']) + cssValueToPixels(style['padding-top']) + cssValueToPixels(style['padding-bottom']) + cssValueToPixels(style.height);
+  },
+  getOffset: function getOffset(el) {
+    var elem = el;
+    var offset = { left: 0, top: 0 };
+    if (elem.offsetParent) {
+      do {
+        offset.left += elem.offsetLeft;
+        offset.top += elem.offsetTop;
+        elem = elem.offsetParent;
+      } while (elem);
+    }
+    return offset;
+  },
+  isActive: function isActive(elem) {
+    return elem === document.activeElement && (elem.type || elem.href);
+  }
+};
+
+var BooleanController = function (_Controller) {
+  inherits(BooleanController, _Controller);
+  function BooleanController(object, property) {
+    classCallCheck(this, BooleanController);
+    var _this2 = possibleConstructorReturn(this, (BooleanController.__proto__ || Object.getPrototypeOf(BooleanController)).call(this, object, property));
+    var _this = _this2;
+    _this2.__prev = _this2.getValue();
+    _this2.__checkbox = document.createElement('input');
+    _this2.__checkbox.setAttribute('type', 'checkbox');
+    function onChange() {
+      _this.setValue(!_this.__prev);
+    }
+    dom.bind(_this2.__checkbox, 'change', onChange, false);
+    _this2.domElement.appendChild(_this2.__checkbox);
+    _this2.updateDisplay();
+    return _this2;
+  }
+  createClass(BooleanController, [{
+    key: 'setValue',
+    value: function setValue(v) {
+      var toReturn = get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'setValue', this).call(this, v);
+      if (this.__onFinishChange) {
+        this.__onFinishChange.call(this, this.getValue());
+      }
+      this.__prev = this.getValue();
+      return toReturn;
+    }
+  }, {
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      if (this.getValue() === true) {
+        this.__checkbox.setAttribute('checked', 'checked');
+        this.__checkbox.checked = true;
+        this.__prev = true;
+      } else {
+        this.__checkbox.checked = false;
+        this.__prev = false;
+      }
+      return get(BooleanController.prototype.__proto__ || Object.getPrototypeOf(BooleanController.prototype), 'updateDisplay', this).call(this);
+    }
+  }]);
+  return BooleanController;
+}(Controller);
+
+var OptionController = function (_Controller) {
+  inherits(OptionController, _Controller);
+  function OptionController(object, property, opts) {
+    classCallCheck(this, OptionController);
+    var _this2 = possibleConstructorReturn(this, (OptionController.__proto__ || Object.getPrototypeOf(OptionController)).call(this, object, property));
+    var options = opts;
+    var _this = _this2;
+    _this2.__select = document.createElement('select');
+    if (Common.isArray(options)) {
+      var map = {};
+      Common.each(options, function (element) {
+        map[element] = element;
+      });
+      options = map;
+    }
+    Common.each(options, function (value, key) {
+      var opt = document.createElement('option');
+      opt.innerHTML = key;
+      opt.setAttribute('value', value);
+      _this.__select.appendChild(opt);
+    });
+    _this2.updateDisplay();
+    dom.bind(_this2.__select, 'change', function () {
+      var desiredValue = this.options[this.selectedIndex].value;
+      _this.setValue(desiredValue);
+    });
+    _this2.domElement.appendChild(_this2.__select);
+    return _this2;
+  }
+  createClass(OptionController, [{
+    key: 'setValue',
+    value: function setValue(v) {
+      var toReturn = get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'setValue', this).call(this, v);
+      if (this.__onFinishChange) {
+        this.__onFinishChange.call(this, this.getValue());
+      }
+      return toReturn;
+    }
+  }, {
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      if (dom.isActive(this.__select)) return this;
+      this.__select.value = this.getValue();
+      return get(OptionController.prototype.__proto__ || Object.getPrototypeOf(OptionController.prototype), 'updateDisplay', this).call(this);
+    }
+  }]);
+  return OptionController;
+}(Controller);
+
+var StringController = function (_Controller) {
+  inherits(StringController, _Controller);
+  function StringController(object, property) {
+    classCallCheck(this, StringController);
+    var _this2 = possibleConstructorReturn(this, (StringController.__proto__ || Object.getPrototypeOf(StringController)).call(this, object, property));
+    var _this = _this2;
+    function onChange() {
+      _this.setValue(_this.__input.value);
+    }
+    function onBlur() {
+      if (_this.__onFinishChange) {
+        _this.__onFinishChange.call(_this, _this.getValue());
+      }
+    }
+    _this2.__input = document.createElement('input');
+    _this2.__input.setAttribute('type', 'text');
+    dom.bind(_this2.__input, 'keyup', onChange);
+    dom.bind(_this2.__input, 'change', onChange);
+    dom.bind(_this2.__input, 'blur', onBlur);
+    dom.bind(_this2.__input, 'keydown', function (e) {
+      if (e.keyCode === 13) {
+        this.blur();
+      }
+    });
+    _this2.updateDisplay();
+    _this2.domElement.appendChild(_this2.__input);
+    return _this2;
+  }
+  createClass(StringController, [{
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      if (!dom.isActive(this.__input)) {
+        this.__input.value = this.getValue();
+      }
+      return get(StringController.prototype.__proto__ || Object.getPrototypeOf(StringController.prototype), 'updateDisplay', this).call(this);
+    }
+  }]);
+  return StringController;
+}(Controller);
+
+function numDecimals(x) {
+  var _x = x.toString();
+  if (_x.indexOf('.') > -1) {
+    return _x.length - _x.indexOf('.') - 1;
+  }
+  return 0;
+}
+var NumberController = function (_Controller) {
+  inherits(NumberController, _Controller);
+  function NumberController(object, property, params) {
+    classCallCheck(this, NumberController);
+    var _this = possibleConstructorReturn(this, (NumberController.__proto__ || Object.getPrototypeOf(NumberController)).call(this, object, property));
+    var _params = params || {};
+    _this.__min = _params.min;
+    _this.__max = _params.max;
+    _this.__step = _params.step;
+    if (Common.isUndefined(_this.__step)) {
+      if (_this.initialValue === 0) {
+        _this.__impliedStep = 1;
+      } else {
+        _this.__impliedStep = Math.pow(10, Math.floor(Math.log(Math.abs(_this.initialValue)) / Math.LN10)) / 10;
+      }
+    } else {
+      _this.__impliedStep = _this.__step;
+    }
+    _this.__precision = numDecimals(_this.__impliedStep);
+    return _this;
+  }
+  createClass(NumberController, [{
+    key: 'setValue',
+    value: function setValue(v) {
+      var _v = v;
+      if (this.__min !== undefined && _v < this.__min) {
+        _v = this.__min;
+      } else if (this.__max !== undefined && _v > this.__max) {
+        _v = this.__max;
+      }
+      if (this.__step !== undefined && _v % this.__step !== 0) {
+        _v = Math.round(_v / this.__step) * this.__step;
+      }
+      return get(NumberController.prototype.__proto__ || Object.getPrototypeOf(NumberController.prototype), 'setValue', this).call(this, _v);
+    }
+  }, {
+    key: 'min',
+    value: function min(minValue) {
+      this.__min = minValue;
+      return this;
+    }
+  }, {
+    key: 'max',
+    value: function max(maxValue) {
+      this.__max = maxValue;
+      return this;
+    }
+  }, {
+    key: 'step',
+    value: function step(stepValue) {
+      this.__step = stepValue;
+      this.__impliedStep = stepValue;
+      this.__precision = numDecimals(stepValue);
+      return this;
+    }
+  }]);
+  return NumberController;
+}(Controller);
+
+function roundToDecimal(value, decimals) {
+  var tenTo = Math.pow(10, decimals);
+  return Math.round(value * tenTo) / tenTo;
+}
+var NumberControllerBox = function (_NumberController) {
+  inherits(NumberControllerBox, _NumberController);
+  function NumberControllerBox(object, property, params) {
+    classCallCheck(this, NumberControllerBox);
+    var _this2 = possibleConstructorReturn(this, (NumberControllerBox.__proto__ || Object.getPrototypeOf(NumberControllerBox)).call(this, object, property, params));
+    _this2.__truncationSuspended = false;
+    var _this = _this2;
+    var prevY = void 0;
+    function onChange() {
+      var attempted = parseFloat(_this.__input.value);
+      if (!Common.isNaN(attempted)) {
+        _this.setValue(attempted);
+      }
+    }
+    function onFinish() {
+      if (_this.__onFinishChange) {
+        _this.__onFinishChange.call(_this, _this.getValue());
+      }
+    }
+    function onBlur() {
+      onFinish();
+    }
+    function onMouseDrag(e) {
+      var diff = prevY - e.clientY;
+      _this.setValue(_this.getValue() + diff * _this.__impliedStep);
+      prevY = e.clientY;
+    }
+    function onMouseUp() {
+      dom.unbind(window, 'mousemove', onMouseDrag);
+      dom.unbind(window, 'mouseup', onMouseUp);
+      onFinish();
+    }
+    function onMouseDown(e) {
+      dom.bind(window, 'mousemove', onMouseDrag);
+      dom.bind(window, 'mouseup', onMouseUp);
+      prevY = e.clientY;
+    }
+    _this2.__input = document.createElement('input');
+    _this2.__input.setAttribute('type', 'text');
+    dom.bind(_this2.__input, 'change', onChange);
+    dom.bind(_this2.__input, 'blur', onBlur);
+    dom.bind(_this2.__input, 'mousedown', onMouseDown);
+    dom.bind(_this2.__input, 'keydown', function (e) {
+      if (e.keyCode === 13) {
+        _this.__truncationSuspended = true;
+        this.blur();
+        _this.__truncationSuspended = false;
+        onFinish();
+      }
+    });
+    _this2.updateDisplay();
+    _this2.domElement.appendChild(_this2.__input);
+    return _this2;
+  }
+  createClass(NumberControllerBox, [{
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      this.__input.value = this.__truncationSuspended ? this.getValue() : roundToDecimal(this.getValue(), this.__precision);
+      return get(NumberControllerBox.prototype.__proto__ || Object.getPrototypeOf(NumberControllerBox.prototype), 'updateDisplay', this).call(this);
+    }
+  }]);
+  return NumberControllerBox;
+}(NumberController);
+
+function map(v, i1, i2, o1, o2) {
+  return o1 + (o2 - o1) * ((v - i1) / (i2 - i1));
+}
+var NumberControllerSlider = function (_NumberController) {
+  inherits(NumberControllerSlider, _NumberController);
+  function NumberControllerSlider(object, property, min, max, step) {
+    classCallCheck(this, NumberControllerSlider);
+    var _this2 = possibleConstructorReturn(this, (NumberControllerSlider.__proto__ || Object.getPrototypeOf(NumberControllerSlider)).call(this, object, property, { min: min, max: max, step: step }));
+    var _this = _this2;
+    _this2.__background = document.createElement('div');
+    _this2.__foreground = document.createElement('div');
+    dom.bind(_this2.__background, 'mousedown', onMouseDown);
+    dom.bind(_this2.__background, 'touchstart', onTouchStart);
+    dom.addClass(_this2.__background, 'slider');
+    dom.addClass(_this2.__foreground, 'slider-fg');
+    function onMouseDown(e) {
+      document.activeElement.blur();
+      dom.bind(window, 'mousemove', onMouseDrag);
+      dom.bind(window, 'mouseup', onMouseUp);
+      onMouseDrag(e);
+    }
+    function onMouseDrag(e) {
+      e.preventDefault();
+      var bgRect = _this.__background.getBoundingClientRect();
+      _this.setValue(map(e.clientX, bgRect.left, bgRect.right, _this.__min, _this.__max));
+      return false;
+    }
+    function onMouseUp() {
+      dom.unbind(window, 'mousemove', onMouseDrag);
+      dom.unbind(window, 'mouseup', onMouseUp);
+      if (_this.__onFinishChange) {
+        _this.__onFinishChange.call(_this, _this.getValue());
+      }
+    }
+    function onTouchStart(e) {
+      if (e.touches.length !== 1) {
+        return;
+      }
+      dom.bind(window, 'touchmove', onTouchMove);
+      dom.bind(window, 'touchend', onTouchEnd);
+      onTouchMove(e);
+    }
+    function onTouchMove(e) {
+      var clientX = e.touches[0].clientX;
+      var bgRect = _this.__background.getBoundingClientRect();
+      _this.setValue(map(clientX, bgRect.left, bgRect.right, _this.__min, _this.__max));
+    }
+    function onTouchEnd() {
+      dom.unbind(window, 'touchmove', onTouchMove);
+      dom.unbind(window, 'touchend', onTouchEnd);
+      if (_this.__onFinishChange) {
+        _this.__onFinishChange.call(_this, _this.getValue());
+      }
+    }
+    _this2.updateDisplay();
+    _this2.__background.appendChild(_this2.__foreground);
+    _this2.domElement.appendChild(_this2.__background);
+    return _this2;
+  }
+  createClass(NumberControllerSlider, [{
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      var pct = (this.getValue() - this.__min) / (this.__max - this.__min);
+      this.__foreground.style.width = pct * 100 + '%';
+      return get(NumberControllerSlider.prototype.__proto__ || Object.getPrototypeOf(NumberControllerSlider.prototype), 'updateDisplay', this).call(this);
+    }
+  }]);
+  return NumberControllerSlider;
+}(NumberController);
+
+var FunctionController = function (_Controller) {
+  inherits(FunctionController, _Controller);
+  function FunctionController(object, property, text) {
+    classCallCheck(this, FunctionController);
+    var _this2 = possibleConstructorReturn(this, (FunctionController.__proto__ || Object.getPrototypeOf(FunctionController)).call(this, object, property));
+    var _this = _this2;
+    _this2.__button = document.createElement('div');
+    _this2.__button.innerHTML = text === undefined ? 'Fire' : text;
+    dom.bind(_this2.__button, 'click', function (e) {
+      e.preventDefault();
+      _this.fire();
+      return false;
+    });
+    dom.addClass(_this2.__button, 'button');
+    _this2.domElement.appendChild(_this2.__button);
+    return _this2;
+  }
+  createClass(FunctionController, [{
+    key: 'fire',
+    value: function fire() {
+      if (this.__onChange) {
+        this.__onChange.call(this);
+      }
+      this.getValue().call(this.object);
+      if (this.__onFinishChange) {
+        this.__onFinishChange.call(this, this.getValue());
+      }
+    }
+  }]);
+  return FunctionController;
+}(Controller);
+
+var ColorController = function (_Controller) {
+  inherits(ColorController, _Controller);
+  function ColorController(object, property) {
+    classCallCheck(this, ColorController);
+    var _this2 = possibleConstructorReturn(this, (ColorController.__proto__ || Object.getPrototypeOf(ColorController)).call(this, object, property));
+    _this2.__color = new Color(_this2.getValue());
+    _this2.__temp = new Color(0);
+    var _this = _this2;
+    _this2.domElement = document.createElement('div');
+    dom.makeSelectable(_this2.domElement, false);
+    _this2.__selector = document.createElement('div');
+    _this2.__selector.className = 'selector';
+    _this2.__saturation_field = document.createElement('div');
+    _this2.__saturation_field.className = 'saturation-field';
+    _this2.__field_knob = document.createElement('div');
+    _this2.__field_knob.className = 'field-knob';
+    _this2.__field_knob_border = '2px solid ';
+    _this2.__hue_knob = document.createElement('div');
+    _this2.__hue_knob.className = 'hue-knob';
+    _this2.__hue_field = document.createElement('div');
+    _this2.__hue_field.className = 'hue-field';
+    _this2.__input = document.createElement('input');
+    _this2.__input.type = 'text';
+    _this2.__input_textShadow = '0 1px 1px ';
+    dom.bind(_this2.__input, 'keydown', function (e) {
+      if (e.keyCode === 13) {
+        onBlur.call(this);
+      }
+    });
+    dom.bind(_this2.__input, 'blur', onBlur);
+    dom.bind(_this2.__selector, 'mousedown', function ()        {
+      dom.addClass(this, 'drag').bind(window, 'mouseup', function ()        {
+        dom.removeClass(_this.__selector, 'drag');
+      });
+    });
+    dom.bind(_this2.__selector, 'touchstart', function ()        {
+      dom.addClass(this, 'drag').bind(window, 'touchend', function ()        {
+        dom.removeClass(_this.__selector, 'drag');
+      });
+    });
+    var valueField = document.createElement('div');
+    Common.extend(_this2.__selector.style, {
+      width: '122px',
+      height: '102px',
+      padding: '3px',
+      backgroundColor: '#222',
+      boxShadow: '0px 1px 3px rgba(0,0,0,0.3)'
+    });
+    Common.extend(_this2.__field_knob.style, {
+      position: 'absolute',
+      width: '12px',
+      height: '12px',
+      border: _this2.__field_knob_border + (_this2.__color.v < 0.5 ? '#fff' : '#000'),
+      boxShadow: '0px 1px 3px rgba(0,0,0,0.5)',
+      borderRadius: '12px',
+      zIndex: 1
+    });
+    Common.extend(_this2.__hue_knob.style, {
+      position: 'absolute',
+      width: '15px',
+      height: '2px',
+      borderRight: '4px solid #fff',
+      zIndex: 1
+    });
+    Common.extend(_this2.__saturation_field.style, {
+      width: '100px',
+      height: '100px',
+      border: '1px solid #555',
+      marginRight: '3px',
+      display: 'inline-block',
+      cursor: 'pointer'
+    });
+    Common.extend(valueField.style, {
+      width: '100%',
+      height: '100%',
+      background: 'none'
+    });
+    linearGradient(valueField, 'top', 'rgba(0,0,0,0)', '#000');
+    Common.extend(_this2.__hue_field.style, {
+      width: '15px',
+      height: '100px',
+      border: '1px solid #555',
+      cursor: 'ns-resize',
+      position: 'absolute',
+      top: '3px',
+      right: '3px'
+    });
+    hueGradient(_this2.__hue_field);
+    Common.extend(_this2.__input.style, {
+      outline: 'none',
+      textAlign: 'center',
+      color: '#fff',
+      border: 0,
+      fontWeight: 'bold',
+      textShadow: _this2.__input_textShadow + 'rgba(0,0,0,0.7)'
+    });
+    dom.bind(_this2.__saturation_field, 'mousedown', fieldDown);
+    dom.bind(_this2.__saturation_field, 'touchstart', fieldDown);
+    dom.bind(_this2.__field_knob, 'mousedown', fieldDown);
+    dom.bind(_this2.__field_knob, 'touchstart', fieldDown);
+    dom.bind(_this2.__hue_field, 'mousedown', fieldDownH);
+    dom.bind(_this2.__hue_field, 'touchstart', fieldDownH);
+    function fieldDown(e) {
+      setSV(e);
+      dom.bind(window, 'mousemove', setSV);
+      dom.bind(window, 'touchmove', setSV);
+      dom.bind(window, 'mouseup', fieldUpSV);
+      dom.bind(window, 'touchend', fieldUpSV);
+    }
+    function fieldDownH(e) {
+      setH(e);
+      dom.bind(window, 'mousemove', setH);
+      dom.bind(window, 'touchmove', setH);
+      dom.bind(window, 'mouseup', fieldUpH);
+      dom.bind(window, 'touchend', fieldUpH);
+    }
+    function fieldUpSV() {
+      dom.unbind(window, 'mousemove', setSV);
+      dom.unbind(window, 'touchmove', setSV);
+      dom.unbind(window, 'mouseup', fieldUpSV);
+      dom.unbind(window, 'touchend', fieldUpSV);
+      onFinish();
+    }
+    function fieldUpH() {
+      dom.unbind(window, 'mousemove', setH);
+      dom.unbind(window, 'touchmove', setH);
+      dom.unbind(window, 'mouseup', fieldUpH);
+      dom.unbind(window, 'touchend', fieldUpH);
+      onFinish();
+    }
+    function onBlur() {
+      var i = interpret(this.value);
+      if (i !== false) {
+        _this.__color.__state = i;
+        _this.setValue(_this.__color.toOriginal());
+      } else {
+        this.value = _this.__color.toString();
+      }
+    }
+    function onFinish() {
+      if (_this.__onFinishChange) {
+        _this.__onFinishChange.call(_this, _this.__color.toOriginal());
+      }
+    }
+    _this2.__saturation_field.appendChild(valueField);
+    _this2.__selector.appendChild(_this2.__field_knob);
+    _this2.__selector.appendChild(_this2.__saturation_field);
+    _this2.__selector.appendChild(_this2.__hue_field);
+    _this2.__hue_field.appendChild(_this2.__hue_knob);
+    _this2.domElement.appendChild(_this2.__input);
+    _this2.domElement.appendChild(_this2.__selector);
+    _this2.updateDisplay();
+    function setSV(e) {
+      if (e.type.indexOf('touch') === -1) {
+        e.preventDefault();
+      }
+      var fieldRect = _this.__saturation_field.getBoundingClientRect();
+      var _ref = e.touches && e.touches[0] || e,
+          clientX = _ref.clientX,
+          clientY = _ref.clientY;
+      var s = (clientX - fieldRect.left) / (fieldRect.right - fieldRect.left);
+      var v = 1 - (clientY - fieldRect.top) / (fieldRect.bottom - fieldRect.top);
+      if (v > 1) {
+        v = 1;
+      } else if (v < 0) {
+        v = 0;
+      }
+      if (s > 1) {
+        s = 1;
+      } else if (s < 0) {
+        s = 0;
+      }
+      _this.__color.v = v;
+      _this.__color.s = s;
+      _this.setValue(_this.__color.toOriginal());
+      return false;
+    }
+    function setH(e) {
+      if (e.type.indexOf('touch') === -1) {
+        e.preventDefault();
+      }
+      var fieldRect = _this.__hue_field.getBoundingClientRect();
+      var _ref2 = e.touches && e.touches[0] || e,
+          clientY = _ref2.clientY;
+      var h = 1 - (clientY - fieldRect.top) / (fieldRect.bottom - fieldRect.top);
+      if (h > 1) {
+        h = 1;
+      } else if (h < 0) {
+        h = 0;
+      }
+      _this.__color.h = h * 360;
+      _this.setValue(_this.__color.toOriginal());
+      return false;
+    }
+    return _this2;
+  }
+  createClass(ColorController, [{
+    key: 'updateDisplay',
+    value: function updateDisplay() {
+      var i = interpret(this.getValue());
+      if (i !== false) {
+        var mismatch = false;
+        Common.each(Color.COMPONENTS, function (component) {
+          if (!Common.isUndefined(i[component]) && !Common.isUndefined(this.__color.__state[component]) && i[component] !== this.__color.__state[component]) {
+            mismatch = true;
+            return {};
+          }
+        }, this);
+        if (mismatch) {
+          Common.extend(this.__color.__state, i);
+        }
+      }
+      Common.extend(this.__temp.__state, this.__color.__state);
+      this.__temp.a = 1;
+      var flip = this.__color.v < 0.5 || this.__color.s > 0.5 ? 255 : 0;
+      var _flip = 255 - flip;
+      Common.extend(this.__field_knob.style, {
+        marginLeft: 100 * this.__color.s - 7 + 'px',
+        marginTop: 100 * (1 - this.__color.v) - 7 + 'px',
+        backgroundColor: this.__temp.toHexString(),
+        border: this.__field_knob_border + 'rgb(' + flip + ',' + flip + ',' + flip + ')'
+      });
+      this.__hue_knob.style.marginTop = (1 - this.__color.h / 360) * 100 + 'px';
+      this.__temp.s = 1;
+      this.__temp.v = 1;
+      linearGradient(this.__saturation_field, 'left', '#fff', this.__temp.toHexString());
+      this.__input.value = this.__color.toString();
+      Common.extend(this.__input.style, {
+        backgroundColor: this.__color.toHexString(),
+        color: 'rgb(' + flip + ',' + flip + ',' + flip + ')',
+        textShadow: this.__input_textShadow + 'rgba(' + _flip + ',' + _flip + ',' + _flip + ',.7)'
+      });
+    }
+  }]);
+  return ColorController;
+}(Controller);
+var vendors = ['-moz-', '-o-', '-webkit-', '-ms-', ''];
+function linearGradient(elem, x, a, b) {
+  elem.style.background = '';
+  Common.each(vendors, function (vendor) {
+    elem.style.cssText += 'background: ' + vendor + 'linear-gradient(' + x + ', ' + a + ' 0%, ' + b + ' 100%); ';
+  });
+}
+function hueGradient(elem) {
+  elem.style.background = '';
+  elem.style.cssText += 'background: -moz-linear-gradient(top,  #ff0000 0%, #ff00ff 17%, #0000ff 34%, #00ffff 50%, #00ff00 67%, #ffff00 84%, #ff0000 100%);';
+  elem.style.cssText += 'background: -webkit-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';
+  elem.style.cssText += 'background: -o-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';
+  elem.style.cssText += 'background: -ms-linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';
+  elem.style.cssText += 'background: linear-gradient(top,  #ff0000 0%,#ff00ff 17%,#0000ff 34%,#00ffff 50%,#00ff00 67%,#ffff00 84%,#ff0000 100%);';
+}
+
+var css = {
+  load: function load(url, indoc) {
+    var doc = indoc || document;
+    var link = doc.createElement('link');
+    link.type = 'text/css';
+    link.rel = 'stylesheet';
+    link.href = url;
+    doc.getElementsByTagName('head')[0].appendChild(link);
+  },
+  inject: function inject(cssContent, indoc) {
+    var doc = indoc || document;
+    var injected = document.createElement('style');
+    injected.type = 'text/css';
+    injected.innerHTML = cssContent;
+    var head = doc.getElementsByTagName('head')[0];
+    try {
+      head.appendChild(injected);
+    } catch (e) {
+    }
+  }
+};
+
+var saveDialogContents = "<div id=\"dg-save\" class=\"dg dialogue\">\n\n  Here's the new load parameter for your <code>GUI</code>'s constructor:\n\n  <textarea id=\"dg-new-constructor\"></textarea>\n\n  <div id=\"dg-save-locally\">\n\n    <input id=\"dg-local-storage\" type=\"checkbox\"/> Automatically save\n    values to <code>localStorage</code> on exit.\n\n    <div id=\"dg-local-explain\">The values saved to <code>localStorage</code> will\n      override those passed to <code>dat.GUI</code>'s constructor. This makes it\n      easier to work incrementally, but <code>localStorage</code> is fragile,\n      and your friends may not see the same values you do.\n\n    </div>\n\n  </div>\n\n</div>";
+
+var ControllerFactory = function ControllerFactory(object, property) {
+  var initialValue = object[property];
+  if (Common.isArray(arguments[2]) || Common.isObject(arguments[2])) {
+    return new OptionController(object, property, arguments[2]);
+  }
+  if (Common.isNumber(initialValue)) {
+    if (Common.isNumber(arguments[2]) && Common.isNumber(arguments[3])) {
+      if (Common.isNumber(arguments[4])) {
+        return new NumberControllerSlider(object, property, arguments[2], arguments[3], arguments[4]);
+      }
+      return new NumberControllerSlider(object, property, arguments[2], arguments[3]);
+    }
+    if (Common.isNumber(arguments[4])) {
+      return new NumberControllerBox(object, property, { min: arguments[2], max: arguments[3], step: arguments[4] });
+    }
+    return new NumberControllerBox(object, property, { min: arguments[2], max: arguments[3] });
+  }
+  if (Common.isString(initialValue)) {
+    return new StringController(object, property);
+  }
+  if (Common.isFunction(initialValue)) {
+    return new FunctionController(object, property, '');
+  }
+  if (Common.isBoolean(initialValue)) {
+    return new BooleanController(object, property);
+  }
+  return null;
+};
+
+function requestAnimationFrame(callback) {
+  setTimeout(callback, 1000 / 60);
+}
+var requestAnimationFrame$1 = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || requestAnimationFrame;
+
+var CenteredDiv = function () {
+  function CenteredDiv() {
+    classCallCheck(this, CenteredDiv);
+    this.backgroundElement = document.createElement('div');
+    Common.extend(this.backgroundElement.style, {
+      backgroundColor: 'rgba(0,0,0,0.8)',
+      top: 0,
+      left: 0,
+      display: 'none',
+      zIndex: '1000',
+      opacity: 0,
+      WebkitTransition: 'opacity 0.2s linear',
+      transition: 'opacity 0.2s linear'
+    });
+    dom.makeFullscreen(this.backgroundElement);
+    this.backgroundElement.style.position = 'fixed';
+    this.domElement = document.createElement('div');
+    Common.extend(this.domElement.style, {
+      position: 'fixed',
+      display: 'none',
+      zIndex: '1001',
+      opacity: 0,
+      WebkitTransition: '-webkit-transform 0.2s ease-out, opacity 0.2s linear',
+      transition: 'transform 0.2s ease-out, opacity 0.2s linear'
+    });
+    document.body.appendChild(this.backgroundElement);
+    document.body.appendChild(this.domElement);
+    var _this = this;
+    dom.bind(this.backgroundElement, 'click', function () {
+      _this.hide();
+    });
+  }
+  createClass(CenteredDiv, [{
+    key: 'show',
+    value: function show() {
+      var _this = this;
+      this.backgroundElement.style.display = 'block';
+      this.domElement.style.display = 'block';
+      this.domElement.style.opacity = 0;
+      this.domElement.style.webkitTransform = 'scale(1.1)';
+      this.layout();
+      Common.defer(function () {
+        _this.backgroundElement.style.opacity = 1;
+        _this.domElement.style.opacity = 1;
+        _this.domElement.style.webkitTransform = 'scale(1)';
+      });
+    }
+  }, {
+    key: 'hide',
+    value: function hide() {
+      var _this = this;
+      var hide = function hide() {
+        _this.domElement.style.display = 'none';
+        _this.backgroundElement.style.display = 'none';
+        dom.unbind(_this.domElement, 'webkitTransitionEnd', hide);
+        dom.unbind(_this.domElement, 'transitionend', hide);
+        dom.unbind(_this.domElement, 'oTransitionEnd', hide);
+      };
+      dom.bind(this.domElement, 'webkitTransitionEnd', hide);
+      dom.bind(this.domElement, 'transitionend', hide);
+      dom.bind(this.domElement, 'oTransitionEnd', hide);
+      this.backgroundElement.style.opacity = 0;
+      this.domElement.style.opacity = 0;
+      this.domElement.style.webkitTransform = 'scale(1.1)';
+    }
+  }, {
+    key: 'layout',
+    value: function layout() {
+      this.domElement.style.left = window.innerWidth / 2 - dom.getWidth(this.domElement) / 2 + 'px';
+      this.domElement.style.top = window.innerHeight / 2 - dom.getHeight(this.domElement) / 2 + 'px';
+    }
+  }]);
+  return CenteredDiv;
+}();
+
+var styleSheet = ___$insertStyle(".dg ul{list-style:none;margin:0;padding:0;width:100%;clear:both}.dg.ac{position:fixed;top:0;left:0;right:0;height:0;z-index:0}.dg:not(.ac) .main{overflow:hidden}.dg.main{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear}.dg.main.taller-than-window{overflow-y:auto}.dg.main.taller-than-window .close-button{opacity:1;margin-top:-1px;border-top:1px solid #2c2c2c}.dg.main ul.closed .close-button{opacity:1 !important}.dg.main:hover .close-button,.dg.main .close-button.drag{opacity:1}.dg.main .close-button{-webkit-transition:opacity .1s linear;-o-transition:opacity .1s linear;-moz-transition:opacity .1s linear;transition:opacity .1s linear;border:0;line-height:19px;height:20px;cursor:pointer;text-align:center;background-color:#000}.dg.main .close-button.close-top{position:relative}.dg.main .close-button.close-bottom{position:absolute}.dg.main .close-button:hover{background-color:#111}.dg.a{float:right;margin-right:15px;overflow-y:visible}.dg.a.has-save>ul.close-top{margin-top:0}.dg.a.has-save>ul.close-bottom{margin-top:27px}.dg.a.has-save>ul.closed{margin-top:0}.dg.a .save-row{top:0;z-index:1002}.dg.a .save-row.close-top{position:relative}.dg.a .save-row.close-bottom{position:fixed}.dg li{-webkit-transition:height .1s ease-out;-o-transition:height .1s ease-out;-moz-transition:height .1s ease-out;transition:height .1s ease-out;-webkit-transition:overflow .1s linear;-o-transition:overflow .1s linear;-moz-transition:overflow .1s linear;transition:overflow .1s linear}.dg li:not(.folder){cursor:auto;height:27px;line-height:27px;padding:0 4px 0 5px}.dg li.folder{padding:0;border-left:4px solid rgba(0,0,0,0)}.dg li.title{cursor:pointer;margin-left:-4px}.dg .closed li:not(.title),.dg .closed ul li,.dg .closed ul li>*{height:0;overflow:hidden;border:0}.dg .cr{clear:both;padding-left:3px;height:27px;overflow:hidden}.dg .property-name{cursor:default;float:left;clear:left;width:40%;overflow:hidden;text-overflow:ellipsis}.dg .c{float:left;width:60%;position:relative}.dg .c input[type=text]{border:0;margin-top:4px;padding:3px;width:100%;float:right}.dg .has-slider input[type=text]{width:30%;margin-left:0}.dg .slider{float:left;width:66%;margin-left:-5px;margin-right:0;height:19px;margin-top:4px}.dg .slider-fg{height:100%}.dg .c input[type=checkbox]{margin-top:7px}.dg .c select{margin-top:5px}.dg .cr.function,.dg .cr.function .property-name,.dg .cr.function *,.dg .cr.boolean,.dg .cr.boolean *{cursor:pointer}.dg .cr.color{overflow:visible}.dg .selector{display:none;position:absolute;margin-left:-9px;margin-top:23px;z-index:10}.dg .c:hover .selector,.dg .selector.drag{display:block}.dg li.save-row{padding:0}.dg li.save-row .button{display:inline-block;padding:0px 6px}.dg.dialogue{background-color:#222;width:460px;padding:15px;font-size:13px;line-height:15px}#dg-new-constructor{padding:10px;color:#222;font-family:Monaco, monospace;font-size:10px;border:0;resize:none;box-shadow:inset 1px 1px 1px #888;word-wrap:break-word;margin:12px 0;display:block;width:440px;overflow-y:scroll;height:100px;position:relative}#dg-local-explain{display:none;font-size:11px;line-height:17px;border-radius:3px;background-color:#333;padding:8px;margin-top:10px}#dg-local-explain code{font-size:10px}#dat-gui-save-locally{display:none}.dg{color:#eee;font:11px 'Lucida Grande', sans-serif;text-shadow:0 -1px 0 #111}.dg.main::-webkit-scrollbar{width:5px;background:#1a1a1a}.dg.main::-webkit-scrollbar-corner{height:0;display:none}.dg.main::-webkit-scrollbar-thumb{border-radius:5px;background:#676767}.dg li:not(.folder){background:#1a1a1a;border-bottom:1px solid #2c2c2c}.dg li.save-row{line-height:25px;background:#dad5cb;border:0}.dg li.save-row select{margin-left:5px;width:108px}.dg li.save-row .button{margin-left:5px;margin-top:1px;border-radius:2px;font-size:9px;line-height:7px;padding:4px 4px 5px 4px;background:#c5bdad;color:#fff;text-shadow:0 1px 0 #b0a58f;box-shadow:0 -1px 0 #b0a58f;cursor:pointer}.dg li.save-row .button.gears{background:#c5bdad url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAANCAYAAAB/9ZQ7AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAQJJREFUeNpiYKAU/P//PwGIC/ApCABiBSAW+I8AClAcgKxQ4T9hoMAEUrxx2QSGN6+egDX+/vWT4e7N82AMYoPAx/evwWoYoSYbACX2s7KxCxzcsezDh3evFoDEBYTEEqycggWAzA9AuUSQQgeYPa9fPv6/YWm/Acx5IPb7ty/fw+QZblw67vDs8R0YHyQhgObx+yAJkBqmG5dPPDh1aPOGR/eugW0G4vlIoTIfyFcA+QekhhHJhPdQxbiAIguMBTQZrPD7108M6roWYDFQiIAAv6Aow/1bFwXgis+f2LUAynwoIaNcz8XNx3Dl7MEJUDGQpx9gtQ8YCueB+D26OECAAQDadt7e46D42QAAAABJRU5ErkJggg==) 2px 1px no-repeat;height:7px;width:8px}.dg li.save-row .button:hover{background-color:#bab19e;box-shadow:0 -1px 0 #b0a58f}.dg li.folder{border-bottom:0}.dg li.title{padding-left:16px;background:#000 url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlI+hKgFxoCgAOw==) 6px 10px no-repeat;cursor:pointer;border-bottom:1px solid rgba(255,255,255,0.2)}.dg .closed li.title{background-image:url(data:image/gif;base64,R0lGODlhBQAFAJEAAP////Pz8////////yH5BAEAAAIALAAAAAAFAAUAAAIIlGIWqMCbWAEAOw==)}.dg .cr.boolean{border-left:3px solid #806787}.dg .cr.color{border-left:3px solid}.dg .cr.function{border-left:3px solid #e61d5f}.dg .cr.number{border-left:3px solid #2FA1D6}.dg .cr.number input[type=text]{color:#2FA1D6}.dg .cr.string{border-left:3px solid #1ed36f}.dg .cr.string input[type=text]{color:#1ed36f}.dg .cr.function:hover,.dg .cr.boolean:hover{background:#111}.dg .c input[type=text]{background:#303030;outline:none}.dg .c input[type=text]:hover{background:#3c3c3c}.dg .c input[type=text]:focus{background:#494949;color:#fff}.dg .c .slider{background:#303030;cursor:ew-resize}.dg .c .slider-fg{background:#2FA1D6;max-width:100%}.dg .c .slider:hover{background:#3c3c3c}.dg .c .slider:hover .slider-fg{background:#44abda}\n");
+
+css.inject(styleSheet);
+var CSS_NAMESPACE = 'dg';
+var HIDE_KEY_CODE = 72;
+var CLOSE_BUTTON_HEIGHT = 20;
+var DEFAULT_DEFAULT_PRESET_NAME = 'Default';
+var SUPPORTS_LOCAL_STORAGE = function () {
+  try {
+    return !!window.localStorage;
+  } catch (e) {
+    return false;
+  }
+}();
+var SAVE_DIALOGUE = void 0;
+var autoPlaceVirgin = true;
+var autoPlaceContainer = void 0;
+var hide = false;
+var hideableGuis = [];
+var GUI = function GUI(pars) {
+  var _this = this;
+  var params = pars || {};
+  this.domElement = document.createElement('div');
+  this.__ul = document.createElement('ul');
+  this.domElement.appendChild(this.__ul);
+  dom.addClass(this.domElement, CSS_NAMESPACE);
+  this.__folders = {};
+  this.__controllers = [];
+  this.__rememberedObjects = [];
+  this.__rememberedObjectIndecesToControllers = [];
+  this.__listening = [];
+  params = Common.defaults(params, {
+    closeOnTop: false,
+    autoPlace: true,
+    width: GUI.DEFAULT_WIDTH
+  });
+  params = Common.defaults(params, {
+    resizable: params.autoPlace,
+    hideable: params.autoPlace
+  });
+  if (!Common.isUndefined(params.load)) {
+    if (params.preset) {
+      params.load.preset = params.preset;
+    }
+  } else {
+    params.load = { preset: DEFAULT_DEFAULT_PRESET_NAME };
+  }
+  if (Common.isUndefined(params.parent) && params.hideable) {
+    hideableGuis.push(this);
+  }
+  params.resizable = Common.isUndefined(params.parent) && params.resizable;
+  if (params.autoPlace && Common.isUndefined(params.scrollable)) {
+    params.scrollable = true;
+  }
+  var useLocalStorage = SUPPORTS_LOCAL_STORAGE && localStorage.getItem(getLocalStorageHash(this, 'isLocal')) === 'true';
+  var saveToLocalStorage = void 0;
+  var titleRow = void 0;
+  Object.defineProperties(this,
+  {
+    parent: {
+      get: function get$$1() {
+        return params.parent;
+      }
+    },
+    scrollable: {
+      get: function get$$1() {
+        return params.scrollable;
+      }
+    },
+    autoPlace: {
+      get: function get$$1() {
+        return params.autoPlace;
+      }
+    },
+    closeOnTop: {
+      get: function get$$1() {
+        return params.closeOnTop;
+      }
+    },
+    preset: {
+      get: function get$$1() {
+        if (_this.parent) {
+          return _this.getRoot().preset;
+        }
+        return params.load.preset;
+      },
+      set: function set$$1(v) {
+        if (_this.parent) {
+          _this.getRoot().preset = v;
+        } else {
+          params.load.preset = v;
+        }
+        setPresetSelectIndex(this);
+        _this.revert();
+      }
+    },
+    width: {
+      get: function get$$1() {
+        return params.width;
+      },
+      set: function set$$1(v) {
+        params.width = v;
+        setWidth(_this, v);
+      }
+    },
+    name: {
+      get: function get$$1() {
+        return params.name;
+      },
+      set: function set$$1(v) {
+        params.name = v;
+        if (titleRow) {
+          titleRow.innerHTML = params.name;
+        }
+      }
+    },
+    closed: {
+      get: function get$$1() {
+        return params.closed;
+      },
+      set: function set$$1(v) {
+        params.closed = v;
+        if (params.closed) {
+          dom.addClass(_this.__ul, GUI.CLASS_CLOSED);
+        } else {
+          dom.removeClass(_this.__ul, GUI.CLASS_CLOSED);
+        }
+        this.onResize();
+        if (_this.__closeButton) {
+          _this.__closeButton.innerHTML = v ? GUI.TEXT_OPEN : GUI.TEXT_CLOSED;
+        }
+      }
+    },
+    load: {
+      get: function get$$1() {
+        return params.load;
+      }
+    },
+    useLocalStorage: {
+      get: function get$$1() {
+        return useLocalStorage;
+      },
+      set: function set$$1(bool) {
+        if (SUPPORTS_LOCAL_STORAGE) {
+          useLocalStorage = bool;
+          if (bool) {
+            dom.bind(window, 'unload', saveToLocalStorage);
+          } else {
+            dom.unbind(window, 'unload', saveToLocalStorage);
+          }
+          localStorage.setItem(getLocalStorageHash(_this, 'isLocal'), bool);
+        }
+      }
+    }
+  });
+  if (Common.isUndefined(params.parent)) {
+    this.closed = params.closed || false;
+    dom.addClass(this.domElement, GUI.CLASS_MAIN);
+    dom.makeSelectable(this.domElement, false);
+    if (SUPPORTS_LOCAL_STORAGE) {
+      if (useLocalStorage) {
+        _this.useLocalStorage = true;
+        var savedGui = localStorage.getItem(getLocalStorageHash(this, 'gui'));
+        if (savedGui) {
+          params.load = JSON.parse(savedGui);
+        }
+      }
+    }
+    this.__closeButton = document.createElement('div');
+    this.__closeButton.innerHTML = GUI.TEXT_CLOSED;
+    dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BUTTON);
+    if (params.closeOnTop) {
+      dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_TOP);
+      this.domElement.insertBefore(this.__closeButton, this.domElement.childNodes[0]);
+    } else {
+      dom.addClass(this.__closeButton, GUI.CLASS_CLOSE_BOTTOM);
+      this.domElement.appendChild(this.__closeButton);
+    }
+    dom.bind(this.__closeButton, 'click', function () {
+      _this.closed = !_this.closed;
+    });
+  } else {
+    if (params.closed === undefined) {
+      params.closed = true;
+    }
+    var titleRowName = document.createTextNode(params.name);
+    dom.addClass(titleRowName, 'controller-name');
+    titleRow = addRow(_this, titleRowName);
+    var onClickTitle = function onClickTitle(e) {
+      e.preventDefault();
+      _this.closed = !_this.closed;
+      return false;
+    };
+    dom.addClass(this.__ul, GUI.CLASS_CLOSED);
+    dom.addClass(titleRow, 'title');
+    dom.bind(titleRow, 'click', onClickTitle);
+    if (!params.closed) {
+      this.closed = false;
+    }
+  }
+  if (params.autoPlace) {
+    if (Common.isUndefined(params.parent)) {
+      if (autoPlaceVirgin) {
+        autoPlaceContainer = document.createElement('div');
+        dom.addClass(autoPlaceContainer, CSS_NAMESPACE);
+        dom.addClass(autoPlaceContainer, GUI.CLASS_AUTO_PLACE_CONTAINER);
+        document.body.appendChild(autoPlaceContainer);
+        autoPlaceVirgin = false;
+      }
+      autoPlaceContainer.appendChild(this.domElement);
+      dom.addClass(this.domElement, GUI.CLASS_AUTO_PLACE);
+    }
+    if (!this.parent) {
+      setWidth(_this, params.width);
+    }
+  }
+  this.__resizeHandler = function () {
+    _this.onResizeDebounced();
+  };
+  dom.bind(window, 'resize', this.__resizeHandler);
+  dom.bind(this.__ul, 'webkitTransitionEnd', this.__resizeHandler);
+  dom.bind(this.__ul, 'transitionend', this.__resizeHandler);
+  dom.bind(this.__ul, 'oTransitionEnd', this.__resizeHandler);
+  this.onResize();
+  if (params.resizable) {
+    addResizeHandle(this);
+  }
+  saveToLocalStorage = function saveToLocalStorage() {
+    if (SUPPORTS_LOCAL_STORAGE && localStorage.getItem(getLocalStorageHash(_this, 'isLocal')) === 'true') {
+      localStorage.setItem(getLocalStorageHash(_this, 'gui'), JSON.stringify(_this.getSaveObject()));
+    }
+  };
+  this.saveToLocalStorageIfPossible = saveToLocalStorage;
+  function resetWidth() {
+    var root = _this.getRoot();
+    root.width += 1;
+    Common.defer(function () {
+      root.width -= 1;
+    });
+  }
+  if (!params.parent) {
+    resetWidth();
+  }
+};
+GUI.toggleHide = function () {
+  hide = !hide;
+  Common.each(hideableGuis, function (gui) {
+    gui.domElement.style.display = hide ? 'none' : '';
+  });
+};
+GUI.CLASS_AUTO_PLACE = 'a';
+GUI.CLASS_AUTO_PLACE_CONTAINER = 'ac';
+GUI.CLASS_MAIN = 'main';
+GUI.CLASS_CONTROLLER_ROW = 'cr';
+GUI.CLASS_TOO_TALL = 'taller-than-window';
+GUI.CLASS_CLOSED = 'closed';
+GUI.CLASS_CLOSE_BUTTON = 'close-button';
+GUI.CLASS_CLOSE_TOP = 'close-top';
+GUI.CLASS_CLOSE_BOTTOM = 'close-bottom';
+GUI.CLASS_DRAG = 'drag';
+GUI.DEFAULT_WIDTH = 245;
+GUI.TEXT_CLOSED = 'Close Controls';
+GUI.TEXT_OPEN = 'Open Controls';
+GUI._keydownHandler = function (e) {
+  if (document.activeElement.type !== 'text' && (e.which === HIDE_KEY_CODE || e.keyCode === HIDE_KEY_CODE)) {
+    GUI.toggleHide();
+  }
+};
+dom.bind(window, 'keydown', GUI._keydownHandler, false);
+Common.extend(GUI.prototype,
+{
+  add: function add(object, property) {
+    return _add(this, object, property, {
+      factoryArgs: Array.prototype.slice.call(arguments, 2)
+    });
+  },
+  addColor: function addColor(object, property) {
+    return _add(this, object, property, {
+      color: true
+    });
+  },
+  remove: function remove(controller) {
+    this.__ul.removeChild(controller.__li);
+    this.__controllers.splice(this.__controllers.indexOf(controller), 1);
+    var _this = this;
+    Common.defer(function () {
+      _this.onResize();
+    });
+  },
+  destroy: function destroy() {
+    if (this.parent) {
+      throw new Error('Only the root GUI should be removed with .destroy(). ' + 'For subfolders, use gui.removeFolder(folder) instead.');
+    }
+    if (this.autoPlace) {
+      autoPlaceContainer.removeChild(this.domElement);
+    }
+    var _this = this;
+    Common.each(this.__folders, function (subfolder) {
+      _this.removeFolder(subfolder);
+    });
+    dom.unbind(window, 'keydown', GUI._keydownHandler, false);
+    removeListeners(this);
+  },
+  addFolder: function addFolder(name) {
+    if (this.__folders[name] !== undefined) {
+      throw new Error('You already have a folder in this GUI by the' + ' name "' + name + '"');
+    }
+    var newGuiParams = { name: name, parent: this };
+    newGuiParams.autoPlace = this.autoPlace;
+    if (this.load &&
+    this.load.folders &&
+    this.load.folders[name]) {
+      newGuiParams.closed = this.load.folders[name].closed;
+      newGuiParams.load = this.load.folders[name];
+    }
+    var gui = new GUI(newGuiParams);
+    this.__folders[name] = gui;
+    var li = addRow(this, gui.domElement);
+    dom.addClass(li, 'folder');
+    return gui;
+  },
+  removeFolder: function removeFolder(folder) {
+    this.__ul.removeChild(folder.domElement.parentElement);
+    delete this.__folders[folder.name];
+    if (this.load &&
+    this.load.folders &&
+    this.load.folders[folder.name]) {
+      delete this.load.folders[folder.name];
+    }
+    removeListeners(folder);
+    var _this = this;
+    Common.each(folder.__folders, function (subfolder) {
+      folder.removeFolder(subfolder);
+    });
+    Common.defer(function () {
+      _this.onResize();
+    });
+  },
+  open: function open() {
+    this.closed = false;
+  },
+  close: function close() {
+    this.closed = true;
+  },
+  hide: function hide() {
+    this.domElement.style.display = 'none';
+  },
+  show: function show() {
+    this.domElement.style.display = '';
+  },
+  onResize: function onResize() {
+    var root = this.getRoot();
+    if (root.scrollable) {
+      var top = dom.getOffset(root.__ul).top;
+      var h = 0;
+      Common.each(root.__ul.childNodes, function (node) {
+        if (!(root.autoPlace && node === root.__save_row)) {
+          h += dom.getHeight(node);
+        }
+      });
+      if (window.innerHeight - top - CLOSE_BUTTON_HEIGHT < h) {
+        dom.addClass(root.domElement, GUI.CLASS_TOO_TALL);
+        root.__ul.style.height = window.innerHeight - top - CLOSE_BUTTON_HEIGHT + 'px';
+      } else {
+        dom.removeClass(root.domElement, GUI.CLASS_TOO_TALL);
+        root.__ul.style.height = 'auto';
+      }
+    }
+    if (root.__resize_handle) {
+      Common.defer(function () {
+        root.__resize_handle.style.height = root.__ul.offsetHeight + 'px';
+      });
+    }
+    if (root.__closeButton) {
+      root.__closeButton.style.width = root.width + 'px';
+    }
+  },
+  onResizeDebounced: Common.debounce(function () {
+    this.onResize();
+  }, 50),
+  remember: function remember() {
+    if (Common.isUndefined(SAVE_DIALOGUE)) {
+      SAVE_DIALOGUE = new CenteredDiv();
+      SAVE_DIALOGUE.domElement.innerHTML = saveDialogContents;
+    }
+    if (this.parent) {
+      throw new Error('You can only call remember on a top level GUI.');
+    }
+    var _this = this;
+    Common.each(Array.prototype.slice.call(arguments), function (object) {
+      if (_this.__rememberedObjects.length === 0) {
+        addSaveMenu(_this);
+      }
+      if (_this.__rememberedObjects.indexOf(object) === -1) {
+        _this.__rememberedObjects.push(object);
+      }
+    });
+    if (this.autoPlace) {
+      setWidth(this, this.width);
+    }
+  },
+  getRoot: function getRoot() {
+    var gui = this;
+    while (gui.parent) {
+      gui = gui.parent;
+    }
+    return gui;
+  },
+  getSaveObject: function getSaveObject() {
+    var toReturn = this.load;
+    toReturn.closed = this.closed;
+    if (this.__rememberedObjects.length > 0) {
+      toReturn.preset = this.preset;
+      if (!toReturn.remembered) {
+        toReturn.remembered = {};
+      }
+      toReturn.remembered[this.preset] = getCurrentPreset(this);
+    }
+    toReturn.folders = {};
+    Common.each(this.__folders, function (element, key) {
+      toReturn.folders[key] = element.getSaveObject();
+    });
+    return toReturn;
+  },
+  save: function save() {
+    if (!this.load.remembered) {
+      this.load.remembered = {};
+    }
+    this.load.remembered[this.preset] = getCurrentPreset(this);
+    markPresetModified(this, false);
+    this.saveToLocalStorageIfPossible();
+  },
+  saveAs: function saveAs(presetName) {
+    if (!this.load.remembered) {
+      this.load.remembered = {};
+      this.load.remembered[DEFAULT_DEFAULT_PRESET_NAME] = getCurrentPreset(this, true);
+    }
+    this.load.remembered[presetName] = getCurrentPreset(this);
+    this.preset = presetName;
+    addPresetOption(this, presetName, true);
+    this.saveToLocalStorageIfPossible();
+  },
+  revert: function revert(gui) {
+    Common.each(this.__controllers, function (controller) {
+      if (!this.getRoot().load.remembered) {
+        controller.setValue(controller.initialValue);
+      } else {
+        recallSavedValue(gui || this.getRoot(), controller);
+      }
+      if (controller.__onFinishChange) {
+        controller.__onFinishChange.call(controller, controller.getValue());
+      }
+    }, this);
+    Common.each(this.__folders, function (folder) {
+      folder.revert(folder);
+    });
+    if (!gui) {
+      markPresetModified(this.getRoot(), false);
+    }
+  },
+  listen: function listen(controller) {
+    var init = this.__listening.length === 0;
+    this.__listening.push(controller);
+    if (init) {
+      updateDisplays(this.__listening);
+    }
+  },
+  updateDisplay: function updateDisplay() {
+    Common.each(this.__controllers, function (controller) {
+      controller.updateDisplay();
+    });
+    Common.each(this.__folders, function (folder) {
+      folder.updateDisplay();
+    });
+  }
+});
+function addRow(gui, newDom, liBefore) {
+  var li = document.createElement('li');
+  if (newDom) {
+    li.appendChild(newDom);
+  }
+  if (liBefore) {
+    gui.__ul.insertBefore(li, liBefore);
+  } else {
+    gui.__ul.appendChild(li);
+  }
+  gui.onResize();
+  return li;
+}
+function removeListeners(gui) {
+  dom.unbind(window, 'resize', gui.__resizeHandler);
+  if (gui.saveToLocalStorageIfPossible) {
+    dom.unbind(window, 'unload', gui.saveToLocalStorageIfPossible);
+  }
+}
+function markPresetModified(gui, modified) {
+  var opt = gui.__preset_select[gui.__preset_select.selectedIndex];
+  if (modified) {
+    opt.innerHTML = opt.value + '*';
+  } else {
+    opt.innerHTML = opt.value;
+  }
+}
+function augmentController(gui, li, controller) {
+  controller.__li = li;
+  controller.__gui = gui;
+  Common.extend(controller,                                   {
+    options: function options(_options) {
+      if (arguments.length > 1) {
+        var nextSibling = controller.__li.nextElementSibling;
+        controller.remove();
+        return _add(gui, controller.object, controller.property, {
+          before: nextSibling,
+          factoryArgs: [Common.toArray(arguments)]
+        });
+      }
+      if (Common.isArray(_options) || Common.isObject(_options)) {
+        var _nextSibling = controller.__li.nextElementSibling;
+        controller.remove();
+        return _add(gui, controller.object, controller.property, {
+          before: _nextSibling,
+          factoryArgs: [_options]
+        });
+      }
+    },
+    name: function name(_name) {
+      controller.__li.firstElementChild.firstElementChild.innerHTML = _name;
+      return controller;
+    },
+    listen: function listen() {
+      controller.__gui.listen(controller);
+      return controller;
+    },
+    remove: function remove() {
+      controller.__gui.remove(controller);
+      return controller;
+    }
+  });
+  if (controller instanceof NumberControllerSlider) {
+    var box = new NumberControllerBox(controller.object, controller.property, { min: controller.__min, max: controller.__max, step: controller.__step });
+    Common.each(['updateDisplay', 'onChange', 'onFinishChange', 'step', 'min', 'max'], function (method) {
+      var pc = controller[method];
+      var pb = box[method];
+      controller[method] = box[method] = function () {
+        var args = Array.prototype.slice.call(arguments);
+        pb.apply(box, args);
+        return pc.apply(controller, args);
+      };
+    });
+    dom.addClass(li, 'has-slider');
+    controller.domElement.insertBefore(box.domElement, controller.domElement.firstElementChild);
+  } else if (controller instanceof NumberControllerBox) {
+    var r = function r(returned) {
+      if (Common.isNumber(controller.__min) && Common.isNumber(controller.__max)) {
+        var oldName = controller.__li.firstElementChild.firstElementChild.innerHTML;
+        var wasListening = controller.__gui.__listening.indexOf(controller) > -1;
+        controller.remove();
+        var newController = _add(gui, controller.object, controller.property, {
+          before: controller.__li.nextElementSibling,
+          factoryArgs: [controller.__min, controller.__max, controller.__step]
+        });
+        newController.name(oldName);
+        if (wasListening) newController.listen();
+        return newController;
+      }
+      return returned;
+    };
+    controller.min = Common.compose(r, controller.min);
+    controller.max = Common.compose(r, controller.max);
+  } else if (controller instanceof BooleanController) {
+    dom.bind(li, 'click', function () {
+      dom.fakeEvent(controller.__checkbox, 'click');
+    });
+    dom.bind(controller.__checkbox, 'click', function (e) {
+      e.stopPropagation();
+    });
+  } else if (controller instanceof FunctionController) {
+    dom.bind(li, 'click', function () {
+      dom.fakeEvent(controller.__button, 'click');
+    });
+    dom.bind(li, 'mouseover', function () {
+      dom.addClass(controller.__button, 'hover');
+    });
+    dom.bind(li, 'mouseout', function () {
+      dom.removeClass(controller.__button, 'hover');
+    });
+  } else if (controller instanceof ColorController) {
+    dom.addClass(li, 'color');
+    controller.updateDisplay = Common.compose(function (val) {
+      li.style.borderLeftColor = controller.__color.toString();
+      return val;
+    }, controller.updateDisplay);
+    controller.updateDisplay();
+  }
+  controller.setValue = Common.compose(function (val) {
+    if (gui.getRoot().__preset_select && controller.isModified()) {
+      markPresetModified(gui.getRoot(), true);
+    }
+    return val;
+  }, controller.setValue);
+}
+function recallSavedValue(gui, controller) {
+  var root = gui.getRoot();
+  var matchedIndex = root.__rememberedObjects.indexOf(controller.object);
+  if (matchedIndex !== -1) {
+    var controllerMap = root.__rememberedObjectIndecesToControllers[matchedIndex];
+    if (controllerMap === undefined) {
+      controllerMap = {};
+      root.__rememberedObjectIndecesToControllers[matchedIndex] = controllerMap;
+    }
+    controllerMap[controller.property] = controller;
+    if (root.load && root.load.remembered) {
+      var presetMap = root.load.remembered;
+      var preset = void 0;
+      if (presetMap[gui.preset]) {
+        preset = presetMap[gui.preset];
+      } else if (presetMap[DEFAULT_DEFAULT_PRESET_NAME]) {
+        preset = presetMap[DEFAULT_DEFAULT_PRESET_NAME];
+      } else {
+        return;
+      }
+      if (preset[matchedIndex] && preset[matchedIndex][controller.property] !== undefined) {
+        var value = preset[matchedIndex][controller.property];
+        controller.initialValue = value;
+        controller.setValue(value);
+      }
+    }
+  }
+}
+function _add(gui, object, property, params) {
+  if (object[property] === undefined) {
+    throw new Error('Object "' + object + '" has no property "' + property + '"');
+  }
+  var controller = void 0;
+  if (params.color) {
+    controller = new ColorController(object, property);
+  } else {
+    var factoryArgs = [object, property].concat(params.factoryArgs);
+    controller = ControllerFactory.apply(gui, factoryArgs);
+  }
+  if (params.before instanceof Controller) {
+    params.before = params.before.__li;
+  }
+  recallSavedValue(gui, controller);
+  dom.addClass(controller.domElement, 'c');
+  var name = document.createElement('span');
+  dom.addClass(name, 'property-name');
+  name.innerHTML = controller.property;
+  var container = document.createElement('div');
+  container.appendChild(name);
+  container.appendChild(controller.domElement);
+  var li = addRow(gui, container, params.before);
+  dom.addClass(li, GUI.CLASS_CONTROLLER_ROW);
+  if (controller instanceof ColorController) {
+    dom.addClass(li, 'color');
+  } else {
+    dom.addClass(li, _typeof(controller.getValue()));
+  }
+  augmentController(gui, li, controller);
+  gui.__controllers.push(controller);
+  return controller;
+}
+function getLocalStorageHash(gui, key) {
+  return document.location.href + '.' + key;
+}
+function addPresetOption(gui, name, setSelected) {
+  var opt = document.createElement('option');
+  opt.innerHTML = name;
+  opt.value = name;
+  gui.__preset_select.appendChild(opt);
+  if (setSelected) {
+    gui.__preset_select.selectedIndex = gui.__preset_select.length - 1;
+  }
+}
+function showHideExplain(gui, explain) {
+  explain.style.display = gui.useLocalStorage ? 'block' : 'none';
+}
+function addSaveMenu(gui) {
+  var div = gui.__save_row = document.createElement('li');
+  dom.addClass(gui.domElement, 'has-save');
+  gui.__ul.insertBefore(div, gui.__ul.firstChild);
+  dom.addClass(div, 'save-row');
+  var gears = document.createElement('span');
+  gears.innerHTML = '&nbsp;';
+  dom.addClass(gears, 'button gears');
+  var button = document.createElement('span');
+  button.innerHTML = 'Save';
+  dom.addClass(button, 'button');
+  dom.addClass(button, 'save');
+  var button2 = document.createElement('span');
+  button2.innerHTML = 'New';
+  dom.addClass(button2, 'button');
+  dom.addClass(button2, 'save-as');
+  var button3 = document.createElement('span');
+  button3.innerHTML = 'Revert';
+  dom.addClass(button3, 'button');
+  dom.addClass(button3, 'revert');
+  var select = gui.__preset_select = document.createElement('select');
+  if (gui.load && gui.load.remembered) {
+    Common.each(gui.load.remembered, function (value, key) {
+      addPresetOption(gui, key, key === gui.preset);
+    });
+  } else {
+    addPresetOption(gui, DEFAULT_DEFAULT_PRESET_NAME, false);
+  }
+  dom.bind(select, 'change', function () {
+    for (var index = 0; index < gui.__preset_select.length; index++) {
+      gui.__preset_select[index].innerHTML = gui.__preset_select[index].value;
+    }
+    gui.preset = this.value;
+  });
+  div.appendChild(select);
+  div.appendChild(gears);
+  div.appendChild(button);
+  div.appendChild(button2);
+  div.appendChild(button3);
+  if (SUPPORTS_LOCAL_STORAGE) {
+    var explain = document.getElementById('dg-local-explain');
+    var localStorageCheckBox = document.getElementById('dg-local-storage');
+    var saveLocally = document.getElementById('dg-save-locally');
+    saveLocally.style.display = 'block';
+    if (localStorage.getItem(getLocalStorageHash(gui, 'isLocal')) === 'true') {
+      localStorageCheckBox.setAttribute('checked', 'checked');
+    }
+    showHideExplain(gui, explain);
+    dom.bind(localStorageCheckBox, 'change', function () {
+      gui.useLocalStorage = !gui.useLocalStorage;
+      showHideExplain(gui, explain);
+    });
+  }
+  var newConstructorTextArea = document.getElementById('dg-new-constructor');
+  dom.bind(newConstructorTextArea, 'keydown', function (e) {
+    if (e.metaKey && (e.which === 67 || e.keyCode === 67)) {
+      SAVE_DIALOGUE.hide();
+    }
+  });
+  dom.bind(gears, 'click', function () {
+    newConstructorTextArea.innerHTML = JSON.stringify(gui.getSaveObject(), undefined, 2);
+    SAVE_DIALOGUE.show();
+    newConstructorTextArea.focus();
+    newConstructorTextArea.select();
+  });
+  dom.bind(button, 'click', function () {
+    gui.save();
+  });
+  dom.bind(button2, 'click', function () {
+    var presetName = prompt('Enter a new preset name.');
+    if (presetName) {
+      gui.saveAs(presetName);
+    }
+  });
+  dom.bind(button3, 'click', function () {
+    gui.revert();
+  });
+}
+function addResizeHandle(gui) {
+  var pmouseX = void 0;
+  gui.__resize_handle = document.createElement('div');
+  Common.extend(gui.__resize_handle.style, {
+    width: '6px',
+    marginLeft: '-3px',
+    height: '200px',
+    cursor: 'ew-resize',
+    position: 'absolute'
+  });
+  function drag(e) {
+    e.preventDefault();
+    gui.width += pmouseX - e.clientX;
+    gui.onResize();
+    pmouseX = e.clientX;
+    return false;
+  }
+  function dragStop() {
+    dom.removeClass(gui.__closeButton, GUI.CLASS_DRAG);
+    dom.unbind(window, 'mousemove', drag);
+    dom.unbind(window, 'mouseup', dragStop);
+  }
+  function dragStart(e) {
+    e.preventDefault();
+    pmouseX = e.clientX;
+    dom.addClass(gui.__closeButton, GUI.CLASS_DRAG);
+    dom.bind(window, 'mousemove', drag);
+    dom.bind(window, 'mouseup', dragStop);
+    return false;
+  }
+  dom.bind(gui.__resize_handle, 'mousedown', dragStart);
+  dom.bind(gui.__closeButton, 'mousedown', dragStart);
+  gui.domElement.insertBefore(gui.__resize_handle, gui.domElement.firstElementChild);
+}
+function setWidth(gui, w) {
+  gui.domElement.style.width = w + 'px';
+  if (gui.__save_row && gui.autoPlace) {
+    gui.__save_row.style.width = w + 'px';
+  }
+  if (gui.__closeButton) {
+    gui.__closeButton.style.width = w + 'px';
+  }
+}
+function getCurrentPreset(gui, useInitialValues) {
+  var toReturn = {};
+  Common.each(gui.__rememberedObjects, function (val, index) {
+    var savedValues = {};
+    var controllerMap = gui.__rememberedObjectIndecesToControllers[index];
+    Common.each(controllerMap, function (controller, property) {
+      savedValues[property] = useInitialValues ? controller.initialValue : controller.getValue();
+    });
+    toReturn[index] = savedValues;
+  });
+  return toReturn;
+}
+function setPresetSelectIndex(gui) {
+  for (var index = 0; index < gui.__preset_select.length; index++) {
+    if (gui.__preset_select[index].value === gui.preset) {
+      gui.__preset_select.selectedIndex = index;
+    }
+  }
+}
+function updateDisplays(controllerArray) {
+  if (controllerArray.length !== 0) {
+    requestAnimationFrame$1.call(window, function () {
+      updateDisplays(controllerArray);
+    });
+  }
+  Common.each(controllerArray, function (c) {
+    c.updateDisplay();
+  });
+}
+
+var color = {
+  Color: Color,
+  math: ColorMath,
+  interpret: interpret
+};
+var controllers = {
+  Controller: Controller,
+  BooleanController: BooleanController,
+  OptionController: OptionController,
+  StringController: StringController,
+  NumberController: NumberController,
+  NumberControllerBox: NumberControllerBox,
+  NumberControllerSlider: NumberControllerSlider,
+  FunctionController: FunctionController,
+  ColorController: ColorController
+};
+var dom$1 = { dom: dom };
+var gui = { GUI: GUI };
+var GUI$1 = GUI;
+var index = {
+  color: color,
+  controllers: controllers,
+  dom: dom$1,
+  gui: gui,
+  GUI: GUI$1
+};
+
+
+/* harmony default export */ __webpack_exports__["default"] = (index);
+//# sourceMappingURL=dat.gui.module.js.map
+
 
 /***/ }),
 
@@ -116,7 +2646,343 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\n\nvar has = Object.prototype.hasOwnProperty\n  , prefix = '~';\n\n/**\n * Constructor to create a storage for our `EE` objects.\n * An `Events` instance is a plain object whose properties are event names.\n *\n * @constructor\n * @private\n */\nfunction Events() {}\n\n//\n// We try to not inherit from `Object.prototype`. In some engines creating an\n// instance in this way is faster than calling `Object.create(null)` directly.\n// If `Object.create(null)` is not supported we prefix the event names with a\n// character to make sure that the built-in object properties are not\n// overridden or used as an attack vector.\n//\nif (Object.create) {\n  Events.prototype = Object.create(null);\n\n  //\n  // This hack is needed because the `__proto__` property is still inherited in\n  // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.\n  //\n  if (!new Events().__proto__) prefix = false;\n}\n\n/**\n * Representation of a single event listener.\n *\n * @param {Function} fn The listener function.\n * @param {*} context The context to invoke the listener with.\n * @param {Boolean} [once=false] Specify if the listener is a one-time listener.\n * @constructor\n * @private\n */\nfunction EE(fn, context, once) {\n  this.fn = fn;\n  this.context = context;\n  this.once = once || false;\n}\n\n/**\n * Add a listener for a given event.\n *\n * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.\n * @param {(String|Symbol)} event The event name.\n * @param {Function} fn The listener function.\n * @param {*} context The context to invoke the listener with.\n * @param {Boolean} once Specify if the listener is a one-time listener.\n * @returns {EventEmitter}\n * @private\n */\nfunction addListener(emitter, event, fn, context, once) {\n  if (typeof fn !== 'function') {\n    throw new TypeError('The listener must be a function');\n  }\n\n  var listener = new EE(fn, context || emitter, once)\n    , evt = prefix ? prefix + event : event;\n\n  if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;\n  else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);\n  else emitter._events[evt] = [emitter._events[evt], listener];\n\n  return emitter;\n}\n\n/**\n * Clear event by name.\n *\n * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.\n * @param {(String|Symbol)} evt The Event name.\n * @private\n */\nfunction clearEvent(emitter, evt) {\n  if (--emitter._eventsCount === 0) emitter._events = new Events();\n  else delete emitter._events[evt];\n}\n\n/**\n * Minimal `EventEmitter` interface that is molded against the Node.js\n * `EventEmitter` interface.\n *\n * @constructor\n * @public\n */\nfunction EventEmitter() {\n  this._events = new Events();\n  this._eventsCount = 0;\n}\n\n/**\n * Return an array listing the events for which the emitter has registered\n * listeners.\n *\n * @returns {Array}\n * @public\n */\nEventEmitter.prototype.eventNames = function eventNames() {\n  var names = []\n    , events\n    , name;\n\n  if (this._eventsCount === 0) return names;\n\n  for (name in (events = this._events)) {\n    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);\n  }\n\n  if (Object.getOwnPropertySymbols) {\n    return names.concat(Object.getOwnPropertySymbols(events));\n  }\n\n  return names;\n};\n\n/**\n * Return the listeners registered for a given event.\n *\n * @param {(String|Symbol)} event The event name.\n * @returns {Array} The registered listeners.\n * @public\n */\nEventEmitter.prototype.listeners = function listeners(event) {\n  var evt = prefix ? prefix + event : event\n    , handlers = this._events[evt];\n\n  if (!handlers) return [];\n  if (handlers.fn) return [handlers.fn];\n\n  for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) {\n    ee[i] = handlers[i].fn;\n  }\n\n  return ee;\n};\n\n/**\n * Return the number of listeners listening to a given event.\n *\n * @param {(String|Symbol)} event The event name.\n * @returns {Number} The number of listeners.\n * @public\n */\nEventEmitter.prototype.listenerCount = function listenerCount(event) {\n  var evt = prefix ? prefix + event : event\n    , listeners = this._events[evt];\n\n  if (!listeners) return 0;\n  if (listeners.fn) return 1;\n  return listeners.length;\n};\n\n/**\n * Calls each of the listeners registered for a given event.\n *\n * @param {(String|Symbol)} event The event name.\n * @returns {Boolean} `true` if the event had listeners, else `false`.\n * @public\n */\nEventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {\n  var evt = prefix ? prefix + event : event;\n\n  if (!this._events[evt]) return false;\n\n  var listeners = this._events[evt]\n    , len = arguments.length\n    , args\n    , i;\n\n  if (listeners.fn) {\n    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);\n\n    switch (len) {\n      case 1: return listeners.fn.call(listeners.context), true;\n      case 2: return listeners.fn.call(listeners.context, a1), true;\n      case 3: return listeners.fn.call(listeners.context, a1, a2), true;\n      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;\n      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;\n      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;\n    }\n\n    for (i = 1, args = new Array(len -1); i < len; i++) {\n      args[i - 1] = arguments[i];\n    }\n\n    listeners.fn.apply(listeners.context, args);\n  } else {\n    var length = listeners.length\n      , j;\n\n    for (i = 0; i < length; i++) {\n      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);\n\n      switch (len) {\n        case 1: listeners[i].fn.call(listeners[i].context); break;\n        case 2: listeners[i].fn.call(listeners[i].context, a1); break;\n        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;\n        case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break;\n        default:\n          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {\n            args[j - 1] = arguments[j];\n          }\n\n          listeners[i].fn.apply(listeners[i].context, args);\n      }\n    }\n  }\n\n  return true;\n};\n\n/**\n * Add a listener for a given event.\n *\n * @param {(String|Symbol)} event The event name.\n * @param {Function} fn The listener function.\n * @param {*} [context=this] The context to invoke the listener with.\n * @returns {EventEmitter} `this`.\n * @public\n */\nEventEmitter.prototype.on = function on(event, fn, context) {\n  return addListener(this, event, fn, context, false);\n};\n\n/**\n * Add a one-time listener for a given event.\n *\n * @param {(String|Symbol)} event The event name.\n * @param {Function} fn The listener function.\n * @param {*} [context=this] The context to invoke the listener with.\n * @returns {EventEmitter} `this`.\n * @public\n */\nEventEmitter.prototype.once = function once(event, fn, context) {\n  return addListener(this, event, fn, context, true);\n};\n\n/**\n * Remove the listeners of a given event.\n *\n * @param {(String|Symbol)} event The event name.\n * @param {Function} fn Only remove the listeners that match this function.\n * @param {*} context Only remove the listeners that have this context.\n * @param {Boolean} once Only remove one-time listeners.\n * @returns {EventEmitter} `this`.\n * @public\n */\nEventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {\n  var evt = prefix ? prefix + event : event;\n\n  if (!this._events[evt]) return this;\n  if (!fn) {\n    clearEvent(this, evt);\n    return this;\n  }\n\n  var listeners = this._events[evt];\n\n  if (listeners.fn) {\n    if (\n      listeners.fn === fn &&\n      (!once || listeners.once) &&\n      (!context || listeners.context === context)\n    ) {\n      clearEvent(this, evt);\n    }\n  } else {\n    for (var i = 0, events = [], length = listeners.length; i < length; i++) {\n      if (\n        listeners[i].fn !== fn ||\n        (once && !listeners[i].once) ||\n        (context && listeners[i].context !== context)\n      ) {\n        events.push(listeners[i]);\n      }\n    }\n\n    //\n    // Reset the array, or remove it completely if we have no more listeners.\n    //\n    if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;\n    else clearEvent(this, evt);\n  }\n\n  return this;\n};\n\n/**\n * Remove all listeners, or those of the specified event.\n *\n * @param {(String|Symbol)} [event] The event name.\n * @returns {EventEmitter} `this`.\n * @public\n */\nEventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {\n  var evt;\n\n  if (event) {\n    evt = prefix ? prefix + event : event;\n    if (this._events[evt]) clearEvent(this, evt);\n  } else {\n    this._events = new Events();\n    this._eventsCount = 0;\n  }\n\n  return this;\n};\n\n//\n// Alias methods names because people roll like that.\n//\nEventEmitter.prototype.off = EventEmitter.prototype.removeListener;\nEventEmitter.prototype.addListener = EventEmitter.prototype.on;\n\n//\n// Expose the prefix.\n//\nEventEmitter.prefixed = prefix;\n\n//\n// Allow `EventEmitter` to be imported as module namespace.\n//\nEventEmitter.EventEmitter = EventEmitter;\n\n//\n// Expose the module.\n//\nif (true) {\n  module.exports = EventEmitter;\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./node_modules/eventemitter3/index.js?");
+
+
+var has = Object.prototype.hasOwnProperty
+  , prefix = '~';
+
+/**
+ * Constructor to create a storage for our `EE` objects.
+ * An `Events` instance is a plain object whose properties are event names.
+ *
+ * @constructor
+ * @private
+ */
+function Events() {}
+
+//
+// We try to not inherit from `Object.prototype`. In some engines creating an
+// instance in this way is faster than calling `Object.create(null)` directly.
+// If `Object.create(null)` is not supported we prefix the event names with a
+// character to make sure that the built-in object properties are not
+// overridden or used as an attack vector.
+//
+if (Object.create) {
+  Events.prototype = Object.create(null);
+
+  //
+  // This hack is needed because the `__proto__` property is still inherited in
+  // some old browsers like Android 4, iPhone 5.1, Opera 11 and Safari 5.
+  //
+  if (!new Events().__proto__) prefix = false;
+}
+
+/**
+ * Representation of a single event listener.
+ *
+ * @param {Function} fn The listener function.
+ * @param {*} context The context to invoke the listener with.
+ * @param {Boolean} [once=false] Specify if the listener is a one-time listener.
+ * @constructor
+ * @private
+ */
+function EE(fn, context, once) {
+  this.fn = fn;
+  this.context = context;
+  this.once = once || false;
+}
+
+/**
+ * Add a listener for a given event.
+ *
+ * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn The listener function.
+ * @param {*} context The context to invoke the listener with.
+ * @param {Boolean} once Specify if the listener is a one-time listener.
+ * @returns {EventEmitter}
+ * @private
+ */
+function addListener(emitter, event, fn, context, once) {
+  if (typeof fn !== 'function') {
+    throw new TypeError('The listener must be a function');
+  }
+
+  var listener = new EE(fn, context || emitter, once)
+    , evt = prefix ? prefix + event : event;
+
+  if (!emitter._events[evt]) emitter._events[evt] = listener, emitter._eventsCount++;
+  else if (!emitter._events[evt].fn) emitter._events[evt].push(listener);
+  else emitter._events[evt] = [emitter._events[evt], listener];
+
+  return emitter;
+}
+
+/**
+ * Clear event by name.
+ *
+ * @param {EventEmitter} emitter Reference to the `EventEmitter` instance.
+ * @param {(String|Symbol)} evt The Event name.
+ * @private
+ */
+function clearEvent(emitter, evt) {
+  if (--emitter._eventsCount === 0) emitter._events = new Events();
+  else delete emitter._events[evt];
+}
+
+/**
+ * Minimal `EventEmitter` interface that is molded against the Node.js
+ * `EventEmitter` interface.
+ *
+ * @constructor
+ * @public
+ */
+function EventEmitter() {
+  this._events = new Events();
+  this._eventsCount = 0;
+}
+
+/**
+ * Return an array listing the events for which the emitter has registered
+ * listeners.
+ *
+ * @returns {Array}
+ * @public
+ */
+EventEmitter.prototype.eventNames = function eventNames() {
+  var names = []
+    , events
+    , name;
+
+  if (this._eventsCount === 0) return names;
+
+  for (name in (events = this._events)) {
+    if (has.call(events, name)) names.push(prefix ? name.slice(1) : name);
+  }
+
+  if (Object.getOwnPropertySymbols) {
+    return names.concat(Object.getOwnPropertySymbols(events));
+  }
+
+  return names;
+};
+
+/**
+ * Return the listeners registered for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @returns {Array} The registered listeners.
+ * @public
+ */
+EventEmitter.prototype.listeners = function listeners(event) {
+  var evt = prefix ? prefix + event : event
+    , handlers = this._events[evt];
+
+  if (!handlers) return [];
+  if (handlers.fn) return [handlers.fn];
+
+  for (var i = 0, l = handlers.length, ee = new Array(l); i < l; i++) {
+    ee[i] = handlers[i].fn;
+  }
+
+  return ee;
+};
+
+/**
+ * Return the number of listeners listening to a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @returns {Number} The number of listeners.
+ * @public
+ */
+EventEmitter.prototype.listenerCount = function listenerCount(event) {
+  var evt = prefix ? prefix + event : event
+    , listeners = this._events[evt];
+
+  if (!listeners) return 0;
+  if (listeners.fn) return 1;
+  return listeners.length;
+};
+
+/**
+ * Calls each of the listeners registered for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @returns {Boolean} `true` if the event had listeners, else `false`.
+ * @public
+ */
+EventEmitter.prototype.emit = function emit(event, a1, a2, a3, a4, a5) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events[evt]) return false;
+
+  var listeners = this._events[evt]
+    , len = arguments.length
+    , args
+    , i;
+
+  if (listeners.fn) {
+    if (listeners.once) this.removeListener(event, listeners.fn, undefined, true);
+
+    switch (len) {
+      case 1: return listeners.fn.call(listeners.context), true;
+      case 2: return listeners.fn.call(listeners.context, a1), true;
+      case 3: return listeners.fn.call(listeners.context, a1, a2), true;
+      case 4: return listeners.fn.call(listeners.context, a1, a2, a3), true;
+      case 5: return listeners.fn.call(listeners.context, a1, a2, a3, a4), true;
+      case 6: return listeners.fn.call(listeners.context, a1, a2, a3, a4, a5), true;
+    }
+
+    for (i = 1, args = new Array(len -1); i < len; i++) {
+      args[i - 1] = arguments[i];
+    }
+
+    listeners.fn.apply(listeners.context, args);
+  } else {
+    var length = listeners.length
+      , j;
+
+    for (i = 0; i < length; i++) {
+      if (listeners[i].once) this.removeListener(event, listeners[i].fn, undefined, true);
+
+      switch (len) {
+        case 1: listeners[i].fn.call(listeners[i].context); break;
+        case 2: listeners[i].fn.call(listeners[i].context, a1); break;
+        case 3: listeners[i].fn.call(listeners[i].context, a1, a2); break;
+        case 4: listeners[i].fn.call(listeners[i].context, a1, a2, a3); break;
+        default:
+          if (!args) for (j = 1, args = new Array(len -1); j < len; j++) {
+            args[j - 1] = arguments[j];
+          }
+
+          listeners[i].fn.apply(listeners[i].context, args);
+      }
+    }
+  }
+
+  return true;
+};
+
+/**
+ * Add a listener for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn The listener function.
+ * @param {*} [context=this] The context to invoke the listener with.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.on = function on(event, fn, context) {
+  return addListener(this, event, fn, context, false);
+};
+
+/**
+ * Add a one-time listener for a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn The listener function.
+ * @param {*} [context=this] The context to invoke the listener with.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.once = function once(event, fn, context) {
+  return addListener(this, event, fn, context, true);
+};
+
+/**
+ * Remove the listeners of a given event.
+ *
+ * @param {(String|Symbol)} event The event name.
+ * @param {Function} fn Only remove the listeners that match this function.
+ * @param {*} context Only remove the listeners that have this context.
+ * @param {Boolean} once Only remove one-time listeners.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.removeListener = function removeListener(event, fn, context, once) {
+  var evt = prefix ? prefix + event : event;
+
+  if (!this._events[evt]) return this;
+  if (!fn) {
+    clearEvent(this, evt);
+    return this;
+  }
+
+  var listeners = this._events[evt];
+
+  if (listeners.fn) {
+    if (
+      listeners.fn === fn &&
+      (!once || listeners.once) &&
+      (!context || listeners.context === context)
+    ) {
+      clearEvent(this, evt);
+    }
+  } else {
+    for (var i = 0, events = [], length = listeners.length; i < length; i++) {
+      if (
+        listeners[i].fn !== fn ||
+        (once && !listeners[i].once) ||
+        (context && listeners[i].context !== context)
+      ) {
+        events.push(listeners[i]);
+      }
+    }
+
+    //
+    // Reset the array, or remove it completely if we have no more listeners.
+    //
+    if (events.length) this._events[evt] = events.length === 1 ? events[0] : events;
+    else clearEvent(this, evt);
+  }
+
+  return this;
+};
+
+/**
+ * Remove all listeners, or those of the specified event.
+ *
+ * @param {(String|Symbol)} [event] The event name.
+ * @returns {EventEmitter} `this`.
+ * @public
+ */
+EventEmitter.prototype.removeAllListeners = function removeAllListeners(event) {
+  var evt;
+
+  if (event) {
+    evt = prefix ? prefix + event : event;
+    if (this._events[evt]) clearEvent(this, evt);
+  } else {
+    this._events = new Events();
+    this._eventsCount = 0;
+  }
+
+  return this;
+};
+
+//
+// Alias methods names because people roll like that.
+//
+EventEmitter.prototype.off = EventEmitter.prototype.removeListener;
+EventEmitter.prototype.addListener = EventEmitter.prototype.on;
+
+//
+// Expose the prefix.
+//
+EventEmitter.prefixed = prefix;
+
+//
+// Allow `EventEmitter` to be imported as module namespace.
+//
+EventEmitter.EventEmitter = EventEmitter;
+
+//
+// Expose the module.
+//
+if (true) {
+  module.exports = EventEmitter;
+}
+
 
 /***/ }),
 
@@ -128,31 +2994,37 @@ eval("\n\nvar has = Object.prototype.hasOwnProperty\n  , prefix = '~';\n\n/**\n 
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"AppBase\", function() { return AppBase; });\n/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phaser */ \"phaser\");\n/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(phaser__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var utils_deviceDetection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils/deviceDetection */ \"./src/js/utils/deviceDetection.js\");\n\n\n\nclass AppBase extends phaser__WEBPACK_IMPORTED_MODULE_0___default.a.Game {\n  constructor({ config }) {\n    super(config);\n    this._gameConfig = config;\n    this._deviceMetric = Object(utils_deviceDetection__WEBPACK_IMPORTED_MODULE_1__[\"getDeviceMetric\"])();\n    this._defaultDimensions = { width: config.width, height: config.height };\n  }\n\n  init() {}\n\n  get gameConfig() {\n    return this._gameConfig;\n  }\n\n  get defaultDimensions() {\n    return this._defaultDimensions;\n  }\n\n  get deviceMetric() {\n    return this._deviceMetric;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/AppBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppBase", function() { return AppBase; });
+/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! phaser */ "phaser");
+/* harmony import */ var phaser__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(phaser__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var utils_deviceDetection__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils/deviceDetection */ "./src/js/utils/deviceDetection.js");
 
-/***/ }),
 
-/***/ "./src/js/base/constants/AppFonts.js":
-/*!*******************************************!*\
-  !*** ./src/js/base/constants/AppFonts.js ***!
-  \*******************************************/
-/*! exports provided: FONT_BALDER, FONT_BARIOL, FONT_CLEARFACE, FONT_FELL_ENGLISH, BOOT_FONTS, APP_FONTS */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_BALDER\", function() { return FONT_BALDER; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_BARIOL\", function() { return FONT_BARIOL; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_CLEARFACE\", function() { return FONT_CLEARFACE; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"FONT_FELL_ENGLISH\", function() { return FONT_FELL_ENGLISH; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BOOT_FONTS\", function() { return BOOT_FONTS; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"APP_FONTS\", function() { return APP_FONTS; });\nconst FONT_BALDER = {\n  REGULAR: 'balder_ll',\n  CSS: ['balder_ll.css'],\n};\nconst FONT_BARIOL = {\n  REGULAR: 'bariol_serif',\n  BOLD: 'bariol_serif_bold',\n  CSS: ['bariol_serif.css'],\n};\nconst FONT_CLEARFACE = {\n  REGULAR: 'clearface_gothic_roman',\n  LIGHT: 'clearface_gothic_light',\n  CSS: ['clearface_gothic.css', 'clearface_gothic_light.css'],\n};\n\nconst FONT_FELL_ENGLISH = {\n  REGULAR: 'im_fell_english_pro_roman',\n  CSS: ['im_fell_english_pro_roman.css'],\n};\n\nconst BOOT_FONTS = [FONT_BARIOL];\nconst APP_FONTS = [FONT_BALDER, FONT_CLEARFACE, FONT_FELL_ENGLISH];\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/AppFonts.js?");
+class AppBase extends phaser__WEBPACK_IMPORTED_MODULE_0___default.a.Game {
+  constructor({ config }) {
+    super(config);
+    this._gameConfig = config;
+    this._deviceMetric = Object(utils_deviceDetection__WEBPACK_IMPORTED_MODULE_1__["getDeviceMetric"])();
+    this._defaultDimensions = { width: config.width, height: config.height };
+  }
 
-/***/ }),
+  init() {}
 
-/***/ "./src/js/base/constants/AppUrls.js":
-/*!******************************************!*\
-  !*** ./src/js/base/constants/AppUrls.js ***!
-  \******************************************/
-/*! exports provided: AppUrls */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+  get gameConfig() {
+    return this._gameConfig;
+  }
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"AppUrls\", function() { return AppUrls; });\nclass AppUrls {\n  constructor(game, paths = { base: './', assets: 'assets/' }) {\n    this.game = game;\n    this.basePath = paths.base;\n    this.assetsPath = paths.assets;\n  }\n\n  // get main directory\n  getBaseDirectory() {\n    return this.basePath;\n  }\n\n  // resolves relativly given url\n  resolveRelativeUrl(path) {\n    return this.getBaseDirectory() + path;\n  }\n\n  resolveLevelAssetsUrl(level, suffix) {\n    return this.resolveRelativeUrl('assets/levels/' + level + '/') + suffix;\n  }\n\n  // get the root of the assets folder, pass in relative url for extended path\n  getAssetsDirectory(urlSuffix) {\n    return urlSuffix\n      ? this.resolveRelativeUrl(this.assetsPath + urlSuffix)\n      : this.resolveRelativeUrl(this.assetsPath);\n  }\n\n  // get the url to a game assets folder based on minigameid\n  getGameAssetsDirectory(gameId, urlSuffix) {\n    return urlSuffix\n      ? this.resolveRelativeUrl(this.assetsPath + 'games/' + gameId + '/' + urlSuffix)\n      : this.resolveRelativeUrl(this.assetsPath + 'games/' + gameId + '/');\n  }\n\n  getFontsDirectory(urlSuffix) {\n    return this.getAssetsDirectory('fonts/' + urlSuffix);\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/AppUrls.js?");
+  get defaultDimensions() {
+    return this._defaultDimensions;
+  }
+
+  get deviceMetric() {
+    return this._deviceMetric;
+  }
+}
+
 
 /***/ }),
 
@@ -164,19 +3036,17 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"SETTINGS_EVENTS\", function() { return SETTINGS_EVENTS; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"VIEWPORT_EVENTS\", function() { return VIEWPORT_EVENTS; });\nconst SETTINGS_EVENTS = {\n  CHANGED: 'CHANGED',\n}\n\nconst VIEWPORT_EVENTS = {\n  UPDATED: 'UPDATED',\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/Events.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SETTINGS_EVENTS", function() { return SETTINGS_EVENTS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "VIEWPORT_EVENTS", function() { return VIEWPORT_EVENTS; });
+const SETTINGS_EVENTS = {
+  CHANGED: 'CHANGED',
+};
 
-/***/ }),
+const VIEWPORT_EVENTS = {
+  UPDATED: 'UPDATED',
+};
 
-/***/ "./src/js/base/constants/SceneConstants.js":
-/*!*************************************************!*\
-  !*** ./src/js/base/constants/SceneConstants.js ***!
-  \*************************************************/
-/*! exports provided: KEYS */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"KEYS\", function() { return KEYS; });\nconst KEYS = {\n  Boot: 'Boot',\n  Load: 'Load',\n  Welcome: 'Welcome',\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/SceneConstants.js?");
 
 /***/ }),
 
@@ -184,11 +3054,18 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!****************************************!*\
   !*** ./src/js/base/constants/index.js ***!
   \****************************************/
-/*! exports provided: FONT_BALDER, FONT_BARIOL, FONT_CLEARFACE, FONT_FELL_ENGLISH, BOOT_FONTS, APP_FONTS, AppUrls, SETTINGS_EVENTS, VIEWPORT_EVENTS, KEYS */
+/*! exports provided: SETTINGS_EVENTS, VIEWPORT_EVENTS */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _AppFonts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppFonts */ \"./src/js/base/constants/AppFonts.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BALDER\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BALDER\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BARIOL\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BARIOL\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_CLEARFACE\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_CLEARFACE\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_FELL_ENGLISH\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"FONT_FELL_ENGLISH\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BOOT_FONTS\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"BOOT_FONTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"APP_FONTS\", function() { return _AppFonts__WEBPACK_IMPORTED_MODULE_0__[\"APP_FONTS\"]; });\n\n/* harmony import */ var _AppUrls__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppUrls */ \"./src/js/base/constants/AppUrls.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"AppUrls\", function() { return _AppUrls__WEBPACK_IMPORTED_MODULE_1__[\"AppUrls\"]; });\n\n/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Events */ \"./src/js/base/constants/Events.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SETTINGS_EVENTS\", function() { return _Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"VIEWPORT_EVENTS\", function() { return _Events__WEBPACK_IMPORTED_MODULE_2__[\"VIEWPORT_EVENTS\"]; });\n\n/* harmony import */ var _SceneConstants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SceneConstants */ \"./src/js/base/constants/SceneConstants.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"KEYS\", function() { return _SceneConstants__WEBPACK_IMPORTED_MODULE_3__[\"KEYS\"]; });\n\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/constants/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Events__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Events */ "./src/js/base/constants/Events.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SETTINGS_EVENTS", function() { return _Events__WEBPACK_IMPORTED_MODULE_0__["SETTINGS_EVENTS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VIEWPORT_EVENTS", function() { return _Events__WEBPACK_IMPORTED_MODULE_0__["VIEWPORT_EVENTS"]; });
+
+
+
 
 /***/ }),
 
@@ -200,7 +3077,68 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _App
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"GameControllerBase\", function() { return GameControllerBase; });\n/* harmony import */ var base_model_ConfigModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! base/model/ConfigModel */ \"./src/js/base/model/ConfigModel.js\");\n/* harmony import */ var base_model_UIModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/model/UIModel */ \"./src/js/base/model/UIModel.js\");\n/* harmony import */ var base_model_CopyModel__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/model/CopyModel */ \"./src/js/base/model/CopyModel.js\");\n/* harmony import */ var base_shortcuts_ShortcutsStub__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! base/shortcuts/ShortcutsStub */ \"./src/js/base/shortcuts/ShortcutsStub.js\");\n/* harmony import */ var base_constants_Events__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! base/constants/Events */ \"./src/js/base/constants/Events.js\");\n\n\n\n\n\n\nclass GameControllerBase {\n  constructor({ game, gameMode }) {\n    this.game = game;\n    this.gameMode = gameMode;\n    this.gamePaused = false;\n  }\n\n  addSceneController(sceneController) {\n    this.sceneController = sceneController\n  }\n\n  assetsLoaded() {\n    console.log('GameControllerBase.assetsLoaded');\n    const appConfig = this.game.cache.json.get('app_config');\n    const uiConfig = this.game.cache.json.get('ui_config');\n    this.config = new base_model_ConfigModel__WEBPACK_IMPORTED_MODULE_0__[\"default\"]({ config: appConfig });\n    this.uiModel = new base_model_UIModel__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({ config: uiConfig, settings: this.settings });\n    this.copyModel = new base_model_CopyModel__WEBPACK_IMPORTED_MODULE_2__[\"default\"]({ xml: this.game.cache.xml.get('copy_xml') });\n    this.game.viewportController.on(base_constants_Events__WEBPACK_IMPORTED_MODULE_4__[\"VIEWPORT_EVENTS\"].UPDATED, this.handleViewportUpdated, this);\n    this.game.viewportController.updateViewport();\n  }\n\n  handleViewportUpdated(viewport) {\n    if (!viewport.landscape) {\n      this.sceneController.showRotate();\n    } else {\n      this.sceneController.removeRotate();\n    }\n  }\n\n  pauseGame() {}\n\n  resumeGame() {}\n\n  /*\n  ====================================================================================================\n  SHORTCUTS\n  ====================================================================================================\n  */\n  addShortcuts(shortcuts) {\n    this.shortcuts = shortcuts || new base_shortcuts_ShortcutsStub__WEBPACK_IMPORTED_MODULE_3__[\"default\"]();\n    this.shortcuts.create();\n  }\n\n  updateShortcuts({ prop, value }) {\n    if (this.shortcuts) {\n      this.shortcuts.model[prop] = value;\n      this.shortcuts.update();\n    }\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/GameControllerBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GameControllerBase", function() { return GameControllerBase; });
+/* harmony import */ var base_model_UIModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! base/model/UIModel */ "./src/js/base/model/UIModel.js");
+/* harmony import */ var base_model_CopyModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/model/CopyModel */ "./src/js/base/model/CopyModel.js");
+/* harmony import */ var base_shortcuts_ShortcutsStub__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/shortcuts/ShortcutsStub */ "./src/js/base/shortcuts/ShortcutsStub.js");
+/* harmony import */ var base_constants_Events__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! base/constants/Events */ "./src/js/base/constants/Events.js");
+
+
+
+
+
+class GameControllerBase {
+  constructor({ game, gameMode }) {
+    this.game = game;
+    this.gameMode = gameMode;
+    this.gamePaused = false;
+  }
+
+  addSceneController(sceneController) {
+    this.sceneController = sceneController;
+  }
+
+  assetsLoaded() {
+    console.log('GameControllerBase.assetsLoaded');
+    const appConfig = this.game.cache.json.get('app_config');
+    const uiConfig = this.game.cache.json.get('ui_config');
+    this.uiModel = new base_model_UIModel__WEBPACK_IMPORTED_MODULE_0__["default"]({ config: uiConfig, settings: this.settings });
+    this.copyModel = new base_model_CopyModel__WEBPACK_IMPORTED_MODULE_1__["default"]({ xml: this.game.cache.xml.get('copy_xml') });
+    this.game.viewportController.on(base_constants_Events__WEBPACK_IMPORTED_MODULE_3__["VIEWPORT_EVENTS"].UPDATED, this.handleViewportUpdated, this);
+    this.game.viewportController.updateViewport();
+  }
+
+  handleViewportUpdated(viewport) {
+    if (!viewport.landscape) {
+      this.sceneController.showRotate();
+    } else {
+      this.sceneController.removeRotate();
+    }
+  }
+
+  pauseGame() {}
+
+  resumeGame() {}
+
+  /*
+  ====================================================================================================
+  SHORTCUTS
+  ====================================================================================================
+  */
+  addShortcuts(shortcuts) {
+    this.shortcuts = shortcuts || new base_shortcuts_ShortcutsStub__WEBPACK_IMPORTED_MODULE_2__["default"]();
+    this.shortcuts.create();
+  }
+
+  updateShortcuts({ prop, value }) {
+    if (this.shortcuts) {
+      this.shortcuts.model[prop] = value;
+      this.shortcuts.update();
+    }
+  }
+}
+
 
 /***/ }),
 
@@ -212,7 +3150,91 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"SceneControllerBase\", function() { return SceneControllerBase; });\nclass SceneControllerBase {\n  constructor(sceneManager) {\n    this.sceneManager = sceneManager;\n  }\n\n  addSceneMap(sceneMap) {\n    this.currentSceneKey = null;\n    sceneMap.map(({ key, state }) => {\n      if (!this.sceneManager.keys[key]) {\n        this.sceneManager.add(key, state);\n      }\n    });\n  }\n\n  reset() {\n    this.currentSceneKey = null;\n  }\n\n  getCurrentScene() {\n    return this.sceneManager.getScene(this.currentSceneKey);\n  }\n\n  getScene(id) {\n    return this.sceneManager.getScene(id);\n  }\n\n  getScenes(isActive = true) {\n    return this.sceneManager.getScenes(isActive);\n  }\n\n  sleepScene(id) {\n    this.sceneManager.getScene(id).sleep();\n    this.sceneManager.sleep(id);\n  }\n\n  shutdownScene(id) {\n    this.sceneManager.getScene(id).shutdown();\n  }\n\n  shutdownScenes(scenes = []) {\n    for (const sceneID of scenes) {\n      this.sceneManager.getScene(sceneID).shutdown();\n    }\n  }\n\n  pause(key) {\n    this.sceneManager.pause(key);\n  }\n\n  resume(key) {\n    this.sceneManager.resume(key);\n  }\n\n  switchScene(sceneKey, { data } = {}) {\n    // console.log('switchScene', sceneKey);\n    if (this.currentSceneKey) {\n      this.stopScene(this.currentSceneKey);\n    }\n    this.currentSceneKey = sceneKey;\n    this.startScene(this.currentSceneKey, { data });\n  }\n\n  startScene(scene, data) {\n    this.sceneManager.start(scene, data);\n    this.sceneManager.getScene(scene).scene.setVisible(true);\n    this.sceneManager.bringToTop(scene);\n  }\n\n  stopScene(scene) {\n    this.sceneManager.stop(scene);\n    this.sceneManager.getScene(scene).scene.setVisible(false);\n  }\n\n  pauseScene(scene) {\n    this.sceneManager.pause(scene);\n  }\n\n  resumeScene(scene) {\n    this.sceneManager.resume(scene);\n    this.sceneManager.bringToTop(scene);\n  }\n}\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/SceneControllerBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SceneControllerBase", function() { return SceneControllerBase; });
+class SceneControllerBase {
+  constructor(sceneManager) {
+    this.sceneManager = sceneManager;
+  }
+
+  addSceneMap(sceneMap) {
+    this.currentSceneKey = null;
+    sceneMap.map(({ key, state }) => {
+      if (!this.sceneManager.keys[key]) {
+        this.sceneManager.add(key, state);
+      }
+    });
+  }
+
+  reset() {
+    this.currentSceneKey = null;
+  }
+
+  getCurrentScene() {
+    return this.sceneManager.getScene(this.currentSceneKey);
+  }
+
+  getScene(id) {
+    return this.sceneManager.getScene(id);
+  }
+
+  getScenes(isActive = true) {
+    return this.sceneManager.getScenes(isActive);
+  }
+
+  sleepScene(id) {
+    this.sceneManager.getScene(id).sleep();
+    this.sceneManager.sleep(id);
+  }
+
+  shutdownScene(id) {
+    this.sceneManager.getScene(id).shutdown();
+  }
+
+  shutdownScenes(scenes = []) {
+    for (const sceneID of scenes) {
+      this.sceneManager.getScene(sceneID).shutdown();
+    }
+  }
+
+  pause(key) {
+    this.sceneManager.pause(key);
+  }
+
+  resume(key) {
+    this.sceneManager.resume(key);
+  }
+
+  switchScene(sceneKey, { data } = {}) {
+    // console.log('switchScene', sceneKey);
+    if (this.currentSceneKey) {
+      this.stopScene(this.currentSceneKey);
+    }
+    this.currentSceneKey = sceneKey;
+    this.startScene(this.currentSceneKey, { data });
+  }
+
+  startScene(scene, data) {
+    this.sceneManager.start(scene, data);
+    this.sceneManager.getScene(scene).scene.setVisible(true);
+    this.sceneManager.bringToTop(scene);
+  }
+
+  stopScene(scene) {
+    this.sceneManager.stop(scene);
+    this.sceneManager.getScene(scene).scene.setVisible(false);
+  }
+
+  pauseScene(scene) {
+    this.sceneManager.pause(scene);
+  }
+
+  resumeScene(scene) {
+    this.sceneManager.resume(scene);
+    this.sceneManager.bringToTop(scene);
+  }
+}
+
 
 /***/ }),
 
@@ -224,7 +3246,97 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"SettingsControllerBase\", function() { return SettingsControllerBase; });\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ \"./node_modules/eventemitter3/index.js\");\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_model_Settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/model/Settings */ \"./src/js/base/model/Settings.js\");\n/* harmony import */ var base_constants_Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/constants/Events */ \"./src/js/base/constants/Events.js\");\n\n\n\n\nclass SettingsControllerBase extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {\n  constructor({ game }) {\n    super();\n\n    this.game = game;\n    this.model = new base_model_Settings__WEBPACK_IMPORTED_MODULE_1__[\"default\"]();\n    this.gameData = {};\n  }\n\n  get audio() {\n    return this.model._audio;\n  }\n\n  get sfx() {\n    return this.model._audio && this.model._sfx;\n  }\n\n  get music() {\n    return this.model._audio && this.model._music;\n  }\n\n  get vo() {\n    return this.model._audio && this.model._vo;\n  }\n\n  get buttonAudio() {\n    return this.model._audio && this.model._buttonAudio;\n  }\n\n  get motion() {\n    return this.model._motion;\n  }\n\n  get captions() {\n    return this.model._captions;\n  }\n\n  set audio(audio) {\n    this.model._audio = audio;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  set sfx(sfx) {\n    this.model._sfx = sfx;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  set music(music) {\n    this.model._music = music;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  set vo(vo) {\n    this.model._vo = vo;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  set buttonAudio(buttonAudio) {\n    this.model._buttonAudio = buttonAudio;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  set motion(motion) {\n    this.model._motion = motion;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  set captions(captions) {\n    this.model._captions = captions;\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"SETTINGS_EVENTS\"].CHANGED);\n  }\n\n  getGameData() {\n    return this.gameData;\n  }\n\n  setTouchLocked(value) {\n    this._touchLocked = value;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/SettingsControllerBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SettingsControllerBase", function() { return SettingsControllerBase; });
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ "./node_modules/eventemitter3/index.js");
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var base_model_Settings__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/model/Settings */ "./src/js/base/model/Settings.js");
+/* harmony import */ var base_constants_Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/constants/Events */ "./src/js/base/constants/Events.js");
+
+
+
+
+class SettingsControllerBase extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {
+  constructor({ game }) {
+    super();
+
+    this.game = game;
+    this.model = new base_model_Settings__WEBPACK_IMPORTED_MODULE_1__["default"]();
+    this.gameData = {};
+  }
+
+  get audio() {
+    return this.model._audio;
+  }
+
+  get sfx() {
+    return this.model._audio && this.model._sfx;
+  }
+
+  get music() {
+    return this.model._audio && this.model._music;
+  }
+
+  get vo() {
+    return this.model._audio && this.model._vo;
+  }
+
+  get buttonAudio() {
+    return this.model._audio && this.model._buttonAudio;
+  }
+
+  get motion() {
+    return this.model._motion;
+  }
+
+  get captions() {
+    return this.model._captions;
+  }
+
+  set audio(audio) {
+    this.model._audio = audio;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  set sfx(sfx) {
+    this.model._sfx = sfx;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  set music(music) {
+    this.model._music = music;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  set vo(vo) {
+    this.model._vo = vo;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  set buttonAudio(buttonAudio) {
+    this.model._buttonAudio = buttonAudio;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  set motion(motion) {
+    this.model._motion = motion;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  set captions(captions) {
+    this.model._captions = captions;
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["SETTINGS_EVENTS"].CHANGED);
+  }
+
+  getGameData() {
+    return this.gameData;
+  }
+
+  setTouchLocked(value) {
+    this._touchLocked = value;
+  }
+}
+
 
 /***/ }),
 
@@ -236,7 +3348,65 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"SoundControllerBase\", function() { return SoundControllerBase; });\nconst SFX_VOLUME = 0.5;\n\nclass SoundControllerBase {\n  constructor({ game }) {\n    this.game = game;\n    this.currentVO = null;\n\n    // this.game.settings.emitter.on('settingsAudioChanged', this.handleAudioChanged, this);\n    // this.handleAudioChanged();\n  }\n\n  handleAudioChanged() {\n    this.mute = !this.game.settings.getAudio();\n  }\n\n  set mute(value) {\n    this.game.sound.mute = value;\n  }\n\n  playGelVO(id) {\n    if (this.currentVO) {\n      this.currentVO.stop();\n      this.currentVO = null;\n    }\n    this.currentVO = this.playAudioSprite('gelvo', id, { volume: 1 });\n  }\n\n  playAudioSprite(spriteID, id, opts = {}, sprite = null) {\n    // console.log('playAudioSprite', spriteID, id, opts);\n    const { volume = SFX_VOLUME, loop = false, delay = null } = opts;\n    if (delay) {\n      const { time, duration } = delay;\n      opts.delay = null;\n      time.addEvent({\n        delay: duration,\n        callback: this.playAudioSprite,\n        callbackScope: this,\n        args: [spriteID, id, opts],\n      });\n      return false;\n    }\n    let audioSprite = sprite;\n    if (!audioSprite && this.game.cache.audio.exists(spriteID)) {\n      audioSprite = this.game.sound.addAudioSprite(spriteID);\n    }\n    if (audioSprite) {\n      audioSprite.play(id, { volume, loop });\n      return audioSprite;\n    }\n    return false;\n  }\n\n  stopAudioSprite(sprite) {\n    sprite.stop();\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/SoundControllerBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SoundControllerBase", function() { return SoundControllerBase; });
+const SFX_VOLUME = 0.5;
+
+class SoundControllerBase {
+  constructor({ game }) {
+    this.game = game;
+    this.currentVO = null;
+
+    // this.game.settings.emitter.on('settingsAudioChanged', this.handleAudioChanged, this);
+    // this.handleAudioChanged();
+  }
+
+  handleAudioChanged() {
+    this.mute = !this.game.settings.getAudio();
+  }
+
+  set mute(value) {
+    this.game.sound.mute = value;
+  }
+
+  playGelVO(id) {
+    if (this.currentVO) {
+      this.currentVO.stop();
+      this.currentVO = null;
+    }
+    this.currentVO = this.playAudioSprite('gelvo', id, { volume: 1 });
+  }
+
+  playAudioSprite(spriteID, id, opts = {}, sprite = null) {
+    // console.log('playAudioSprite', spriteID, id, opts);
+    const { volume = SFX_VOLUME, loop = false, delay = null } = opts;
+    if (delay) {
+      const { time, duration } = delay;
+      opts.delay = null;
+      time.addEvent({
+        delay: duration,
+        callback: this.playAudioSprite,
+        callbackScope: this,
+        args: [spriteID, id, opts],
+      });
+      return false;
+    }
+    let audioSprite = sprite;
+    if (!audioSprite && this.game.cache.audio.exists(spriteID)) {
+      audioSprite = this.game.sound.addAudioSprite(spriteID);
+    }
+    if (audioSprite) {
+      audioSprite.play(id, { volume, loop });
+      return audioSprite;
+    }
+    return false;
+  }
+
+  stopAudioSprite(sprite) {
+    sprite.stop();
+  }
+}
+
 
 /***/ }),
 
@@ -248,7 +3418,35 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"TrackingControllerBase\", function() { return TrackingControllerBase; });\nclass TrackingControllerBase {\n  constructor({ game }) {\n    this.game = game;\n    this._plugin = null;\n  }\n\n  set plugin(plugin) {\n    this._plugin = plugin;\n  }\n\n  track(data) {\n    if (this._plugin) {\n      this._plugin.track(data);\n    } else {\n      console.log('Unhandled track event', data);\n    }\n  }\n\n  setPage(data) {\n    if (this._plugin) {\n      this._plugin.setPage(data);\n    } else {\n      console.log('Unhandled setPage event', data);\n    }\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/TrackingControllerBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TrackingControllerBase", function() { return TrackingControllerBase; });
+class TrackingControllerBase {
+  constructor({ game }) {
+    this.game = game;
+    this._plugin = null;
+  }
+
+  set plugin(plugin) {
+    this._plugin = plugin;
+  }
+
+  track(data) {
+    if (this._plugin) {
+      this._plugin.track(data);
+    } else {
+      console.log('Unhandled track event', data);
+    }
+  }
+
+  setPage(data) {
+    if (this._plugin) {
+      this._plugin.setPage(data);
+    } else {
+      console.log('Unhandled setPage event', data);
+    }
+  }
+}
+
 
 /***/ }),
 
@@ -260,7 +3458,135 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ViewportControllerBase\", function() { return ViewportControllerBase; });\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ \"./node_modules/eventemitter3/index.js\");\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_objects_Collision__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/objects/Collision */ \"./src/js/base/objects/Collision.js\");\n/* harmony import */ var base_constants_Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/constants/Events */ \"./src/js/base/constants/Events.js\");\n\n\n\n\nclass ViewportControllerBase extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {\n  constructor({ game }) {\n    super();\n    this.game = game;\n    this._viewport = { x: 0, y: 0, width: 0, height: 0, padding: 0, paddingBottom: 0 };\n    this.game.scale.on('resize', this.updateViewport, this);\n    this.updateViewport();\n  }\n\n  get viewport() {\n    return { ...this._viewport };\n  }\n\n  get padding() {\n    return this.viewport.padding;\n  }\n\n  get paddingBottom() {\n    return this.viewport.paddingBottom;\n  }\n\n  get width() {\n    return this.viewport.width;\n  }\n\n  get height() {\n    return this.viewport.height;\n  }\n\n  get x() {\n    return this.viewport.x;\n  }\n\n  get y() {\n    return this.viewport.y;\n  }\n  get centerY() {\n    return this.y + this.height * 0.5;\n  }\n  get centerX() {\n    return this.x + this.width * 0.5;\n  }\n  get center() {\n    return { x: this.centerX, y: this.centerY };\n  }\n\n  get left() {\n    return this.x;\n  }\n\n  get right() {\n    return this.x + this.width;\n  }\n  get top() {\n    return this.y;\n  }\n\n  get bottom() {\n    return this.y + this.height;\n  }\n\n  get rightPadded() {\n    return this.right - this.padding;\n  }\n\n  get leftPadded() {\n    return this.left + this.padding;\n  }\n\n  get topPadded() {\n    return this.top + this.padding;\n  }\n\n  get bottomPadded() {\n    return this.bottom - this.paddingBottom;\n  }\n\n  get isLandscape() {\n    return this.width >= this.height;\n  }\n\n  updateViewport() {\n    const windowAspect = this.game.scale.parentSize.aspectRatio;\n    const height = this.game.defaultGameHeight;\n    const width = Math.min(this.game.defaultGameWidth, this.game.defaultGameHeight * windowAspect);\n    const x = Math.max(0, this.game.defaultGameWidth * 0.5 - width * 0.5);\n    const y = Math.max(0, this.game.defaultGameHeight * 0.5 - height * 0.5);\n    const padding = Math.max(width * 0.02, height * 0.02);\n    let paddingBottom = padding;\n\n    // add a 32pixel botttom padding on iphone mobiles due to brim...\n    if (window.innerWidth <= 568 && window.devicePixelRatio === 2) {\n      paddingBottom = 32 / (this.game.canvas.clientHeight / height);\n    }\n\n    this._viewport.x = x;\n    this._viewport.y = y;\n    this._viewport.width = width;\n    this._viewport.height = height;\n    this._viewport.padding = padding;\n    this._viewport.paddingBottom = paddingBottom;\n    this._viewport.landscape = width >= height;\n\n    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__[\"VIEWPORT_EVENTS\"].UPDATED, this._viewport);\n  }\n\n  overlapsViewport(rect) {\n    return Object(base_objects_Collision__WEBPACK_IMPORTED_MODULE_1__[\"checkRects\"])(rect, this);\n  }\n\n  isWithinViewport(x, y) {\n    return Object(base_objects_Collision__WEBPACK_IMPORTED_MODULE_1__[\"checkPoint\"])(x, y, this);\n  }\n\n  destroy() {\n    this.game.scale.off('resize', this.updateViewport, this);\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/ViewportControllerBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ViewportControllerBase", function() { return ViewportControllerBase; });
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ "./node_modules/eventemitter3/index.js");
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var base_objects_Collision__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/objects/Collision */ "./src/js/base/objects/Collision.js");
+/* harmony import */ var base_constants_Events__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! base/constants/Events */ "./src/js/base/constants/Events.js");
+
+
+
+
+class ViewportControllerBase extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {
+  constructor({ game }) {
+    super();
+    this.game = game;
+    this._viewport = { x: 0, y: 0, width: 0, height: 0, padding: 0, paddingBottom: 0 };
+    this.game.scale.on('resize', this.updateViewport, this);
+    this.updateViewport();
+  }
+
+  get viewport() {
+    return { ...this._viewport };
+  }
+
+  get padding() {
+    return this.viewport.padding;
+  }
+
+  get paddingBottom() {
+    return this.viewport.paddingBottom;
+  }
+
+  get width() {
+    return this.viewport.width;
+  }
+
+  get height() {
+    return this.viewport.height;
+  }
+
+  get x() {
+    return this.viewport.x;
+  }
+
+  get y() {
+    return this.viewport.y;
+  }
+  get centerY() {
+    return this.y + this.height * 0.5;
+  }
+  get centerX() {
+    return this.x + this.width * 0.5;
+  }
+  get center() {
+    return { x: this.centerX, y: this.centerY };
+  }
+
+  get left() {
+    return this.x;
+  }
+
+  get right() {
+    return this.x + this.width;
+  }
+  get top() {
+    return this.y;
+  }
+
+  get bottom() {
+    return this.y + this.height;
+  }
+
+  get rightPadded() {
+    return this.right - this.padding;
+  }
+
+  get leftPadded() {
+    return this.left + this.padding;
+  }
+
+  get topPadded() {
+    return this.top + this.padding;
+  }
+
+  get bottomPadded() {
+    return this.bottom - this.paddingBottom;
+  }
+
+  get isLandscape() {
+    return this.width >= this.height;
+  }
+
+  updateViewport() {
+    const windowAspect = this.game.scale.parentSize.aspectRatio;
+    const height = this.game.defaultGameHeight;
+    const width = Math.min(this.game.defaultGameWidth, this.game.defaultGameHeight * windowAspect);
+    const x = Math.max(0, this.game.defaultGameWidth * 0.5 - width * 0.5);
+    const y = Math.max(0, this.game.defaultGameHeight * 0.5 - height * 0.5);
+    const padding = Math.max(width * 0.02, height * 0.02);
+    let paddingBottom = padding;
+
+    // add a 32pixel botttom padding on iphone mobiles due to brim...
+    if (window.innerWidth <= 568 && window.devicePixelRatio === 2) {
+      paddingBottom = 32 / (this.game.canvas.clientHeight / height);
+    }
+
+    this._viewport.x = x;
+    this._viewport.y = y;
+    this._viewport.width = width;
+    this._viewport.height = height;
+    this._viewport.padding = padding;
+    this._viewport.paddingBottom = paddingBottom;
+    this._viewport.landscape = width >= height;
+
+    this.emit(base_constants_Events__WEBPACK_IMPORTED_MODULE_2__["VIEWPORT_EVENTS"].UPDATED, this._viewport);
+  }
+
+  overlapsViewport(rect) {
+    return Object(base_objects_Collision__WEBPACK_IMPORTED_MODULE_1__["checkRects"])(rect, this);
+  }
+
+  isWithinViewport(x, y) {
+    return Object(base_objects_Collision__WEBPACK_IMPORTED_MODULE_1__["checkPoint"])(x, y, this);
+  }
+
+  destroy() {
+    this.game.scale.off('resize', this.updateViewport, this);
+  }
+}
+
 
 /***/ }),
 
@@ -272,7 +3598,32 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _GameControllerBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GameControllerBase */ \"./src/js/base/controller/GameControllerBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"GameControllerBase\", function() { return _GameControllerBase__WEBPACK_IMPORTED_MODULE_0__[\"GameControllerBase\"]; });\n\n/* harmony import */ var _SceneControllerBase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SceneControllerBase */ \"./src/js/base/controller/SceneControllerBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SceneControllerBase\", function() { return _SceneControllerBase__WEBPACK_IMPORTED_MODULE_1__[\"SceneControllerBase\"]; });\n\n/* harmony import */ var _SettingsControllerBase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SettingsControllerBase */ \"./src/js/base/controller/SettingsControllerBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SettingsControllerBase\", function() { return _SettingsControllerBase__WEBPACK_IMPORTED_MODULE_2__[\"SettingsControllerBase\"]; });\n\n/* harmony import */ var _SoundControllerBase__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SoundControllerBase */ \"./src/js/base/controller/SoundControllerBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SoundControllerBase\", function() { return _SoundControllerBase__WEBPACK_IMPORTED_MODULE_3__[\"SoundControllerBase\"]; });\n\n/* harmony import */ var _TrackingControllerBase__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TrackingControllerBase */ \"./src/js/base/controller/TrackingControllerBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"TrackingControllerBase\", function() { return _TrackingControllerBase__WEBPACK_IMPORTED_MODULE_4__[\"TrackingControllerBase\"]; });\n\n/* harmony import */ var _ViewportControllerBase__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ViewportControllerBase */ \"./src/js/base/controller/ViewportControllerBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"ViewportControllerBase\", function() { return _ViewportControllerBase__WEBPACK_IMPORTED_MODULE_5__[\"ViewportControllerBase\"]; });\n\n\n\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/controller/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _GameControllerBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./GameControllerBase */ "./src/js/base/controller/GameControllerBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameControllerBase", function() { return _GameControllerBase__WEBPACK_IMPORTED_MODULE_0__["GameControllerBase"]; });
+
+/* harmony import */ var _SceneControllerBase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SceneControllerBase */ "./src/js/base/controller/SceneControllerBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SceneControllerBase", function() { return _SceneControllerBase__WEBPACK_IMPORTED_MODULE_1__["SceneControllerBase"]; });
+
+/* harmony import */ var _SettingsControllerBase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SettingsControllerBase */ "./src/js/base/controller/SettingsControllerBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SettingsControllerBase", function() { return _SettingsControllerBase__WEBPACK_IMPORTED_MODULE_2__["SettingsControllerBase"]; });
+
+/* harmony import */ var _SoundControllerBase__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SoundControllerBase */ "./src/js/base/controller/SoundControllerBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SoundControllerBase", function() { return _SoundControllerBase__WEBPACK_IMPORTED_MODULE_3__["SoundControllerBase"]; });
+
+/* harmony import */ var _TrackingControllerBase__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./TrackingControllerBase */ "./src/js/base/controller/TrackingControllerBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TrackingControllerBase", function() { return _TrackingControllerBase__WEBPACK_IMPORTED_MODULE_4__["TrackingControllerBase"]; });
+
+/* harmony import */ var _ViewportControllerBase__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ViewportControllerBase */ "./src/js/base/controller/ViewportControllerBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ViewportControllerBase", function() { return _ViewportControllerBase__WEBPACK_IMPORTED_MODULE_5__["ViewportControllerBase"]; });
+
+
+
+
+
+
+
+
 
 /***/ }),
 
@@ -284,7 +3635,84 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Gam
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return TapArea; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"TAP\", function() { return TAP; });\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ \"./node_modules/eventemitter3/index.js\");\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);\n\n\nclass TapArea extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {\n  constructor(scene, container, { x, y, w, h }) {\n    super();\n\n    this.scene = scene;\n    this.bindedDown = this.onDown.bind(this);\n    this.bindedUp = this.onUp.bind(this);\n    this.bindedMove = this.onMove.bind(this);\n    // const { width, height } = scene.game.canvas;\n    this.clickbox = scene.add.zone(x, y, w, h).setOrigin(0);\n    this.clickbox.setScrollFactor(0); // phaser 2 fixedToCamera\n    this.clickbox.active = true;\n    this.pointer = false;\n    this.pointerDown = false;\n    this.timeDown = 0;\n    container.add(this.clickbox);\n    this.enable();\n  }\n\n  enable() {\n    this.clickbox.setInteractive({ useHandCursor: true });\n    this.clickbox.on('pointerdown', this.bindedDown, this);\n    this.clickbox.on('pointerup', this.bindedUp, this);\n  }\n\n  disable() {\n    this.clickbox.disableInteractive();\n    this.clickbox.off('pointerdown', this.bindedDown, this);\n    this.clickbox.off('pointermove', this.bindedMove, this);\n    this.clickbox.off('pointerup', this.bindedUp, this);\n  }\n\n  onMove(pointer) {\n    if (this.scene.time.now - this.timeDown > 250) {\n      if (this.pointerDown) {\n        const { x, y } = pointer;\n        this.pointer = { x, y };\n      }\n    }\n  }\n\n  onDown(pointer) {\n    this.timeDown = this.scene.time.now;\n    this.clickbox.on('pointermove', this.bindedMove, this);\n    this.pointerDown = true;\n    const { x, y } = pointer;\n    this.pointer = { x, y };\n  }\n\n  onUp(pointer) {\n    this.clickbox.off('pointermove', this.bindedMove, this);\n    this.pointerDown = false;\n    this.pointer = false;\n    // const { x, y } = pointer;\n    // this.onClick(pointer);\n  }\n\n  onClick(pointer) {\n    const { x, y } = pointer;\n    this.emit(TAP, { x, y });\n  }\n\n  destroy() {\n    this.disable();\n    this.clickbox = null;\n  }\n}\n\nconst TAP = 'TAP';\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/input/TapArea.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return TapArea; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TAP", function() { return TAP; });
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ "./node_modules/eventemitter3/index.js");
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);
+
+
+class TapArea extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {
+  constructor(scene, container, { x, y, w, h }) {
+    super();
+
+    this.scene = scene;
+    this.bindedDown = this.onDown.bind(this);
+    this.bindedUp = this.onUp.bind(this);
+    this.bindedMove = this.onMove.bind(this);
+    // const { width, height } = scene.game.canvas;
+    this.clickbox = scene.add.zone(x, y, w, h).setOrigin(0);
+    this.clickbox.setScrollFactor(0); // phaser 2 fixedToCamera
+    this.clickbox.active = true;
+    this.pointer = false;
+    this.pointerDown = false;
+    this.timeDown = 0;
+    container.add(this.clickbox);
+    this.enable();
+  }
+
+  enable() {
+    this.clickbox.setInteractive({ useHandCursor: true });
+    this.clickbox.on('pointerdown', this.bindedDown, this);
+    this.clickbox.on('pointerup', this.bindedUp, this);
+  }
+
+  disable() {
+    this.clickbox.disableInteractive();
+    this.clickbox.off('pointerdown', this.bindedDown, this);
+    this.clickbox.off('pointermove', this.bindedMove, this);
+    this.clickbox.off('pointerup', this.bindedUp, this);
+  }
+
+  onMove(pointer) {
+    if (this.scene.time.now - this.timeDown > 250) {
+      if (this.pointerDown) {
+        const { x, y } = pointer;
+        this.pointer = { x, y };
+      }
+    }
+  }
+
+  onDown(pointer) {
+    this.timeDown = this.scene.time.now;
+    this.clickbox.on('pointermove', this.bindedMove, this);
+    this.pointerDown = true;
+    const { x, y } = pointer;
+    this.pointer = { x, y };
+  }
+
+  onUp(pointer) {
+    pointer;
+    this.clickbox.off('pointermove', this.bindedMove, this);
+    this.pointerDown = false;
+    this.pointer = false;
+    // const { x, y } = pointer;
+    // this.onClick(pointer);
+  }
+
+  onClick(pointer) {
+    const { x, y } = pointer;
+    this.emit(TAP, { x, y });
+  }
+
+  destroy() {
+    this.disable();
+    this.clickbox = null;
+  }
+}
+
+const TAP = 'TAP';
+
 
 /***/ }),
 
@@ -296,19 +3724,65 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _TapArea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TapArea */ \"./src/js/base/input/TapArea.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"TAP\", function() { return _TapArea__WEBPACK_IMPORTED_MODULE_0__[\"TAP\"]; });\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/input/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _TapArea__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TapArea */ "./src/js/base/input/TapArea.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TAP", function() { return _TapArea__WEBPACK_IMPORTED_MODULE_0__["TAP"]; });
+
+
+
 
 /***/ }),
 
-/***/ "./src/js/base/model/ConfigModel.js":
-/*!******************************************!*\
-  !*** ./src/js/base/model/ConfigModel.js ***!
-  \******************************************/
-/*! exports provided: default */
+/***/ "./src/js/base/model/AppUrls.js":
+/*!**************************************!*\
+  !*** ./src/js/base/model/AppUrls.js ***!
+  \**************************************/
+/*! exports provided: AppUrls */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nclass ConfigModel {\n  constructor({ config }) {\n    this.config = { ...config };\n  }\n}\n/* harmony default export */ __webpack_exports__[\"default\"] = (ConfigModel);\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/ConfigModel.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppUrls", function() { return AppUrls; });
+class AppUrls {
+  constructor(game, paths = { base: './', assets: 'assets/' }) {
+    this.game = game;
+    this.basePath = paths.base;
+    this.assetsPath = paths.assets;
+  }
+
+  // get main directory
+  getBaseDirectory() {
+    return this.basePath;
+  }
+
+  // resolves relativly given url
+  resolveRelativeUrl(path) {
+    return this.getBaseDirectory() + path;
+  }
+
+  resolveLevelAssetsUrl(level, suffix) {
+    return this.resolveRelativeUrl('assets/levels/' + level + '/') + suffix;
+  }
+
+  // get the root of the assets folder, pass in relative url for extended path
+  getAssetsDirectory(urlSuffix) {
+    return urlSuffix
+      ? this.resolveRelativeUrl(this.assetsPath + urlSuffix)
+      : this.resolveRelativeUrl(this.assetsPath);
+  }
+
+  // get the url to a game assets folder based on minigameid
+  getGameAssetsDirectory(gameId, urlSuffix) {
+    return urlSuffix
+      ? this.resolveRelativeUrl(this.assetsPath + 'games/' + gameId + '/' + urlSuffix)
+      : this.resolveRelativeUrl(this.assetsPath + 'games/' + gameId + '/');
+  }
+
+  getFontsDirectory(urlSuffix) {
+    return this.getAssetsDirectory('fonts/' + urlSuffix);
+  }
+}
+
 
 /***/ }),
 
@@ -320,7 +3794,37 @@ eval("__webpack_require__.r(__webpack_exports__);\nclass ConfigModel {\n  constr
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\nclass CopyModel {\n  constructor({ xml }) {\n    this.copy = {};\n    if (xml) {\n      const nodes = xml.getElementsByTagName('item');\n      for (let i = 0; i < nodes.length; i++) {\n        this.copy[nodes[i].getAttribute('id')] = nodes[i].childNodes[0].nodeValue;\n      }\n    } else {\n      console.warn('CopyModel : no xml received')\n    }\n  }\n\n  get(copyId, nodefault = true) {\n    return nodefault ? this.getStringNoDefault(copyId) : this.getString(copyId);\n  }\n\n  getString(copyId) {\n    return this.copy[copyId] || 'copy not found [ ' + copyId + ' ]';\n  }\n\n  getStringNoDefault(copyId) {\n    if (!this.copy[copyId]) {\n      console.warn('copy not found [ ' + copyId + ' ]');\n    }\n    return this.copy[copyId] || null;\n  }\n}\n/* harmony default export */ __webpack_exports__[\"default\"] = (CopyModel);\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/CopyModel.js?");
+__webpack_require__.r(__webpack_exports__);
+class CopyModel {
+  constructor({ xml }) {
+    this.copy = {};
+    if (xml) {
+      const nodes = xml.getElementsByTagName('item');
+      for (let i = 0; i < nodes.length; i++) {
+        this.copy[nodes[i].getAttribute('id')] = nodes[i].childNodes[0].nodeValue;
+      }
+    } else {
+      console.warn('CopyModel : no xml received');
+    }
+  }
+
+  get(copyId, nodefault = true) {
+    return nodefault ? this.getStringNoDefault(copyId) : this.getString(copyId);
+  }
+
+  getString(copyId) {
+    return this.copy[copyId] || 'copy not found [ ' + copyId + ' ]';
+  }
+
+  getStringNoDefault(copyId) {
+    if (!this.copy[copyId]) {
+      console.warn('copy not found [ ' + copyId + ' ]');
+    }
+    return this.copy[copyId] || null;
+  }
+}
+/* harmony default export */ __webpack_exports__["default"] = (CopyModel);
+
 
 /***/ }),
 
@@ -332,7 +3836,212 @@ eval("__webpack_require__.r(__webpack_exports__);\nclass CopyModel {\n  construc
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"NEW_SAVE\", function() { return NEW_SAVE; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"Saves\", function() { return Saves; });\nconst VERSION = 1;\nconst SAVES_ID = 'saves';\nconst NEW_SAVE = 'NEW_SAVE';\n\nclass Saves {\n  /*\n   * data structure for saves\n   * saveID1 : {game: {}, player: {} ...}\n   * saveID2 : {game: {}, player: {} ...}\n   */\n  constructor({ storage }) {\n    this.storage = storage; // swap out for different storage types\n    this.saveID = null;\n    this.saves = this.loadData(SAVES_ID, {});\n    this.createSaveCount();\n  }\n\n  createSaveID() {\n    this.incrementSaveCount();\n    return new Date().getTime();\n  }\n\n  setSaveID(val) {\n    this.saveID = val === NEW_SAVE ? this.createSaveID() : val;\n  }\n  getSaveID() {\n    return this.saveID;\n  }\n\n  loadData(id, returnVal = {}) {\n    const gameData = this.storage.getGameData();\n    const dataString = gameData[id];\n    if (dataString) {\n      return JSON.parse(dataString);\n    }\n    return returnVal;\n  }\n\n  /*\n  ===================================================================================\n    CREATE AND DELETE\n  ===================================================================================\n  */\n  createSaveCount() {\n    this.saveCount = this.loadData('savecount', 0);\n    const savesString = JSON.stringify(this.saveCount);\n    this.storage.setGameData('savecount', savesString);\n  }\n  incrementSaveCount() {\n    this.saveCount++;\n    const savesString = JSON.stringify(this.saveCount);\n    this.storage.setGameData('savecount', savesString);\n  }\n\n  create({ saveID }) {\n    if (!this.hasSave(saveID)) {\n      const saveNumber = this.saveCount;\n      this.saves[saveID] = { id: saveID, version: VERSION, saveNumber };\n      console.info(`Saves.create ${saveID} #${saveNumber} version ${VERSION}`);\n    } else {\n      console.warn(`Saves.create ${saveID} exists`);\n    }\n    this.saveData();\n    return this.saves[saveID];\n  }\n\n  load(id) {\n    const saveID = id || this.saveID;\n    if (this.hasSave(saveID)) {\n      // console.info(`Saves.load ${saveID}`);\n      const { version } = this.saves[saveID];\n      if (version !== VERSION) {\n        if (\n          window.confirm(\n            'Saved data is incompatible due to development changes.\\n\\nClick OK to delete old saved data and restart'\n          )\n        ) {\n          this.deleteSave(saveID);\n          this.saveID = null;\n          location.reload();\n        }\n      }\n      return this.saves[saveID];\n    }\n  }\n\n  save({ id, data }) {\n    const saveID = id || this.saveID;\n    // console.log('save', saveID, data);\n    if (saveID) {\n      const existing = this.saves[saveID] || this.create({ saveID });\n      const merged = { ...existing, ...data };\n      this.saves[saveID] = merged;\n      this.saveData();\n    }\n  }\n\n  renameSave() {\n    if (this.saveID) {\n      const newSaveID = this.createSaveID();\n      this.saves[newSaveID] = { ...this.saves[this.saveID] };\n      this.saves[newSaveID].id = newSaveID;\n      delete this.saves[this.saveID];\n      this.setSaveID(newSaveID);\n      this.saveData();\n    }\n  }\n\n  deleteSaves() {\n    if (this.playerHasSaves()) {\n      for (const save of Object.keys(this.saves)) {\n        this.deleteSave(save);\n      }\n      return true;\n    } else {\n      return false;\n    }\n  }\n\n  deleteSave(id) {\n    const saveID = id || this.saveID;\n    if (this.hasSave(saveID)) {\n      delete this.saves[saveID];\n      this.saveData();\n      console.info(`Saves.delete slot ${saveID}`);\n    } else {\n      console.warn(`Saves.delete save ${saveID} : doesn't exist`);\n    }\n  }\n\n  hasSave(saveID) {\n    if (this.saves) {\n      return this.saves[saveID] || false;\n    }\n    return false;\n  }\n\n  playerHasSaves() {\n    if (this.saves) {\n      return Object.keys(this.saves).length > 0;\n    }\n    return false;\n  }\n\n  getSaves() {\n    return Object.keys(this.saves).map((key) => {\n      return this.saves[key];\n    });\n  }\n\n  getSaveNumber() {\n    if (this.hasSave(this.saveID)) {\n      return this.saves[this.saveID].saveNumber;\n    } else {\n      return this.saveCount;\n    }\n  }\n\n  getSavesCount() {\n    if (this.saves) {\n      return Object.keys(this.saves).length;\n    } else {\n      return 0;\n    }\n  }\n\n  /*\n  ====================================================================================================\n  LOCALSTORAGE\n  ====================================================================================================\n  */\n  saveData() {\n    const savesString = JSON.stringify(this.saves);\n    this.storage.setGameData(SAVES_ID, savesString);\n  }\n\n  /*\n  ====================================================================================================\n  DATA SERIALIZATION\n  ====================================================================================================\n  */\n  deserialize(object, data, modelID) {\n    const dataSlice = (data && data[modelID]) || null;\n    if (dataSlice) {\n      const keys = Object.keys(dataSlice);\n      for (const key of keys) {\n        if (object[key] !== null || object[key] !== undefined) {\n          object[key] = dataSlice[key];\n        }\n      }\n    }\n  }\n\n  serialize(object, modelID, keys) {\n    const data = {};\n    data[modelID] = keys.reduce((obj, key) => {\n      obj[key] = object[key];\n      return obj;\n    }, {});\n    return data;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/Saves.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NEW_SAVE", function() { return NEW_SAVE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Saves", function() { return Saves; });
+const VERSION = 1;
+const SAVES_ID = 'saves';
+const NEW_SAVE = 'NEW_SAVE';
+
+class Saves {
+  /*
+   * data structure for saves
+   * saveID1 : {game: {}, player: {} ...}
+   * saveID2 : {game: {}, player: {} ...}
+   */
+  constructor({ storage }) {
+    this.storage = storage; // swap out for different storage types
+    this.saveID = null;
+    this.saves = this.loadData(SAVES_ID, {});
+    this.createSaveCount();
+  }
+
+  createSaveID() {
+    this.incrementSaveCount();
+    return new Date().getTime();
+  }
+
+  setSaveID(val) {
+    this.saveID = val === NEW_SAVE ? this.createSaveID() : val;
+  }
+  getSaveID() {
+    return this.saveID;
+  }
+
+  loadData(id, returnVal = {}) {
+    const gameData = this.storage.getGameData();
+    const dataString = gameData[id];
+    if (dataString) {
+      return JSON.parse(dataString);
+    }
+    return returnVal;
+  }
+
+  /*
+  ===================================================================================
+    CREATE AND DELETE
+  ===================================================================================
+  */
+  createSaveCount() {
+    this.saveCount = this.loadData('savecount', 0);
+    const savesString = JSON.stringify(this.saveCount);
+    this.storage.setGameData('savecount', savesString);
+  }
+  incrementSaveCount() {
+    this.saveCount++;
+    const savesString = JSON.stringify(this.saveCount);
+    this.storage.setGameData('savecount', savesString);
+  }
+
+  create({ saveID }) {
+    if (!this.hasSave(saveID)) {
+      const saveNumber = this.saveCount;
+      this.saves[saveID] = { id: saveID, version: VERSION, saveNumber };
+      console.info(`Saves.create ${saveID} #${saveNumber} version ${VERSION}`);
+    } else {
+      console.warn(`Saves.create ${saveID} exists`);
+    }
+    this.saveData();
+    return this.saves[saveID];
+  }
+
+  load(id) {
+    const saveID = id || this.saveID;
+    if (this.hasSave(saveID)) {
+      // console.info(`Saves.load ${saveID}`);
+      const { version } = this.saves[saveID];
+      if (version !== VERSION) {
+        if (
+          window.confirm(
+            'Saved data is incompatible due to development changes.\n\nClick OK to delete old saved data and restart'
+          )
+        ) {
+          this.deleteSave(saveID);
+          this.saveID = null;
+          location.reload();
+        }
+      }
+      return this.saves[saveID];
+    }
+  }
+
+  save({ id, data }) {
+    const saveID = id || this.saveID;
+    // console.log('save', saveID, data);
+    if (saveID) {
+      const existing = this.saves[saveID] || this.create({ saveID });
+      const merged = { ...existing, ...data };
+      this.saves[saveID] = merged;
+      this.saveData();
+    }
+  }
+
+  renameSave() {
+    if (this.saveID) {
+      const newSaveID = this.createSaveID();
+      this.saves[newSaveID] = { ...this.saves[this.saveID] };
+      this.saves[newSaveID].id = newSaveID;
+      delete this.saves[this.saveID];
+      this.setSaveID(newSaveID);
+      this.saveData();
+    }
+  }
+
+  deleteSaves() {
+    if (this.playerHasSaves()) {
+      for (const save of Object.keys(this.saves)) {
+        this.deleteSave(save);
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  deleteSave(id) {
+    const saveID = id || this.saveID;
+    if (this.hasSave(saveID)) {
+      delete this.saves[saveID];
+      this.saveData();
+      console.info(`Saves.delete slot ${saveID}`);
+    } else {
+      console.warn(`Saves.delete save ${saveID} : doesn't exist`);
+    }
+  }
+
+  hasSave(saveID) {
+    if (this.saves) {
+      return this.saves[saveID] || false;
+    }
+    return false;
+  }
+
+  playerHasSaves() {
+    if (this.saves) {
+      return Object.keys(this.saves).length > 0;
+    }
+    return false;
+  }
+
+  getSaves() {
+    return Object.keys(this.saves).map((key) => {
+      return this.saves[key];
+    });
+  }
+
+  getSaveNumber() {
+    if (this.hasSave(this.saveID)) {
+      return this.saves[this.saveID].saveNumber;
+    } else {
+      return this.saveCount;
+    }
+  }
+
+  getSavesCount() {
+    if (this.saves) {
+      return Object.keys(this.saves).length;
+    } else {
+      return 0;
+    }
+  }
+
+  /*
+  ====================================================================================================
+  LOCALSTORAGE
+  ====================================================================================================
+  */
+  saveData() {
+    const savesString = JSON.stringify(this.saves);
+    this.storage.setGameData(SAVES_ID, savesString);
+  }
+
+  /*
+  ====================================================================================================
+  DATA SERIALIZATION
+  ====================================================================================================
+  */
+  deserialize(object, data, modelID) {
+    const dataSlice = (data && data[modelID]) || null;
+    if (dataSlice) {
+      const keys = Object.keys(dataSlice);
+      for (const key of keys) {
+        if (object[key] !== null || object[key] !== undefined) {
+          object[key] = dataSlice[key];
+        }
+      }
+    }
+  }
+
+  serialize(object, modelID, keys) {
+    const data = {};
+    data[modelID] = keys.reduce((obj, key) => {
+      obj[key] = object[key];
+      return obj;
+    }, {});
+    return data;
+  }
+}
+
 
 /***/ }),
 
@@ -344,7 +4053,20 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return Settings; });\nclass Settings {\n  constructor() {\n    this._audio = true;\n    this._sfx = true;\n    this._music = true;\n    this._vo = true;\n    this._buttonAudio = true;\n    this._motion = true;\n    this._captions = true;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/Settings.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Settings; });
+class Settings {
+  constructor() {
+    this._audio = true;
+    this._sfx = true;
+    this._music = true;
+    this._vo = true;
+    this._buttonAudio = true;
+    this._motion = true;
+    this._captions = true;
+  }
+}
+
 
 /***/ }),
 
@@ -356,7 +4078,82 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return UIModel; });\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ \"./node_modules/eventemitter3/index.js\");\n/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);\n\n\nclass UIModel extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {\n  /*\n   * UIModel saves mute state to LocalStorage via utils/Settings\n   */\n  constructor({ config, settings }) {\n    super();\n    this.config = { ...config };\n    this.settings = settings;\n    this.paused = false;\n    this.emitter = new Phaser.Events.EventEmitter();\n  }\n\n  getGlobalSettings() {\n    return this.settings.getGlobalSettings();\n  }\n\n  /*\n   * AUDIO\n   */\n  updateAudio() {\n    this.emit('onAudioIsChanged', { isMuted: this.settings.getIsMuted() });\n  }\n  toggleAudio() {\n    const result = this.settings.toggleAudio();\n    this.emit('onAudioIsChanged', result);\n    this.emit('settingChanged');\n    return result.isMuted;\n  }\n  getAudio() {\n    return this.settings.getAudio();\n  }\n  getIsMuted() {\n    return this.settings.getIsMuted();\n  }\n\n  toggleMotion() {\n    const result = this.settings.toggleMotion();\n    this.emit('onMotionIsChanged', result);\n    this.emit('settingChanged');\n    return result;\n  }\n  getMotion() {\n    return this.settings.getMotion();\n  }\n\n  /**\n   * Subtitles\n   */\n\n  getSubtitles() {\n    return this.settings.getSubtitles();\n  }\n  toggleSubtitles() {\n    return this.settings.toggleSubtitles();\n  }\n\n  /**\n   * Pause\n   */\n\n  setPaused(value) {\n    this.paused = value;\n    // this.onPauseIsChanged.dispatch({ paused: this.paused });\n  }\n\n  destroy() {\n    super.destroy();\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/UIModel.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return UIModel; });
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! eventemitter3 */ "./node_modules/eventemitter3/index.js");
+/* harmony import */ var eventemitter3__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(eventemitter3__WEBPACK_IMPORTED_MODULE_0__);
+
+
+class UIModel extends eventemitter3__WEBPACK_IMPORTED_MODULE_0___default.a {
+  /*
+   * UIModel saves mute state to LocalStorage via utils/Settings
+   */
+  constructor({ config, settings }) {
+    super();
+    this.config = { ...config };
+    this.settings = settings;
+    this.paused = false;
+    this.emitter = new Phaser.Events.EventEmitter();
+  }
+
+  getGlobalSettings() {
+    return this.settings.getGlobalSettings();
+  }
+
+  /*
+   * AUDIO
+   */
+  updateAudio() {
+    this.emit('onAudioIsChanged', { isMuted: this.settings.getIsMuted() });
+  }
+  toggleAudio() {
+    const result = this.settings.toggleAudio();
+    this.emit('onAudioIsChanged', result);
+    this.emit('settingChanged');
+    return result.isMuted;
+  }
+  getAudio() {
+    return this.settings.getAudio();
+  }
+  getIsMuted() {
+    return this.settings.getIsMuted();
+  }
+
+  toggleMotion() {
+    const result = this.settings.toggleMotion();
+    this.emit('onMotionIsChanged', result);
+    this.emit('settingChanged');
+    return result;
+  }
+  getMotion() {
+    return this.settings.getMotion();
+  }
+
+  /**
+   * Subtitles
+   */
+
+  getSubtitles() {
+    return this.settings.getSubtitles();
+  }
+  toggleSubtitles() {
+    return this.settings.toggleSubtitles();
+  }
+
+  /**
+   * Pause
+   */
+
+  setPaused(value) {
+    this.paused = value;
+    // this.onPauseIsChanged.dispatch({ paused: this.paused });
+  }
+
+  destroy() {
+    super.destroy();
+  }
+}
+
 
 /***/ }),
 
@@ -364,11 +4161,28 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*!************************************!*\
   !*** ./src/js/base/model/index.js ***!
   \************************************/
-/*! exports provided: NEW_SAVE, Saves */
+/*! exports provided: AppUrls, NEW_SAVE, Saves */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _ConfigModel__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ConfigModel */ \"./src/js/base/model/ConfigModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _CopyModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CopyModel */ \"./src/js/base/model/CopyModel.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _Saves__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Saves */ \"./src/js/base/model/Saves.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"NEW_SAVE\", function() { return _Saves__WEBPACK_IMPORTED_MODULE_2__[\"NEW_SAVE\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"Saves\", function() { return _Saves__WEBPACK_IMPORTED_MODULE_2__[\"Saves\"]; });\n\n/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Settings */ \"./src/js/base/model/Settings.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _UIModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./UIModel */ \"./src/js/base/model/UIModel.js\");\n/* empty/unused harmony star reexport */\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/model/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AppUrls__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AppUrls */ "./src/js/base/model/AppUrls.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AppUrls", function() { return _AppUrls__WEBPACK_IMPORTED_MODULE_0__["AppUrls"]; });
+
+/* harmony import */ var _CopyModel__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CopyModel */ "./src/js/base/model/CopyModel.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _Saves__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Saves */ "./src/js/base/model/Saves.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NEW_SAVE", function() { return _Saves__WEBPACK_IMPORTED_MODULE_2__["NEW_SAVE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Saves", function() { return _Saves__WEBPACK_IMPORTED_MODULE_2__["Saves"]; });
+
+/* harmony import */ var _Settings__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Settings */ "./src/js/base/model/Settings.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _UIModel__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./UIModel */ "./src/js/base/model/UIModel.js");
+/* empty/unused harmony star reexport */
+
+
+
+
+
 
 /***/ }),
 
@@ -380,7 +4194,63 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Con
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BoundsDBStub\", function() { return BoundsDBStub; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return BoundsDB; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"CLR\", function() { return CLR; });\nclass BoundsDBStub {\n  constructor() {}\n  clearGraphics() {}\n  drawBounds() {}\n}\n\nclass BoundsDB extends Phaser.GameObjects.Graphics {\n  constructor(scene, shortcutsModel) {\n    super(scene);\n    this.shortcuts = shortcutsModel;\n  }\n\n  clearGraphics() {\n    this.clear();\n  }\n\n  drawBounds({ x, y, width, height }, colour = CLR.GENERAL) {\n    if (this.shortcuts.boundsDebug) {\n      this.lineStyle(2, colour, 1);\n      this.strokeRect(x, y, width, height);\n    }\n  }\n\n  drawLine(sx, sy, ex, ey, colour = 0xffff00) {\n    this.lineStyle(5, colour, 1);\n    this.lineBetween(sx, sy, ex, ey);\n  }\n\n  drawCircle(x, y, radius, colour = CLR.GENERAL) {\n    if (this.shortcuts.boundsDebug) {\n      this.lineStyle(2, colour, 1);\n      this.strokeCircle(x, y, radius);\n    }\n  }\n\n  drawPoints(points, colour = CLR.GENERAL) {\n    this.lineStyle(2, colour, 1);\n    this.moveTo(points[0].x, points[0].y);\n    points.forEach((p, index) => {\n      this.lineTo(p.x, p.y);\n    });\n    this.lineTo(points[0].x, points[0].y);\n    this.stroke();\n  }\n}\nconst CLR = {\n  GENERAL: 0xffff00,\n  GROUND: 0x00ff00,\n  PLAYER: 0xffff00,\n  COLLISION: 0xff0000,\n  SLOT: 0xfcb103,\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/objects/BoundsDB.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BoundsDBStub", function() { return BoundsDBStub; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return BoundsDB; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CLR", function() { return CLR; });
+class BoundsDBStub {
+  constructor() {}
+  clearGraphics() {}
+  drawBounds() {}
+}
+
+class BoundsDB extends Phaser.GameObjects.Graphics {
+  constructor(scene, shortcutsModel) {
+    super(scene);
+    this.shortcuts = shortcutsModel;
+  }
+
+  clearGraphics() {
+    this.clear();
+  }
+
+  drawBounds({ x, y, width, height }, colour = CLR.GENERAL) {
+    if (this.shortcuts.boundsDebug) {
+      this.lineStyle(2, colour, 1);
+      this.strokeRect(x, y, width, height);
+    }
+  }
+
+  drawLine(sx, sy, ex, ey, colour = 0xffff00) {
+    this.lineStyle(5, colour, 1);
+    this.lineBetween(sx, sy, ex, ey);
+  }
+
+  drawCircle(x, y, radius, colour = CLR.GENERAL) {
+    if (this.shortcuts.boundsDebug) {
+      this.lineStyle(2, colour, 1);
+      this.strokeCircle(x, y, radius);
+    }
+  }
+
+  drawPoints(points, colour = CLR.GENERAL) {
+    this.lineStyle(2, colour, 1);
+    this.moveTo(points[0].x, points[0].y);
+    points.forEach((p, index) => {
+      this.lineTo(p.x, p.y);
+    });
+    this.lineTo(points[0].x, points[0].y);
+    this.stroke();
+  }
+}
+const CLR = {
+  GENERAL: 0xffff00,
+  GROUND: 0x00ff00,
+  PLAYER: 0xffff00,
+  COLLISION: 0xff0000,
+  SLOT: 0xfcb103,
+};
+
 
 /***/ }),
 
@@ -392,7 +4262,25 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"checkRects\", function() { return checkRects; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"checkPoint\", function() { return checkPoint; });\nconst checkRects = (rectA, rectB) => {\n  if (\n    rectA.x + rectA.width > rectB.x &&\n    rectA.x < rectB.x + rectB.width &&\n    rectA.y + rectA.height > rectB.y &&\n    rectA.y < rectB.y + rectB.height\n  ) {\n    return true;\n  }\n  return false;\n};\n\nconst checkPoint = (x, y, rect) => {\n  return x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height;\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/objects/Collision.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkRects", function() { return checkRects; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "checkPoint", function() { return checkPoint; });
+const checkRects = (rectA, rectB) => {
+  if (
+    rectA.x + rectA.width > rectB.x &&
+    rectA.x < rectB.x + rectB.width &&
+    rectA.y + rectA.height > rectB.y &&
+    rectA.y < rectB.y + rectB.height
+  ) {
+    return true;
+  }
+  return false;
+};
+
+const checkPoint = (x, y, rect) => {
+  return x > rect.x && x < rect.x + rect.width && y > rect.y && y < rect.y + rect.height;
+};
+
 
 /***/ }),
 
@@ -404,7 +4292,20 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _BoundsDB__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundsDB */ \"./src/js/base/objects/BoundsDB.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BoundsDBStub\", function() { return _BoundsDB__WEBPACK_IMPORTED_MODULE_0__[\"BoundsDBStub\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"CLR\", function() { return _BoundsDB__WEBPACK_IMPORTED_MODULE_0__[\"CLR\"]; });\n\n/* harmony import */ var _Collision__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Collision */ \"./src/js/base/objects/Collision.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkRects\", function() { return _Collision__WEBPACK_IMPORTED_MODULE_1__[\"checkRects\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkPoint\", function() { return _Collision__WEBPACK_IMPORTED_MODULE_1__[\"checkPoint\"]; });\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/objects/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BoundsDB__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BoundsDB */ "./src/js/base/objects/BoundsDB.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundsDBStub", function() { return _BoundsDB__WEBPACK_IMPORTED_MODULE_0__["BoundsDBStub"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CLR", function() { return _BoundsDB__WEBPACK_IMPORTED_MODULE_0__["CLR"]; });
+
+/* harmony import */ var _Collision__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Collision */ "./src/js/base/objects/Collision.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "checkRects", function() { return _Collision__WEBPACK_IMPORTED_MODULE_1__["checkRects"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "checkPoint", function() { return _Collision__WEBPACK_IMPORTED_MODULE_1__["checkPoint"]; });
+
+
+
+
 
 /***/ }),
 
@@ -416,7 +4317,125 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Bou
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"BootBase\", function() { return BootBase; });\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ \"webfontloader\");\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/constants/SceneConstants */ \"./src/js/base/constants/SceneConstants.js\");\n\n\n\nclass BootBase extends Phaser.Scene {\n  constructor({ key = base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Boot, active = true, debug = false }) {\n    super({ key, active });\n    console.log('BootBase | key', key, '| active', active, '| debug', debug);\n    this.debug = debug;\n    this.fontsReady = false;\n  }\n\n  init() {\n    this.handleLoadStart = this.loadStart.bind(this);\n    this.handleLoadProgress = this.loadProgress.bind(this);\n    this.handleFileLoadProgress = this.loadFileProgress.bind(this);\n    this.handleLoadError = this.loadError.bind(this);\n    this.handleLoadComplete = this.loadComplete.bind(this);\n    this.errorCount = 0;\n    this.loadHasErrored = false;\n  }\n\n  preload({ fonts }) {\n    const loadFonts = fonts.reduce(\n      (obj, font) => {\n        for (const i in font) {\n          if (i === 'CSS') {\n            obj.urls.push(\n              ...font[i].map((css) => {\n                return this.game.appUrls.getFontsDirectory(css);\n              })\n            );\n          } else {\n            obj.families.push(font[i]);\n          }\n        }\n\n        return obj;\n      },\n      { families: [], urls: [] }\n    );\n\n    webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load({\n      custom: loadFonts,\n      active: this.fontsLoaded.bind(this),\n      inactive: this.fontsLoaded.bind(this),\n    });\n\n    this.load.crossOrigin = 'anonymous';\n    this.load.on('start', this.handleLoadStart);\n    this.load.on('progress', this.handleLoadProgress);\n    this.load.on('fileprogress', this.handleFileLoadProgress);\n    this.load.on('loaderror', this.handleLoadError);\n    this.load.on('complete', this.handleLoadComplete);\n    // override and add implementation\n  }\n\n  loadStart() {\n    this.debug && console.log('BootBase.loadStart');\n  }\n\n  loadProgress(value) {\n    this.debug && console.log('BootBase.loadProgress', value);\n  }\n\n  loadFileProgress(file) {\n    this.debug && console.log('BootBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);\n  }\n\n  loadError(pack) {\n    this.loadHasErrored = true;\n    this.errorCount++;\n    if (pack) {\n      let errorMessage = `Boot.loadError | type ${pack.type} | key ${pack.key} | src ${pack.src}`;\n      errorMessage +=\n        '\\n-- status : ' +\n        pack.xhrLoader.status +\n        ' | -- statusText : ' +\n        pack.xhrLoader.statusText;\n      console.error(errorMessage + ' | -- response :\\n' + pack.xhrLoader.response);\n      this.add.text(30, this.errorCount * 60, errorMessage, {\n        fontFamily: 'Arial',\n        color: '#00ff00',\n        fontSize: '21px',\n      });\n    }\n  }\n\n  loadComplete() {\n    this.debug && console.log('BootBase.loadComplete');\n    this.load.off('start', this.handleLoadStart);\n    this.load.off('progress', this.handleLoadProgress);\n    this.load.off('fileprogress', this.handleFileLoadProgress);\n    this.load.off('loaderror', this.handleLoadError);\n    this.load.off('complete', this.handleLoadComplete);\n    this.assetsReady = true;\n    this.scene.start(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Load, { booted: true });\n  }\n\n  fontsLoaded() {\n    this.fontsReady = true;\n  }\n\n  create() {}\n\n  update(time, delta) {}\n\n  shutdown() {\n    this.scene.stop(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Boot);\n    this.scene.remove(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Boot);\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/BootBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BootBase", function() { return BootBase; });
+/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ "webfontloader");
+/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);
+
+
+class BootBase extends Phaser.Scene {
+  constructor({ key, active = true, debug = false }) {
+    super({ key, active });
+    console.log('BootBase | key', key, '| active', active, '| debug', debug);
+    this.key = key;
+    this.debug = debug;
+    this.fontsReady = false;
+  }
+
+  init() {
+    this.handleLoadStart = this.loadStart.bind(this);
+    this.handleLoadProgress = this.loadProgress.bind(this);
+    this.handleFileLoadProgress = this.loadFileProgress.bind(this);
+    this.handleLoadError = this.loadError.bind(this);
+    this.handleLoadComplete = this.loadComplete.bind(this);
+    this.errorCount = 0;
+    this.loadHasErrored = false;
+  }
+
+  preload({ fonts }) {
+    const loadFonts = fonts.reduce(
+      (obj, font) => {
+        for (const i in font) {
+          if (i === 'CSS') {
+            obj.urls.push(
+              ...font[i].map((css) => {
+                return this.game.appUrls.getFontsDirectory(css);
+              })
+            );
+          } else {
+            obj.families.push(font[i]);
+          }
+        }
+
+        return obj;
+      },
+      { families: [], urls: [] }
+    );
+
+    webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load({
+      custom: loadFonts,
+      active: this.fontsLoaded.bind(this),
+      inactive: this.fontsLoaded.bind(this),
+    });
+
+    this.load.crossOrigin = 'anonymous';
+    this.load.on('start', this.handleLoadStart);
+    this.load.on('progress', this.handleLoadProgress);
+    this.load.on('fileprogress', this.handleFileLoadProgress);
+    this.load.on('loaderror', this.handleLoadError);
+    this.load.on('complete', this.handleLoadComplete);
+    // override and add implementation
+  }
+
+  loadStart() {
+    this.debug && console.log('BootBase.loadStart');
+  }
+
+  loadProgress(value) {
+    this.debug && console.log('BootBase.loadProgress', value);
+  }
+
+  loadFileProgress(file) {
+    this.debug &&
+      console.log('BootBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+  }
+
+  loadError(pack) {
+    this.loadHasErrored = true;
+    this.errorCount++;
+    if (pack) {
+      let errorMessage = `Boot.loadError | type ${pack.type} | key ${pack.key} | src ${pack.src}`;
+      errorMessage +=
+        '\n-- status : ' +
+        pack.xhrLoader.status +
+        ' | -- statusText : ' +
+        pack.xhrLoader.statusText;
+      console.error(errorMessage + ' | -- response :\n' + pack.xhrLoader.response);
+      this.add.text(30, this.errorCount * 60, errorMessage, {
+        fontFamily: 'Arial',
+        color: '#00ff00',
+        fontSize: '21px',
+      });
+    }
+  }
+
+  loadComplete() {
+    this.debug && console.log('BootBase.loadComplete');
+    this.load.off('start', this.handleLoadStart);
+    this.load.off('progress', this.handleLoadProgress);
+    this.load.off('fileprogress', this.handleFileLoadProgress);
+    this.load.off('loaderror', this.handleLoadError);
+    this.load.off('complete', this.handleLoadComplete);
+    this.assetsReady = true;
+    this.scene.start(this.key, { booted: true });
+  }
+
+  fontsLoaded() {
+    this.fontsReady = true;
+  }
+
+  create() {}
+
+  update(time, delta) {
+    time, delta;
+  }
+
+  shutdown() {
+    this.scene.stop(this.key);
+    this.scene.remove(this.key);
+  }
+}
+
 
 /***/ }),
 
@@ -428,7 +4447,125 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"LoadBase\", function() { return LoadBase; });\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ \"webfontloader\");\n/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/constants/SceneConstants */ \"./src/js/base/constants/SceneConstants.js\");\n\n\n\nclass LoadBase extends Phaser.Scene {\n  constructor({ key = base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Load, active = false, debug = false }) {\n    super({ key, active });\n    console.log('LoadBase | key', key, '| active', active, '| debug', debug);\n    this.debug = debug;\n    this.fontsReady = false;\n    this.assetsReady = false;\n  }\n\n  init() {\n    this.handleLoadProgress = this.loadProgress.bind(this);\n    this.handleFileLoadProgress = this.loadFileProgress.bind(this);\n    this.handleFileLoadComplete = this.loadFileComplete.bind(this);\n    this.handleLoadError = this.loadError.bind(this);\n    this.handleLoadComplete = this.loadComplete.bind(this);\n\n    this.events.on('shutdown', this.shutdown, this);\n  }\n\n  renderScene() {}\n\n  preload({ fonts }) {\n    this.renderScene();\n    const loadFonts = fonts.reduce(\n      (obj, font) => {\n        for (const i in font) {\n          if (i === 'CSS') {\n            obj.urls.push(\n              ...font[i].map((css) => {\n                return this.game.appUrls.getFontsDirectory(css);\n              })\n            );\n          } else {\n            obj.families.push(font[i]);\n          }\n        }\n\n        return obj;\n      },\n      { families: [], urls: [] }\n    );\n\n    webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load({\n      custom: loadFonts,\n      active: this.fontsLoaded.bind(this),\n      inactive: this.fontsLoaded.bind(this),\n    });\n\n    this.load.crossOrigin = 'anonymous';\n    this.load.on('progress', this.handleLoadProgress);\n    this.load.on('fileprogress', this.handleFileLoadProgress);\n    this.load.on('filecomplete', this.handleFileLoadComplete);\n    this.load.on('loaderror', this.handleLoadError);\n    this.load.on('complete', this.handleLoadComplete);\n  }\n\n  loadProgress(value) {\n    if (this.loadBar) {\n      this.loadBar.setProgress(value);\n    }\n  }\n\n  loadFileProgress(file) {\n    this.debug && console.log('LoadBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);\n  }\n\n  loadFileComplete(key, type) {\n    this.debug && console.log('LoadBase.loadFileComplete | type ' + type + ' | key ' + key);\n  }\n\n  loadError(file) {\n    this.debug && file &&\n      console.error(\n        'LoadBase.loadError | type ' + file.type + ' | key ' + file.key + ' | src ' + file.src\n      );\n  }\n\n  loadComplete() {\n    this.debug && console.log('LoadBase.loadComplete');\n    this.load.off('progress', this.handleLoadProgress);\n    this.load.off('fileprogress', this.handleFileLoadProgress);\n    this.load.off('filecomplete', this.handleFileLoadComplete);\n    this.load.off('loaderror', this.handleLoadError);\n    this.load.off('complete', this.handleLoadComplete);\n    this.assetsReady = true;\n  }\n\n  fontsLoaded() {\n    this.fontsReady = true;\n  }\n\n  create(opts) {\n    this.scene.stop(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Load);\n  }\n\n  update(time, delta) {}\n\n  shutdown() {\n    this.events.off('shutdown', this.shutdown, this);\n    if (this.loadBar) {\n      this.loadBar.destroy(true);\n      this.loadBar = null;\n    }\n    this.scene.stop(base_constants_SceneConstants__WEBPACK_IMPORTED_MODULE_1__[\"KEYS\"].Load);\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/LoadBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LoadBase", function() { return LoadBase; });
+/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! webfontloader */ "webfontloader");
+/* harmony import */ var webfontloader__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(webfontloader__WEBPACK_IMPORTED_MODULE_0__);
+
+
+class LoadBase extends Phaser.Scene {
+  constructor({ key, active = false, debug = false }) {
+    super({ key, active });
+    console.log('LoadBase | key', key, '| active', active, '| debug', debug);
+    this.key = key;
+    this.debug = debug;
+    this.fontsReady = false;
+    this.assetsReady = false;
+  }
+
+  init() {
+    this.handleLoadProgress = this.loadProgress.bind(this);
+    this.handleFileLoadProgress = this.loadFileProgress.bind(this);
+    this.handleFileLoadComplete = this.loadFileComplete.bind(this);
+    this.handleLoadError = this.loadError.bind(this);
+    this.handleLoadComplete = this.loadComplete.bind(this);
+
+    this.events.on('shutdown', this.shutdown, this);
+  }
+
+  renderScene() {}
+
+  preload({ fonts }) {
+    this.renderScene();
+    const loadFonts = fonts.reduce(
+      (obj, font) => {
+        for (const i in font) {
+          if (i === 'CSS') {
+            obj.urls.push(
+              ...font[i].map((css) => {
+                return this.game.appUrls.getFontsDirectory(css);
+              })
+            );
+          } else {
+            obj.families.push(font[i]);
+          }
+        }
+
+        return obj;
+      },
+      { families: [], urls: [] }
+    );
+
+    webfontloader__WEBPACK_IMPORTED_MODULE_0___default.a.load({
+      custom: loadFonts,
+      active: this.fontsLoaded.bind(this),
+      inactive: this.fontsLoaded.bind(this),
+    });
+
+    this.load.crossOrigin = 'anonymous';
+    this.load.on('progress', this.handleLoadProgress);
+    this.load.on('fileprogress', this.handleFileLoadProgress);
+    this.load.on('filecomplete', this.handleFileLoadComplete);
+    this.load.on('loaderror', this.handleLoadError);
+    this.load.on('complete', this.handleLoadComplete);
+  }
+
+  loadProgress(value) {
+    if (this.loadBar) {
+      this.loadBar.setProgress(value);
+    }
+  }
+
+  loadFileProgress(file) {
+    this.debug &&
+      console.log('LoadBase.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+  }
+
+  loadFileComplete(key, type) {
+    this.debug && console.log('LoadBase.loadFileComplete | type ' + type + ' | key ' + key);
+  }
+
+  loadError(file) {
+    this.debug &&
+      file &&
+      console.error(
+        'LoadBase.loadError | type ' + file.type + ' | key ' + file.key + ' | src ' + file.src
+      );
+  }
+
+  loadComplete() {
+    this.debug && console.log('LoadBase.loadComplete');
+    this.load.off('progress', this.handleLoadProgress);
+    this.load.off('fileprogress', this.handleFileLoadProgress);
+    this.load.off('filecomplete', this.handleFileLoadComplete);
+    this.load.off('loaderror', this.handleLoadError);
+    this.load.off('complete', this.handleLoadComplete);
+    this.assetsReady = true;
+  }
+
+  fontsLoaded() {
+    this.fontsReady = true;
+  }
+
+  create(opts) {
+    opts;
+    this.scene.stop(this.key);
+  }
+
+  update(time, delta) {
+    time, delta;
+  }
+
+  shutdown() {
+    this.events.off('shutdown', this.shutdown, this);
+    if (this.loadBar) {
+      this.loadBar.destroy(true);
+      this.loadBar = null;
+    }
+    this.scene.stop(this.key);
+  }
+}
+
 
 /***/ }),
 
@@ -440,7 +4577,71 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"SceneBase\", function() { return SceneBase; });\nclass SceneBase extends Phaser.Scene {\n  constructor({ key , active = false }) {\n    super({ key, active });\n  }\n\n  init() {\n    const { width, height } = this.game.defaultDimensions;\n    this.defaultWidth = width;\n    this.defaultHeight = height;\n  }\n\n  create(options) {\n    this.scale.on('resize', this.handleGameResized, this);\n    this.events.on('shutdown', this.shutdown, this);\n    this.events.on('pause', this.onScenePaused, this);\n    this.events.on('resume', this.onSceneResumed, this);\n  }\n\n  handleGameResized() {\n    const viewport = this.getViewport();\n    if (this.bg) {\n      this.bg.width = viewport.width;\n      this.bg.height = viewport.height;\n    }\n  }\n\n  onScenePaused() {\n    this.disableScene();\n  }\n\n  onSceneResumed() {\n    this.enableScene();\n  }\n\n  enableScene() {}\n\n  disableScene() {}\n\n  getViewport() {\n    const windowAspect = this.game.scale.parentSize.aspectRatio;\n    const height = this.defaultHeight;\n    const width = Math.min(this.defaultWidth, this.defaultHeight * windowAspect);\n    const x = Math.max(0, this.defaultWidth * 0.5 - width * 0.5);\n    const y = Math.max(0, this.defaultHeight * 0.5 - height * 0.5);\n    const right = x + width;\n    const bottom = y + height;\n    const padding = Math.max(width * 0.02, height * 0.02);\n    return { x, y, width, height, padding, right, bottom };\n  }\n\n  shutdown() {\n    this.scale.off('resize', this.handleGameResized, this);\n    this.events.off('shutdown', this.shutdown, this);\n    this.events.off('pause', this.onScenePaused, this);\n    this.events.off('resume', this.onSceneResumed, this);\n    if (this.bg) {\n      this.bg.destroy(true);\n      this.bg = null;\n    }\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/SceneBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SceneBase", function() { return SceneBase; });
+class SceneBase extends Phaser.Scene {
+  constructor({ key, active = false }) {
+    super({ key, active });
+  }
+
+  init() {
+    const { width, height } = this.game.defaultDimensions;
+    this.defaultWidth = width;
+    this.defaultHeight = height;
+  }
+
+  create(options) {
+    options;
+    this.scale.on('resize', this.handleGameResized, this);
+    this.events.on('shutdown', this.shutdown, this);
+    this.events.on('pause', this.onScenePaused, this);
+    this.events.on('resume', this.onSceneResumed, this);
+  }
+
+  handleGameResized() {
+    const viewport = this.getViewport();
+    if (this.bg) {
+      this.bg.width = viewport.width;
+      this.bg.height = viewport.height;
+    }
+  }
+
+  onScenePaused() {
+    this.disableScene();
+  }
+
+  onSceneResumed() {
+    this.enableScene();
+  }
+
+  enableScene() {}
+
+  disableScene() {}
+
+  getViewport() {
+    const windowAspect = this.game.scale.parentSize.aspectRatio;
+    const height = this.defaultHeight;
+    const width = Math.min(this.defaultWidth, this.defaultHeight * windowAspect);
+    const x = Math.max(0, this.defaultWidth * 0.5 - width * 0.5);
+    const y = Math.max(0, this.defaultHeight * 0.5 - height * 0.5);
+    const right = x + width;
+    const bottom = y + height;
+    const padding = Math.max(width * 0.02, height * 0.02);
+    return { x, y, width, height, padding, right, bottom };
+  }
+
+  shutdown() {
+    this.scale.off('resize', this.handleGameResized, this);
+    this.events.off('shutdown', this.shutdown, this);
+    this.events.off('pause', this.onScenePaused, this);
+    this.events.off('resume', this.onSceneResumed, this);
+    if (this.bg) {
+      this.bg.destroy(true);
+      this.bg = null;
+    }
+  }
+}
+
 
 /***/ }),
 
@@ -452,7 +4653,156 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"SceneLoadBase\", function() { return SceneLoadBase; });\nconst LOADED_ASSETS = { multiatlas: [], spine: [] };\n\nclass SceneLoadBase extends Phaser.Scene {\n  constructor(opts) {\n    super(opts);\n    this.debug = opts.debug || false;\n  }\n\n  init() {\n    this.handleLoadStart = this.loadStart.bind(this);\n    this.handleLoadProgress = this.loadProgress.bind(this);\n    this.handleFileLoadProgress = this.loadFileProgress.bind(this);\n    this.handleFileLoadComplete = this.loadFileComplete.bind(this);\n    this.handleLoadError = this.loadError.bind(this);\n    this.handleLoadAssetPackComplete = this.loadAssetPackComplete.bind(this);\n    this.handleLoadComplete = this.loadComplete.bind(this);\n    this.errorCount = 0;\n    this.loadHasErrored = false;\n  }\n\n  renderScene() {}\n\n  preload(path) {\n    this.flushLoadedAssets();\n    this.renderScene();\n\n    this.load.crossOrigin = 'anonymous';\n    this.load.path = path;\n    this.load.on('start', this.handleLoadStart);\n    this.load.on('progress', this.handleLoadProgress);\n    this.load.on('fileprogress', this.handleFileLoadProgress);\n    this.load.on('filecomplete', this.handleFileLoadComplete);\n    this.load.on('loaderror', this.handleLoadError);\n    this.load.on('complete', this.handleLoadAssetPackComplete);\n  }\n\n  loadStart() {\n    this.debug && console.log('Load.handleLoadStart', value);\n  }\n\n  loadProgress(value) {\n    this.debug && console.log('Load.loadProgress', value);\n  }\n\n  loadFileProgress(file) {\n    this.debug && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);\n  }\n\n  loadFileComplete(key, type) {\n    this.debug && console.log('Load.loadFileComplete | type ' + type + ' | key ' + key);\n  }\n\n  loadError(pack) {\n    this.loadHasErrored = true;\n    this.errorCount++;\n    if (pack) {\n      let errorMessage = `SceneLoad.loadError | type ${pack.type} | key ${pack.key} | src ${pack.src}`;\n      errorMessage +=\n        '\\n-- status : ' +\n        pack.xhrLoader.status +\n        ' | -- statusText : ' +\n        pack.xhrLoader.statusText;\n      console.error(errorMessage + ' | -- response :\\n' + pack.xhrLoader.response);\n      this.add.text(30, this.errorCount * 60, errorMessage, {\n        fontFamily: 'Arial',\n        color: '#00ff00',\n        fontSize: '21px',\n      });\n    }\n  }\n\n  loadAssetPackComplete() {\n    this.debug && console.log('Load.loadAssetPackComplete');\n  }\n\n  create() {\n    this.load.off('complete', this.handleLoadAssetPackComplete);\n    this.load.on('complete', this.handleLoadComplete);\n    this.load.start();\n  }\n\n  loadComplete() {\n    this.load.off('progress', this.handleLoadProgress);\n    this.load.off('fileprogress', this.handleFileLoadProgress);\n    this.load.off('filecomplete', this.handleFileLoadComplete);\n    this.load.off('loaderror', this.handleLoadError);\n    this.load.off('complete', this.handleLoadComplete);\n\n    this.start();\n  }\n\n  start() {} // override\n\n  registerLoadedAsset(type, key) {\n    if (!LOADED_ASSETS[type]) {\n      LOADED_ASSETS[type] = [];\n    }\n    LOADED_ASSETS[type].push(key);\n  }\n\n  flushLoadedAssets() {\n    LOADED_ASSETS.multiatlas.forEach((atlas) => {\n      this.debug && console.log('flush multiatlas : ' + atlas);\n      if (this.textures.exists(atlas)) {\n        this.debug && console.log('\\tflush texture');\n        this.textures.remove(atlas);\n      }\n      if (this.cache.json.exists(atlas)) {\n        this.debug && console.log('\\tflush json');\n        this.cache.json.remove(atlas);\n      }\n    });\n    LOADED_ASSETS.multiatlas = [];\n\n    LOADED_ASSETS.spine.forEach((spine) => {\n      if (this.textures.exists(spine + '.png')) {\n        this.textures.remove(spine + '.png');\n      }\n      if (this.cache.json.exists(spine)) {\n        this.cache.json.remove(spine);\n      }\n      if (this.cache.custom.spine.exists(spine)) {\n        this.cache.custom.spine.remove(spine);\n      }\n      if (this.cache.custom.spineTextures.exists(spine)) {\n        this.cache.custom.spineTextures.remove(spine);\n      }\n    });\n\n    if (LOADED_ASSETS.audiosprite) {\n      LOADED_ASSETS.audiosprite.forEach((audiosprite) => {\n        this.debug && console.log('REMOVE AUDIO : ' + audiosprite);\n        if (this.cache.audio.exists(audiosprite)) {\n          this.debug && console.log('\\tREMOVED AUDIO : ' + audiosprite);\n          this.game.sound.removeByKey(audiosprite);\n          this.cache.audio.remove(audiosprite);\n          this.cache.json.remove(audiosprite);\n        }\n      });\n      LOADED_ASSETS.audiosprite = [];\n    }\n\n    LOADED_ASSETS.spine = [];\n  }\n\n  shutdown() {}\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/SceneLoadBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SceneLoadBase", function() { return SceneLoadBase; });
+const LOADED_ASSETS = { multiatlas: [], spine: [] };
+
+class SceneLoadBase extends Phaser.Scene {
+  constructor(opts) {
+    super(opts);
+    this.debug = opts.debug || false;
+  }
+
+  init() {
+    this.handleLoadStart = this.loadStart.bind(this);
+    this.handleLoadProgress = this.loadProgress.bind(this);
+    this.handleFileLoadProgress = this.loadFileProgress.bind(this);
+    this.handleFileLoadComplete = this.loadFileComplete.bind(this);
+    this.handleLoadError = this.loadError.bind(this);
+    this.handleLoadAssetPackComplete = this.loadAssetPackComplete.bind(this);
+    this.handleLoadComplete = this.loadComplete.bind(this);
+    this.errorCount = 0;
+    this.loadHasErrored = false;
+  }
+
+  renderScene() {}
+
+  preload(path) {
+    this.flushLoadedAssets();
+    this.renderScene();
+
+    this.load.crossOrigin = 'anonymous';
+    this.load.path = path;
+    this.load.on('start', this.handleLoadStart);
+    this.load.on('progress', this.handleLoadProgress);
+    this.load.on('fileprogress', this.handleFileLoadProgress);
+    this.load.on('filecomplete', this.handleFileLoadComplete);
+    this.load.on('loaderror', this.handleLoadError);
+    this.load.on('complete', this.handleLoadAssetPackComplete);
+  }
+
+  loadStart() {
+    this.debug && console.log('Load.handleLoadStart');
+  }
+
+  loadProgress(value) {
+    this.debug && console.log('Load.loadProgress', value);
+  }
+
+  loadFileProgress(file) {
+    this.debug && console.log('Load.loadFileProgress | type ' + file.type + ' | key ' + file.key);
+  }
+
+  loadFileComplete(key, type) {
+    this.debug && console.log('Load.loadFileComplete | type ' + type + ' | key ' + key);
+  }
+
+  loadError(pack) {
+    this.loadHasErrored = true;
+    this.errorCount++;
+    if (pack) {
+      let errorMessage = `SceneLoad.loadError | type ${pack.type} | key ${pack.key} | src ${pack.src}`;
+      errorMessage +=
+        '\n-- status : ' +
+        pack.xhrLoader.status +
+        ' | -- statusText : ' +
+        pack.xhrLoader.statusText;
+      console.error(errorMessage + ' | -- response :\n' + pack.xhrLoader.response);
+      this.add.text(30, this.errorCount * 60, errorMessage, {
+        fontFamily: 'Arial',
+        color: '#00ff00',
+        fontSize: '21px',
+      });
+    }
+  }
+
+  loadAssetPackComplete() {
+    this.debug && console.log('Load.loadAssetPackComplete');
+  }
+
+  create() {
+    this.load.off('complete', this.handleLoadAssetPackComplete);
+    this.load.on('complete', this.handleLoadComplete);
+    this.load.start();
+  }
+
+  loadComplete() {
+    this.load.off('progress', this.handleLoadProgress);
+    this.load.off('fileprogress', this.handleFileLoadProgress);
+    this.load.off('filecomplete', this.handleFileLoadComplete);
+    this.load.off('loaderror', this.handleLoadError);
+    this.load.off('complete', this.handleLoadComplete);
+
+    this.start();
+  }
+
+  start() {} // override
+
+  registerLoadedAsset(type, key) {
+    if (!LOADED_ASSETS[type]) {
+      LOADED_ASSETS[type] = [];
+    }
+    LOADED_ASSETS[type].push(key);
+  }
+
+  flushLoadedAssets() {
+    LOADED_ASSETS.multiatlas.forEach((atlas) => {
+      this.debug && console.log('flush multiatlas : ' + atlas);
+      if (this.textures.exists(atlas)) {
+        this.debug && console.log('\tflush texture');
+        this.textures.remove(atlas);
+      }
+      if (this.cache.json.exists(atlas)) {
+        this.debug && console.log('\tflush json');
+        this.cache.json.remove(atlas);
+      }
+    });
+    LOADED_ASSETS.multiatlas = [];
+
+    LOADED_ASSETS.spine.forEach((spine) => {
+      if (this.textures.exists(spine + '.png')) {
+        this.textures.remove(spine + '.png');
+      }
+      if (this.cache.json.exists(spine)) {
+        this.cache.json.remove(spine);
+      }
+      if (this.cache.custom.spine.exists(spine)) {
+        this.cache.custom.spine.remove(spine);
+      }
+      if (this.cache.custom.spineTextures.exists(spine)) {
+        this.cache.custom.spineTextures.remove(spine);
+      }
+    });
+
+    if (LOADED_ASSETS.audiosprite) {
+      LOADED_ASSETS.audiosprite.forEach((audiosprite) => {
+        this.debug && console.log('REMOVE AUDIO : ' + audiosprite);
+        if (this.cache.audio.exists(audiosprite)) {
+          this.debug && console.log('\tREMOVED AUDIO : ' + audiosprite);
+          this.game.sound.removeByKey(audiosprite);
+          this.cache.audio.remove(audiosprite);
+          this.cache.json.remove(audiosprite);
+        }
+      });
+      LOADED_ASSETS.audiosprite = [];
+    }
+
+    LOADED_ASSETS.spine = [];
+  }
+
+  shutdown() {}
+}
+
 
 /***/ }),
 
@@ -464,7 +4814,24 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _BootBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BootBase */ \"./src/js/base/scenes/BootBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BootBase\", function() { return _BootBase__WEBPACK_IMPORTED_MODULE_0__[\"BootBase\"]; });\n\n/* harmony import */ var _LoadBase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoadBase */ \"./src/js/base/scenes/LoadBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"LoadBase\", function() { return _LoadBase__WEBPACK_IMPORTED_MODULE_1__[\"LoadBase\"]; });\n\n/* harmony import */ var _SceneBase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SceneBase */ \"./src/js/base/scenes/SceneBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SceneBase\", function() { return _SceneBase__WEBPACK_IMPORTED_MODULE_2__[\"SceneBase\"]; });\n\n/* harmony import */ var _SceneLoadBase__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SceneLoadBase */ \"./src/js/base/scenes/SceneLoadBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SceneLoadBase\", function() { return _SceneLoadBase__WEBPACK_IMPORTED_MODULE_3__[\"SceneLoadBase\"]; });\n\n\n\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/scenes/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _BootBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./BootBase */ "./src/js/base/scenes/BootBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BootBase", function() { return _BootBase__WEBPACK_IMPORTED_MODULE_0__["BootBase"]; });
+
+/* harmony import */ var _LoadBase__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoadBase */ "./src/js/base/scenes/LoadBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LoadBase", function() { return _LoadBase__WEBPACK_IMPORTED_MODULE_1__["LoadBase"]; });
+
+/* harmony import */ var _SceneBase__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./SceneBase */ "./src/js/base/scenes/SceneBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SceneBase", function() { return _SceneBase__WEBPACK_IMPORTED_MODULE_2__["SceneBase"]; });
+
+/* harmony import */ var _SceneLoadBase__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SceneLoadBase */ "./src/js/base/scenes/SceneLoadBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SceneLoadBase", function() { return _SceneLoadBase__WEBPACK_IMPORTED_MODULE_3__["SceneLoadBase"]; });
+
+
+
+
+
+
 
 /***/ }),
 
@@ -476,7 +4843,273 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Boo
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return ShortcutTriggers; });\n/* eslint-disable */\nconst KEYS = {\n  backspace: 8,\n  tab: 9,\n  enter: 13,\n  return: 13,\n  shift: 16,\n  '⇧': 16,\n  control: 17,\n  ctrl: 17,\n  '⌃': 17,\n  alt: 18,\n  option: 18,\n  '⌥': 18,\n  pause: 19,\n  capslock: 20,\n  esc: 27,\n  space: 32,\n  pageup: 33,\n  pagedown: 34,\n  end: 35,\n  home: 36,\n  left: 37,\n  L: 37,\n  '←': 37,\n  up: 38,\n  U: 38,\n  '↑': 38,\n  right: 39,\n  R: 39,\n  '→': 39,\n  down: 40,\n  D: 40,\n  '↓': 40,\n  insert: 45,\n  delete: 46,\n  0: 48,\n  1: 49,\n  2: 50,\n  3: 51,\n  4: 52,\n  5: 53,\n  6: 54,\n  7: 55,\n  8: 56,\n  9: 57,\n  a: 65,\n  b: 66,\n  c: 67,\n  d: 68,\n  e: 69,\n  f: 70,\n  g: 71,\n  h: 72,\n  i: 73,\n  j: 74,\n  k: 75,\n  l: 76,\n  m: 77,\n  n: 78,\n  o: 79,\n  p: 80,\n  q: 81,\n  r: 82,\n  s: 83,\n  t: 84,\n  u: 85,\n  v: 86,\n  w: 87,\n  x: 88,\n  y: 89,\n  z: 90,\n  '⌘': 91,\n  command: 91,\n  kp_0: 96,\n  kp_1: 97,\n  kp_2: 98,\n  kp_3: 99,\n  kp_4: 100,\n  kp_5: 101,\n  kp_6: 102,\n  kp_7: 103,\n  kp_8: 104,\n  kp_9: 105,\n  kp_multiply: 106,\n  kp_plus: 107,\n  kp_minus: 109,\n  kp_decimal: 110,\n  kp_divide: 111,\n  f1: 112,\n  f2: 113,\n  f3: 114,\n  f4: 115,\n  f5: 116,\n  f6: 117,\n  f7: 118,\n  f8: 119,\n  f9: 120,\n  f10: 121,\n  f11: 122,\n  f12: 123,\n  equal: 187,\n  '=': 187,\n  comma: 188,\n  ',': 188,\n  minus: 189,\n  '-': 189,\n  period: 190,\n  '.': 190,\n};\n/* eslint-enable */\nconst NOOP = () => {};\n\nfunction attachListener(obj, type, fn) {\n  if (obj.addEventListener) {\n    obj.addEventListener(type, fn, false);\n  } else if (obj.attachEvent) {\n    obj['e' + type + fn] = fn;\n    obj[type + fn] = function () {\n      obj['e' + type + fn](window.event);\n    };\n    obj.attachEvent('on' + type, obj[type + fn]);\n  }\n}\nfunction removeListener(obj, type, fn) {\n  obj.removeEventListener(type, fn);\n}\nfunction createSequence(str, { done = NOOP, next = NOOP, fail = NOOP }) {\n  const seq = str.split(' ');\n  const keys = seq.map((key) => {\n    return KEYS[key];\n  });\n  return {\n    index: 0,\n    str,\n    next,\n    fail,\n    done,\n    seq,\n    keys,\n  };\n}\nfunction resetSequence(sequence) {\n  sequence.index = 0;\n}\nfunction handleSequence(sequence, keyCode) {\n  const { str, seq, keys, next, fail, done } = sequence;\n  const { index: i } = sequence;\n\n  if (keyCode !== keys[i]) {\n    if (i > 0) {\n      resetSequence(sequence);\n      fail(str);\n    }\n    return;\n  }\n  sequence.index++;\n  next(str, seq[i], i, seq);\n\n  if (sequence.index === keys.length) {\n    done(str);\n    resetSequence(sequence);\n  }\n}\n\nclass ShortcutTriggers {\n  constructor({ sequence = '↑ ↑ ↓ ↓ ← →', onComplete, onNext, onFail }) {\n    this.touchCoords = { startX: null, startY: null, endX: null, endY: null };\n    this.bindedNext = this.next.bind(this);\n    this.bindedFail = this.fail.bind(this);\n    this.bindedComplete = this.complete.bind(this);\n    this.bindedKeyDown = this.keydown.bind(this);\n    this.bindedKeyUp = this.keyup.bind(this);\n    this.bindedTouchStart = this.touchstart.bind(this);\n    this.bindedTouchEnd = this.touchend.bind(this);\n    this.touchEnabled = 'ontouchstart' in window;\n    this.sequence = createSequence(sequence, {\n      done: onComplete || this.bindedComplete,\n      next: onNext || this.bindedNext,\n      fail: onFail || this.bindedFail,\n    });\n    this.enable();\n  }\n\n  enable() {\n    attachListener(window, 'keydown', this.bindedKeyDown);\n    attachListener(window, 'keyup', this.bindedKeyUp);\n    if (this.touchEnabled) {\n      attachListener(window, 'touchstart', this.bindedTouchStart);\n      attachListener(window, 'touchend', this.bindedTouchEnd);\n    }\n  }\n\n  disable() {\n    removeListener(window, 'keydown', this.bindedKeyDown);\n    removeListener(window, 'keyup', this.bindedKeyUp);\n    if (this.touchEnabled) {\n      removeListener(window, 'touchstart', this.bindedTouchStart);\n      removeListener(window, 'touchend', this.bindedTouchEnd);\n    }\n  }\n\n  destroy() {\n    this.disable();\n    this.sequence = null;\n  }\n\n  /*\n   * INTERNAL\n   */\n\n  /* eslint-disable */\n  keydown(e) {}\n  /* eslint-enable */\n\n  keyup(e) {\n    handleSequence(this.sequence, e.keyCode);\n  }\n\n  /*\n   * Touch\n   */\n  touchstart(e) {\n    this.touchCoords.startX = e.touches[0].screenX;\n    this.touchCoords.startY = e.touches[0].screenY;\n  }\n\n  touchend(e) {\n    this.touchCoords.endX = e.changedTouches[0].screenX;\n    this.touchCoords.endY = e.changedTouches[0].screenY;\n    this.determineSwipeDirection(this.touchCoords);\n  }\n\n  determineSwipeDirection({ startX, startY, endX, endY }) {\n    const threshold = 100; // tweak this value to fine tune swipe detection\n    const deltaX = endX - startX;\n    const deltaY = endY - startY;\n    const absDeltaX = Math.abs(deltaX);\n    const absDeltaY = Math.abs(deltaY);\n    if (Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold) {\n      if (absDeltaY > 1.5 * absDeltaX) {\n        if (deltaY > threshold) {\n          handleSequence(this.sequence, KEYS.down);\n        } else if (deltaY < -threshold) {\n          handleSequence(this.sequence, KEYS.up);\n        }\n      } else if (absDeltaX > 1.5 * absDeltaY) {\n        if (deltaX > threshold) {\n          handleSequence(this.sequence, KEYS.right);\n        } else if (deltaX < -threshold) {\n          handleSequence(this.sequence, KEYS.left);\n        }\n      }\n    }\n  }\n\n  /* eslint-disable */\n  fail(str) {}\n\n  next(str, key, ind, seq) {}\n\n  complete(str) {}\n  /* eslint-enable */\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/shortcuts/ShortcutTriggers.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShortcutTriggers; });
+/* eslint-disable */
+const KEYS = {
+  backspace: 8,
+  tab: 9,
+  enter: 13,
+  return: 13,
+  shift: 16,
+  '⇧': 16,
+  control: 17,
+  ctrl: 17,
+  '⌃': 17,
+  alt: 18,
+  option: 18,
+  '⌥': 18,
+  pause: 19,
+  capslock: 20,
+  esc: 27,
+  space: 32,
+  pageup: 33,
+  pagedown: 34,
+  end: 35,
+  home: 36,
+  left: 37,
+  L: 37,
+  '←': 37,
+  up: 38,
+  U: 38,
+  '↑': 38,
+  right: 39,
+  R: 39,
+  '→': 39,
+  down: 40,
+  D: 40,
+  '↓': 40,
+  insert: 45,
+  delete: 46,
+  0: 48,
+  1: 49,
+  2: 50,
+  3: 51,
+  4: 52,
+  5: 53,
+  6: 54,
+  7: 55,
+  8: 56,
+  9: 57,
+  a: 65,
+  b: 66,
+  c: 67,
+  d: 68,
+  e: 69,
+  f: 70,
+  g: 71,
+  h: 72,
+  i: 73,
+  j: 74,
+  k: 75,
+  l: 76,
+  m: 77,
+  n: 78,
+  o: 79,
+  p: 80,
+  q: 81,
+  r: 82,
+  s: 83,
+  t: 84,
+  u: 85,
+  v: 86,
+  w: 87,
+  x: 88,
+  y: 89,
+  z: 90,
+  '⌘': 91,
+  command: 91,
+  kp_0: 96,
+  kp_1: 97,
+  kp_2: 98,
+  kp_3: 99,
+  kp_4: 100,
+  kp_5: 101,
+  kp_6: 102,
+  kp_7: 103,
+  kp_8: 104,
+  kp_9: 105,
+  kp_multiply: 106,
+  kp_plus: 107,
+  kp_minus: 109,
+  kp_decimal: 110,
+  kp_divide: 111,
+  f1: 112,
+  f2: 113,
+  f3: 114,
+  f4: 115,
+  f5: 116,
+  f6: 117,
+  f7: 118,
+  f8: 119,
+  f9: 120,
+  f10: 121,
+  f11: 122,
+  f12: 123,
+  equal: 187,
+  '=': 187,
+  comma: 188,
+  ',': 188,
+  minus: 189,
+  '-': 189,
+  period: 190,
+  '.': 190,
+};
+/* eslint-enable */
+const NOOP = () => {};
+
+function attachListener(obj, type, fn) {
+  if (obj.addEventListener) {
+    obj.addEventListener(type, fn, false);
+  } else if (obj.attachEvent) {
+    obj['e' + type + fn] = fn;
+    obj[type + fn] = function () {
+      obj['e' + type + fn](window.event);
+    };
+    obj.attachEvent('on' + type, obj[type + fn]);
+  }
+}
+function removeListener(obj, type, fn) {
+  obj.removeEventListener(type, fn);
+}
+function createSequence(str, { done = NOOP, next = NOOP, fail = NOOP }) {
+  const seq = str.split(' ');
+  const keys = seq.map((key) => {
+    return KEYS[key];
+  });
+  return {
+    index: 0,
+    str,
+    next,
+    fail,
+    done,
+    seq,
+    keys,
+  };
+}
+function resetSequence(sequence) {
+  sequence.index = 0;
+}
+function handleSequence(sequence, keyCode) {
+  const { str, seq, keys, next, fail, done } = sequence;
+  const { index: i } = sequence;
+
+  if (keyCode !== keys[i]) {
+    if (i > 0) {
+      resetSequence(sequence);
+      fail(str);
+    }
+    return;
+  }
+  sequence.index++;
+  next(str, seq[i], i, seq);
+
+  if (sequence.index === keys.length) {
+    done(str);
+    resetSequence(sequence);
+  }
+}
+
+class ShortcutTriggers {
+  constructor({ sequence = '↑ ↑ ↓ ↓ ← →', onComplete, onNext, onFail }) {
+    this.touchCoords = { startX: null, startY: null, endX: null, endY: null };
+    this.bindedNext = this.next.bind(this);
+    this.bindedFail = this.fail.bind(this);
+    this.bindedComplete = this.complete.bind(this);
+    this.bindedKeyDown = this.keydown.bind(this);
+    this.bindedKeyUp = this.keyup.bind(this);
+    this.bindedTouchStart = this.touchstart.bind(this);
+    this.bindedTouchEnd = this.touchend.bind(this);
+    this.touchEnabled = 'ontouchstart' in window;
+    this.sequence = createSequence(sequence, {
+      done: onComplete || this.bindedComplete,
+      next: onNext || this.bindedNext,
+      fail: onFail || this.bindedFail,
+    });
+    this.enable();
+  }
+
+  enable() {
+    attachListener(window, 'keydown', this.bindedKeyDown);
+    attachListener(window, 'keyup', this.bindedKeyUp);
+    if (this.touchEnabled) {
+      attachListener(window, 'touchstart', this.bindedTouchStart);
+      attachListener(window, 'touchend', this.bindedTouchEnd);
+    }
+  }
+
+  disable() {
+    removeListener(window, 'keydown', this.bindedKeyDown);
+    removeListener(window, 'keyup', this.bindedKeyUp);
+    if (this.touchEnabled) {
+      removeListener(window, 'touchstart', this.bindedTouchStart);
+      removeListener(window, 'touchend', this.bindedTouchEnd);
+    }
+  }
+
+  destroy() {
+    this.disable();
+    this.sequence = null;
+  }
+
+  /*
+   * INTERNAL
+   */
+
+  /* eslint-disable */
+  keydown(e) {}
+  /* eslint-enable */
+
+  keyup(e) {
+    handleSequence(this.sequence, e.keyCode);
+  }
+
+  /*
+   * Touch
+   */
+  touchstart(e) {
+    this.touchCoords.startX = e.touches[0].screenX;
+    this.touchCoords.startY = e.touches[0].screenY;
+  }
+
+  touchend(e) {
+    this.touchCoords.endX = e.changedTouches[0].screenX;
+    this.touchCoords.endY = e.changedTouches[0].screenY;
+    this.determineSwipeDirection(this.touchCoords);
+  }
+
+  determineSwipeDirection({ startX, startY, endX, endY }) {
+    const threshold = 100; // tweak this value to fine tune swipe detection
+    const deltaX = endX - startX;
+    const deltaY = endY - startY;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(deltaY);
+    if (Math.abs(deltaX) > threshold || Math.abs(deltaY) > threshold) {
+      if (absDeltaY > 1.5 * absDeltaX) {
+        if (deltaY > threshold) {
+          handleSequence(this.sequence, KEYS.down);
+        } else if (deltaY < -threshold) {
+          handleSequence(this.sequence, KEYS.up);
+        }
+      } else if (absDeltaX > 1.5 * absDeltaY) {
+        if (deltaX > threshold) {
+          handleSequence(this.sequence, KEYS.right);
+        } else if (deltaX < -threshold) {
+          handleSequence(this.sequence, KEYS.left);
+        }
+      }
+    }
+  }
+
+  /* eslint-disable */
+  fail(str) {}
+
+  next(str, key, ind, seq) {}
+
+  complete(str) {}
+  /* eslint-enable */
+}
+
 
 /***/ }),
 
@@ -488,7 +5121,150 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"ShortcutsBase\", function() { return ShortcutsBase; });\n/* harmony import */ var dat_gui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dat.gui */ \"./node_modules/dat.gui/build/dat.gui.module.js\");\n/* harmony import */ var base_shortcuts_ShortcutTriggers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/shortcuts/ShortcutTriggers */ \"./src/js/base/shortcuts/ShortcutTriggers.js\");\n\n\n\nconst TRIGGER = '↑ ↑ ↓ ↓ ← →';\n\nclass ShortcutsBase {\n  constructor(game, { model: shortcutsModel, isVisible: isVisible = false }) {\n    this.game = game;\n    this.model = shortcutsModel;\n\n    this.gameSettings = null;\n    this.saveSettings = null;\n    this.levelSettings = null;\n\n    this.saveControl = null;\n\n    this.boundClearSaves = this.clearSaves.bind(this);\n\n    this.boundToggle = this.toggleDisplay.bind(this);\n\n    this.isVisible = isVisible;\n\n    this.trigger = new base_shortcuts_ShortcutTriggers__WEBPACK_IMPORTED_MODULE_1__[\"default\"]({\n      sequence: TRIGGER,\n      onComplete: this.boundToggle,\n      onFail: (val) => {\n        console.log('FAIL', val);\n      },\n    });\n  }\n\n  toggleDisplay() {\n    this.isVisible ? this.hide() : this.show();\n  }\n\n  open() {\n    this.gui.open();\n  }\n\n  close() {\n    this.gui.close();\n  }\n\n  show() {\n    this.isVisible = true;\n    this.gui.show();\n  }\n\n  hide() {\n    this.isVisible = false;\n    this.gui.hide();\n  }\n\n  clearSaves() {\n    if (this.game.controller.saves) {\n      this.game.controller.saves.deleteSaves();\n    }\n  }\n\n  setVisible() {\n    this.isVisible ? this.show() : this.hide();\n  }\n\n  /*\n  =========================================================================================================\n    GAME\n  =========================================================================================================\n  */\n  createGameSettings() {\n    this.gameSettings = this.gui.addFolder('Game Settings');\n\n    this.gameSettings.open();\n  }\n\n  /*\n  =========================================================================================================\n    SAVE\n  =========================================================================================================\n  */\n  createSaveSettings() {\n    this.saveSettings = this.gui.addFolder('Saved Data');\n    this.saveControl = this.saveSettings\n      .add(this.model, 'clearPlayerSaves')\n      .name('Clear Saves')\n      .onChange(this.boundClearSaves);\n\n    this.saveSettings.open();\n  }\n\n  /*\n  =========================================================================================================\n    API\n  =========================================================================================================\n  */\n  create() {\n    dat_gui__WEBPACK_IMPORTED_MODULE_0__[\"GUI\"].TEXT_CLOSED = 'Close Shortcuts';\n    dat_gui__WEBPACK_IMPORTED_MODULE_0__[\"GUI\"].TEXT_OPEN = 'Open Shortcuts';\n    this.gui = new dat_gui__WEBPACK_IMPORTED_MODULE_0__[\"GUI\"]({ name: 'Shortcuts', closed: false, autoPlace: false });\n    this.gui.domElement.id = 'gui';\n    this.gui.domElement.style.position = 'absolute';\n    this.gui.domElement.style.top = 0;\n    this.game.scale.parent.appendChild(this.gui.domElement);\n    this.createGameSettings();\n    this.createSaveSettings();\n    this.close();\n    this.setVisible();\n  }\n\n  reset() {\n    this.levelSettings && this.gui.removeFolder(this.levelSettings);\n    this.levelSettings = null;\n    this.addItemMenu && this.gui.removeFolder(this.addItemMenu);\n    this.addItemMenu = null;\n  }\n\n  cleanUp(control) {\n    if (control) {\n      control.remove();\n      control = null;\n    }\n  }\n\n  destroy() {\n    this.quests = null;\n\n    this.gui.removeFolder(this.gameSettings);\n    this.gameSettings = null;\n\n    this.cleanUp(this.saveControl);\n    this.gui.removeFolder(this.saveSettings);\n    this.saveSettings = null;\n\n    this.gui.destroy();\n    this.gui = null;\n\n    this.trigger.destroy();\n    this.trigger = null;\n  }\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/shortcuts/ShortcutsBase.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ShortcutsBase", function() { return ShortcutsBase; });
+/* harmony import */ var dat_gui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! dat.gui */ "./node_modules/dat.gui/build/dat.gui.module.js");
+/* harmony import */ var base_shortcuts_ShortcutTriggers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! base/shortcuts/ShortcutTriggers */ "./src/js/base/shortcuts/ShortcutTriggers.js");
+
+
+
+const TRIGGER = '↑ ↑ ↓ ↓ ← →';
+
+class ShortcutsBase {
+  constructor(game, { model: shortcutsModel, isVisible: isVisible = false }) {
+    this.game = game;
+    this.model = shortcutsModel;
+
+    this.gameSettings = null;
+    this.saveSettings = null;
+    this.levelSettings = null;
+
+    this.saveControl = null;
+
+    this.boundClearSaves = this.clearSaves.bind(this);
+
+    this.boundToggle = this.toggleDisplay.bind(this);
+
+    this.isVisible = isVisible;
+
+    this.trigger = new base_shortcuts_ShortcutTriggers__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      sequence: TRIGGER,
+      onComplete: this.boundToggle,
+      onFail: (val) => {
+        console.log('FAIL', val);
+      },
+    });
+  }
+
+  toggleDisplay() {
+    this.isVisible ? this.hide() : this.show();
+  }
+
+  open() {
+    this.gui.open();
+  }
+
+  close() {
+    this.gui.close();
+  }
+
+  show() {
+    this.isVisible = true;
+    this.gui.show();
+  }
+
+  hide() {
+    this.isVisible = false;
+    this.gui.hide();
+  }
+
+  clearSaves() {
+    if (this.game.controller.saves) {
+      this.game.controller.saves.deleteSaves();
+    }
+  }
+
+  setVisible() {
+    this.isVisible ? this.show() : this.hide();
+  }
+
+  /*
+  =========================================================================================================
+    GAME
+  =========================================================================================================
+  */
+  createGameSettings() {
+    this.gameSettings = this.gui.addFolder('Game Settings');
+
+    this.gameSettings.open();
+  }
+
+  /*
+  =========================================================================================================
+    SAVE
+  =========================================================================================================
+  */
+  createSaveSettings() {
+    this.saveSettings = this.gui.addFolder('Saved Data');
+    this.saveControl = this.saveSettings
+      .add(this.model, 'clearPlayerSaves')
+      .name('Clear Saves')
+      .onChange(this.boundClearSaves);
+
+    this.saveSettings.open();
+  }
+
+  /*
+  =========================================================================================================
+    API
+  =========================================================================================================
+  */
+  create() {
+    dat_gui__WEBPACK_IMPORTED_MODULE_0__["GUI"].TEXT_CLOSED = 'Close Shortcuts';
+    dat_gui__WEBPACK_IMPORTED_MODULE_0__["GUI"].TEXT_OPEN = 'Open Shortcuts';
+    this.gui = new dat_gui__WEBPACK_IMPORTED_MODULE_0__["GUI"]({ name: 'Shortcuts', closed: false, autoPlace: false });
+    this.gui.domElement.id = 'gui';
+    this.gui.domElement.style.position = 'absolute';
+    this.gui.domElement.style.top = 0;
+    this.game.scale.parent.appendChild(this.gui.domElement);
+    this.createGameSettings();
+    this.createSaveSettings();
+    this.close();
+    this.setVisible();
+  }
+
+  reset() {
+    this.levelSettings && this.gui.removeFolder(this.levelSettings);
+    this.levelSettings = null;
+    this.addItemMenu && this.gui.removeFolder(this.addItemMenu);
+    this.addItemMenu = null;
+  }
+
+  cleanUp(control) {
+    if (control) {
+      control.remove();
+      control = null;
+    }
+  }
+
+  destroy() {
+    this.quests = null;
+
+    this.gui.removeFolder(this.gameSettings);
+    this.gameSettings = null;
+
+    this.cleanUp(this.saveControl);
+    this.gui.removeFolder(this.saveSettings);
+    this.saveSettings = null;
+
+    this.gui.destroy();
+    this.gui = null;
+
+    this.trigger.destroy();
+    this.trigger = null;
+  }
+}
+
 
 /***/ }),
 
@@ -500,7 +5276,16 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return ShortcutsStub; });\nclass ShortcutsStub {\n  constructor() {\n    this.model = {};\n  }\n  create() {}\n  reset() {}\n}\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/shortcuts/ShortcutsStub.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ShortcutsStub; });
+class ShortcutsStub {
+  constructor() {
+    this.model = {};
+  }
+  create() {}
+  reset() {}
+}
+
 
 /***/ }),
 
@@ -512,7 +5297,16 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _ShortcutsBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ShortcutsBase */ \"./src/js/base/shortcuts/ShortcutsBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"ShortcutsBase\", function() { return _ShortcutsBase__WEBPACK_IMPORTED_MODULE_0__[\"ShortcutsBase\"]; });\n\n/* harmony import */ var _ShortcutsStub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShortcutsStub */ \"./src/js/base/shortcuts/ShortcutsStub.js\");\n/* empty/unused harmony star reexport *//* harmony import */ var _ShortcutTriggers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ShortcutTriggers */ \"./src/js/base/shortcuts/ShortcutTriggers.js\");\n/* empty/unused harmony star reexport */\n\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/base/shortcuts/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ShortcutsBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ShortcutsBase */ "./src/js/base/shortcuts/ShortcutsBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ShortcutsBase", function() { return _ShortcutsBase__WEBPACK_IMPORTED_MODULE_0__["ShortcutsBase"]; });
+
+/* harmony import */ var _ShortcutsStub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ShortcutsStub */ "./src/js/base/shortcuts/ShortcutsStub.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _ShortcutTriggers__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ShortcutTriggers */ "./src/js/base/shortcuts/ShortcutTriggers.js");
+/* empty/unused harmony star reexport */
+
+
+
 
 /***/ }),
 
@@ -520,11 +5314,73 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _Sho
 /*!*************************!*\
   !*** ./src/js/index.js ***!
   \*************************/
-/*! exports provided: FONT_BALDER, FONT_BARIOL, FONT_CLEARFACE, FONT_FELL_ENGLISH, BOOT_FONTS, APP_FONTS, AppUrls, SETTINGS_EVENTS, VIEWPORT_EVENTS, KEYS, GameControllerBase, SceneControllerBase, SettingsControllerBase, SoundControllerBase, TrackingControllerBase, ViewportControllerBase, TAP, NEW_SAVE, Saves, BoundsDBStub, CLR, checkRects, checkPoint, BootBase, LoadBase, SceneBase, SceneLoadBase, ShortcutsBase, AppBase */
+/*! exports provided: SETTINGS_EVENTS, VIEWPORT_EVENTS, GameControllerBase, SceneControllerBase, SettingsControllerBase, SoundControllerBase, TrackingControllerBase, ViewportControllerBase, TAP, AppUrls, NEW_SAVE, Saves, BoundsDBStub, CLR, checkRects, checkPoint, BootBase, LoadBase, SceneBase, SceneLoadBase, ShortcutsBase, AppBase */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _base_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base/constants */ \"./src/js/base/constants/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BALDER\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BALDER\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_BARIOL\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_BARIOL\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_CLEARFACE\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_CLEARFACE\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"FONT_FELL_ENGLISH\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"FONT_FELL_ENGLISH\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BOOT_FONTS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"BOOT_FONTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"APP_FONTS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"APP_FONTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"AppUrls\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"AppUrls\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SETTINGS_EVENTS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"SETTINGS_EVENTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"VIEWPORT_EVENTS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"VIEWPORT_EVENTS\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"KEYS\", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__[\"KEYS\"]; });\n\n/* harmony import */ var _base_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base/controller */ \"./src/js/base/controller/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"GameControllerBase\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"GameControllerBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SceneControllerBase\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"SceneControllerBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SettingsControllerBase\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"SettingsControllerBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SoundControllerBase\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"SoundControllerBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"TrackingControllerBase\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"TrackingControllerBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"ViewportControllerBase\", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__[\"ViewportControllerBase\"]; });\n\n/* harmony import */ var _base_input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./base/input */ \"./src/js/base/input/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"TAP\", function() { return _base_input__WEBPACK_IMPORTED_MODULE_2__[\"TAP\"]; });\n\n/* harmony import */ var _base_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base/model */ \"./src/js/base/model/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"NEW_SAVE\", function() { return _base_model__WEBPACK_IMPORTED_MODULE_3__[\"NEW_SAVE\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"Saves\", function() { return _base_model__WEBPACK_IMPORTED_MODULE_3__[\"Saves\"]; });\n\n/* harmony import */ var _base_objects__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./base/objects */ \"./src/js/base/objects/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BoundsDBStub\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"BoundsDBStub\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"CLR\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"CLR\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkRects\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"checkRects\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"checkPoint\", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__[\"checkPoint\"]; });\n\n/* harmony import */ var _base_scenes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./base/scenes */ \"./src/js/base/scenes/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"BootBase\", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__[\"BootBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"LoadBase\", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__[\"LoadBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SceneBase\", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__[\"SceneBase\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"SceneLoadBase\", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__[\"SceneLoadBase\"]; });\n\n/* harmony import */ var _base_shortcuts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./base/shortcuts */ \"./src/js/base/shortcuts/index.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"ShortcutsBase\", function() { return _base_shortcuts__WEBPACK_IMPORTED_MODULE_6__[\"ShortcutsBase\"]; });\n\n/* harmony import */ var _AppBase__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AppBase */ \"./src/js/AppBase.js\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"AppBase\", function() { return _AppBase__WEBPACK_IMPORTED_MODULE_7__[\"AppBase\"]; });\n\n\n\n\n\n\n\n\n//\n\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/index.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _base_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./base/constants */ "./src/js/base/constants/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SETTINGS_EVENTS", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__["SETTINGS_EVENTS"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VIEWPORT_EVENTS", function() { return _base_constants__WEBPACK_IMPORTED_MODULE_0__["VIEWPORT_EVENTS"]; });
+
+/* harmony import */ var _base_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./base/controller */ "./src/js/base/controller/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "GameControllerBase", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__["GameControllerBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SceneControllerBase", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__["SceneControllerBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SettingsControllerBase", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__["SettingsControllerBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SoundControllerBase", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__["SoundControllerBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TrackingControllerBase", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__["TrackingControllerBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ViewportControllerBase", function() { return _base_controller__WEBPACK_IMPORTED_MODULE_1__["ViewportControllerBase"]; });
+
+/* harmony import */ var _base_input__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./base/input */ "./src/js/base/input/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "TAP", function() { return _base_input__WEBPACK_IMPORTED_MODULE_2__["TAP"]; });
+
+/* harmony import */ var _base_model__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./base/model */ "./src/js/base/model/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AppUrls", function() { return _base_model__WEBPACK_IMPORTED_MODULE_3__["AppUrls"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NEW_SAVE", function() { return _base_model__WEBPACK_IMPORTED_MODULE_3__["NEW_SAVE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Saves", function() { return _base_model__WEBPACK_IMPORTED_MODULE_3__["Saves"]; });
+
+/* harmony import */ var _base_objects__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./base/objects */ "./src/js/base/objects/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BoundsDBStub", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__["BoundsDBStub"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CLR", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__["CLR"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "checkRects", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__["checkRects"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "checkPoint", function() { return _base_objects__WEBPACK_IMPORTED_MODULE_4__["checkPoint"]; });
+
+/* harmony import */ var _base_scenes__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./base/scenes */ "./src/js/base/scenes/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BootBase", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__["BootBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LoadBase", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__["LoadBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SceneBase", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__["SceneBase"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SceneLoadBase", function() { return _base_scenes__WEBPACK_IMPORTED_MODULE_5__["SceneLoadBase"]; });
+
+/* harmony import */ var _base_shortcuts__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./base/shortcuts */ "./src/js/base/shortcuts/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ShortcutsBase", function() { return _base_shortcuts__WEBPACK_IMPORTED_MODULE_6__["ShortcutsBase"]; });
+
+/* harmony import */ var _AppBase__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./AppBase */ "./src/js/AppBase.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "AppBase", function() { return _AppBase__WEBPACK_IMPORTED_MODULE_7__["AppBase"]; });
+
+
+
+
+
+
+
+
+//
+
+
 
 /***/ }),
 
@@ -536,7 +5392,273 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _bas
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"PERFORMANCE_CATEGORY\", function() { return PERFORMANCE_CATEGORY; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"isIE\", function() { return isIE; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"isIE11\", function() { return isIE11; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"getIPhoneModel\", function() { return getIPhoneModel; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"getIPadModel\", function() { return getIPadModel; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"getiOSversion\", function() { return getiOSversion; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"isOld\", function() { return isOld; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"getDeviceMetric\", function() { return getDeviceMetric; });\n/* harmony import */ var utils_platformDetection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/platformDetection */ \"./src/js/utils/platformDetection.js\");\n/* eslint-disable camelcase */\n\nconst iPHONE1_3 = 'iPhone 1/3g/3gs';\nconst iPHONE4_4S = 'iPhone 4/4s';\nconst iPHONE5_5C_5S = 'iPhone 5/5c/5s';\nconst iPHONE6_6S_7_8 = 'iPhone 6/6s/7/8';\nconst iPHONE6_6S_7_8_DZ = 'iPhone 6/6s/7/8 (Display Zoom)';\nconst iPHONE6_6S_7P_8P = 'iPhone 6/6s/7 Plus/8 Plus';\nconst iPHONE6_6S_7P_8P_DZ = 'iPhone 6/6s/7 Plus/8 Plus (Display Zoom)';\nconst iPHONEX = 'iPhone X';\n\nconst IPAD1_2_MINI1 = 'iPad 1/2 | Mini 1';\nconst IPAD3_5_PRO_MINI2_4 = 'iPad 3-5, iPad Air 1-2, iPad Mini 2-4, iPad Pro 9.7';\nconst IPAD_PRO_10 = 'iPad Pro 10.5';\nconst IPAD_PRO_12 = 'iPad Pro 12.9, Pro 12.9 (2nd Gen)';\n\nconst NEXUS_TABLET = /Android.*Nexus[\\\\s]+(7|9|10)/;\nconst GALAXY_TAB_4 = /SM-T530|SM-T330|SM-N8010/;\nconst HTC_PHONE = /HTC|HTC.*(Sensation|Evo|Vision|Explorer|6800|8100|8900|A7272|S510e|C110e|Legend|Desire|T8282)|APX515CKT|Qtek9090|APA9292KT|HD_mini|Sensation.*Z710e|PG86100|Z715e|Desire.*(A8181|HD)|ADR6200|ADR6400L|ADR6425|001HT|Inspire 4G|Android.*\\\\bEVO\\\\b|T-Mobile G1|Z520m|Android [0-9.]+; Pixel/;\nconst HTC_TABLET = /HTC_Flyer_P512|HTC Flyer|HTC Jetstream|HTC-P715a|HTC EVO View 4G|PG41200|PG09410/;\nconst SAMSUNG_TABE = /sm-t377|sm-t56/;\nconst TESCO_HUDL = /hudl/;\n\n// prettier-ignore\n\n\nconst PERFORMANCE_CATEGORY = {\n  LOW_END: 'LOW_END',\n  MID_END: 'MID_END',\n  HIGH_END: 'HIGH_END',\n};\nconst IOS = {\n  LOW_END: `${iPHONE1_3},${iPHONE4_4S},${iPHONE5_5C_5S},${IPAD1_2_MINI1}`,\n  MID_END: `${iPHONE6_6S_7_8},${iPHONE6_6S_7_8_DZ},${iPHONE6_6S_7P_8P},${iPHONE6_6S_7P_8P_DZ},${IPAD3_5_PRO_MINI2_4}`,\n};\n\n// Internet Explorer\nconst isIE = () => {\n  const ua = window.navigator.userAgent;\n  const msie = ua.indexOf('MSIE ');\n  if (msie > 0) {\n    // IE 10 or older => return version number\n    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);\n  }\n  const trident = ua.indexOf('Trident/');\n  if (trident > 0) {\n    // IE 11 => return version number\n    const rv = ua.indexOf('rv:');\n    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);\n  }\n  // const edge = ua.indexOf('Edge/');\n  // if (edge > 0) {\n  //     // Edge (IE 12+) => return version number\n  //     return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);\n  // }\n  return false;\n};\n\nconst isIE11 = () => {\n  // detection code from https://stackoverflow.com/questions/21825157/internet-explorer-11-detection/29715168\n  return !!window.MSInputMethodContext && !!document.documentMode;\n};\n\n// iOS\nconst getIPhoneModel = () => {\n  if (/iPhone/.test(navigator.userAgent) && !window.MSStream) {\n    const width =\n      window.screen.width > window.screen.height ? window.screen.height : window.screen.width;\n    const height =\n      window.screen.width > window.screen.height ? window.screen.width : window.screen.height;\n    const wh = width / height;\n    const ratio = window.devicePixelRatio;\n\n    if (wh === 320 / 480 && ratio === 1) {\n      return iPHONE1_3;\n    }\n\n    if (wh === 640 / 960 && ratio === 2) {\n      return iPHONE4_4S;\n    }\n\n    if (wh === 640 / 1136 && ratio === 2) {\n      return iPHONE5_5C_5S;\n    }\n\n    if (wh === 750 / 1334 && ratio === 2) {\n      return iPHONE6_6S_7_8;\n    }\n\n    if (wh === 640 / 1136 && ratio === 2) {\n      return iPHONE6_6S_7_8_DZ;\n    }\n\n    if (wh === 1242 / 2208 && ratio === 3) {\n      return iPHONE6_6S_7P_8P;\n    }\n\n    if (wh === 1125 / 2001 && ratio === 3) {\n      return iPHONE6_6S_7P_8P_DZ;\n    }\n\n    if (wh === 375 / 812 && ratio === 3) {\n      return iPHONEX;\n    }\n    return '';\n  } else {\n    return '';\n  }\n};\n\nconst getIPadModel = () => {\n  // typeof window.androidBridge === 'undefined'\n  if (/iPad/.test(navigator.userAgent) && !window.MSStream) {\n    const width =\n      window.screen.width > window.screen.height ? window.screen.height : window.screen.width;\n    const height =\n      window.screen.width > window.screen.height ? window.screen.width : window.screen.height;\n    const wh = width / height;\n    const ratio = window.devicePixelRatio;\n    if (wh === 768 / 1024) {\n      if (ratio === 1) {\n        return IPAD1_2_MINI1;\n      } else {\n        return IPAD3_5_PRO_MINI2_4;\n      }\n    }\n    if (wh === 834 / 1112) {\n      return IPAD_PRO_10;\n    }\n    if (wh === 1024 / 1366) {\n      return IPAD_PRO_12;\n    }\n  } else {\n    return '';\n  }\n};\n\nconst getiOSversion = () => {\n  const agent = window.navigator.userAgent;\n  const start = agent.indexOf('OS ');\n  if ((agent.indexOf('iPhone') > -1 || agent.indexOf('iPad') > -1) && start > -1) {\n    return window.Number(agent.substr(start + 3, 3).replace('_', '.'));\n  }\n  return 0;\n};\n\n/*\n * Checks specific devices via UA and categories\n * specific models as LOW_END\n */\nconst isOld = () => {\n  // check specific devices\n  const ua = window.navigator.userAgent;\n  if (ua.match(NEXUS_TABLET)) {\n    return true;\n  }\n  if (ua.match(GALAXY_TAB_4)) {\n    return true;\n  }\n  if (ua.match(HTC_PHONE) || ua.match(HTC_TABLET)) {\n    return true;\n  }\n  if (ua.match(SAMSUNG_TABE)) {\n    return true;\n  }\n  return !!ua.match(TESCO_HUDL);\n};\n\nconst getAndroidCategory = (platform) => {\n  console.log('DEVICE : Android : ', platform);\n  if (isOld()) {\n    return PERFORMANCE_CATEGORY.LOW_END;\n  }\n  const version = (platform.version && parseInt(platform.version)) || 0;\n  /*\n   * finally check android version\n   * <= 6 = LOW_END\n   * MID_END\n   * > 9 = HIGH_END\n   */\n  if (version <= 6) {\n    return PERFORMANCE_CATEGORY.LOW_END;\n  } else if (version > 9) {\n    return PERFORMANCE_CATEGORY.HIGH_END;\n  }\n  return PERFORMANCE_CATEGORY.MID_END;\n};\n\nconst getKindleCategory = (platform) => {\n  console.log('DEVICE : Kindle : ', platform.kindle.description);\n  let category = PERFORMANCE_CATEGORY.MID_END;\n  if (platform.kindle.gen < 8) {\n    category = PERFORMANCE_CATEGORY.LOW_END;\n  }\n  return category;\n};\n\nconst getIosCategory = (platform) => {\n  /*\n   * Only detects older models, everything else newer is classed as high end\n   */\n  let category = PERFORMANCE_CATEGORY.HIGH_END;\n  if (platform.type === 'tablet') {\n    const model = getIPadModel();\n    console.log('DEVICE : iOS tablet : ', model);\n    if (IOS.LOW_END.includes(model)) {\n      category = PERFORMANCE_CATEGORY.LOW_END;\n    } else if (IOS.MID_END.includes(model)) {\n      category = PERFORMANCE_CATEGORY.MID_END;\n    }\n  } else if (platform.type === 'smartphone') {\n    const model = getIPhoneModel();\n    console.log('DEVICE : iOS phone : ', model);\n    if (IOS.LOW_END.includes(model)) {\n      category = PERFORMANCE_CATEGORY.LOW_END;\n    } else if (IOS.MID_END.includes(model)) {\n      category = PERFORMANCE_CATEGORY.MID_END;\n    }\n  }\n  return category;\n};\n\nconst getDeviceMetric = () => {\n  /*\n   * Returns LOW_END, MID_END or HIGH_END\n   * LOW_END = oldest - served slim experience\n   * MID_END = oldish and popular - served 32 bit audio\n   * HIGH_END = newer devices, served full experience\n   */\n  let category = PERFORMANCE_CATEGORY.HIGH_END;\n  const platform = Object(utils_platformDetection__WEBPACK_IMPORTED_MODULE_0__[\"getPlatform\"])();\n  if (platform.type === 'desktop') {\n    category = PERFORMANCE_CATEGORY.HIGH_END;\n  } else if (platform.type !== 'unknown') {\n    switch (platform.os) {\n      case 'windows':\n      case 'blackberry':\n      case 'webos':\n        category = PERFORMANCE_CATEGORY.LOW_END;\n        break;\n      case 'fire':\n        category = getKindleCategory(platform);\n        break;\n      case 'android':\n        category = getAndroidCategory(platform);\n        break;\n      case 'ios': {\n        category = getIosCategory(platform);\n        break;\n      }\n    }\n\n    return { platform, category };\n  }\n  return { platform, category };\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/utils/deviceDetection.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PERFORMANCE_CATEGORY", function() { return PERFORMANCE_CATEGORY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIE", function() { return isIE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIE11", function() { return isIE11; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIPhoneModel", function() { return getIPhoneModel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getIPadModel", function() { return getIPadModel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getiOSversion", function() { return getiOSversion; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isOld", function() { return isOld; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getDeviceMetric", function() { return getDeviceMetric; });
+/* harmony import */ var utils_platformDetection__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/platformDetection */ "./src/js/utils/platformDetection.js");
+/* eslint-disable camelcase */
+
+const iPHONE1_3 = 'iPhone 1/3g/3gs';
+const iPHONE4_4S = 'iPhone 4/4s';
+const iPHONE5_5C_5S = 'iPhone 5/5c/5s';
+const iPHONE6_6S_7_8 = 'iPhone 6/6s/7/8';
+const iPHONE6_6S_7_8_DZ = 'iPhone 6/6s/7/8 (Display Zoom)';
+const iPHONE6_6S_7P_8P = 'iPhone 6/6s/7 Plus/8 Plus';
+const iPHONE6_6S_7P_8P_DZ = 'iPhone 6/6s/7 Plus/8 Plus (Display Zoom)';
+const iPHONEX = 'iPhone X';
+
+const IPAD1_2_MINI1 = 'iPad 1/2 | Mini 1';
+const IPAD3_5_PRO_MINI2_4 = 'iPad 3-5, iPad Air 1-2, iPad Mini 2-4, iPad Pro 9.7';
+const IPAD_PRO_10 = 'iPad Pro 10.5';
+const IPAD_PRO_12 = 'iPad Pro 12.9, Pro 12.9 (2nd Gen)';
+
+const NEXUS_TABLET = /Android.*Nexus[\\s]+(7|9|10)/;
+const GALAXY_TAB_4 = /SM-T530|SM-T330|SM-N8010/;
+const HTC_PHONE = /HTC|HTC.*(Sensation|Evo|Vision|Explorer|6800|8100|8900|A7272|S510e|C110e|Legend|Desire|T8282)|APX515CKT|Qtek9090|APA9292KT|HD_mini|Sensation.*Z710e|PG86100|Z715e|Desire.*(A8181|HD)|ADR6200|ADR6400L|ADR6425|001HT|Inspire 4G|Android.*\\bEVO\\b|T-Mobile G1|Z520m|Android [0-9.]+; Pixel/;
+const HTC_TABLET = /HTC_Flyer_P512|HTC Flyer|HTC Jetstream|HTC-P715a|HTC EVO View 4G|PG41200|PG09410/;
+const SAMSUNG_TABE = /sm-t377|sm-t56/;
+const TESCO_HUDL = /hudl/;
+
+// prettier-ignore
+
+
+const PERFORMANCE_CATEGORY = {
+  LOW_END: 'LOW_END',
+  MID_END: 'MID_END',
+  HIGH_END: 'HIGH_END',
+};
+const IOS = {
+  LOW_END: `${iPHONE1_3},${iPHONE4_4S},${iPHONE5_5C_5S},${IPAD1_2_MINI1}`,
+  MID_END: `${iPHONE6_6S_7_8},${iPHONE6_6S_7_8_DZ},${iPHONE6_6S_7P_8P},${iPHONE6_6S_7P_8P_DZ},${IPAD3_5_PRO_MINI2_4}`,
+};
+
+// Internet Explorer
+const isIE = () => {
+  const ua = window.navigator.userAgent;
+  const msie = ua.indexOf('MSIE ');
+  if (msie > 0) {
+    // IE 10 or older => return version number
+    return parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)), 10);
+  }
+  const trident = ua.indexOf('Trident/');
+  if (trident > 0) {
+    // IE 11 => return version number
+    const rv = ua.indexOf('rv:');
+    return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
+  }
+  // const edge = ua.indexOf('Edge/');
+  // if (edge > 0) {
+  //     // Edge (IE 12+) => return version number
+  //     return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
+  // }
+  return false;
+};
+
+const isIE11 = () => {
+  // detection code from https://stackoverflow.com/questions/21825157/internet-explorer-11-detection/29715168
+  return !!window.MSInputMethodContext && !!document.documentMode;
+};
+
+// iOS
+const getIPhoneModel = () => {
+  if (/iPhone/.test(navigator.userAgent) && !window.MSStream) {
+    const width =
+      window.screen.width > window.screen.height ? window.screen.height : window.screen.width;
+    const height =
+      window.screen.width > window.screen.height ? window.screen.width : window.screen.height;
+    const wh = width / height;
+    const ratio = window.devicePixelRatio;
+
+    if (wh === 320 / 480 && ratio === 1) {
+      return iPHONE1_3;
+    }
+
+    if (wh === 640 / 960 && ratio === 2) {
+      return iPHONE4_4S;
+    }
+
+    if (wh === 640 / 1136 && ratio === 2) {
+      return iPHONE5_5C_5S;
+    }
+
+    if (wh === 750 / 1334 && ratio === 2) {
+      return iPHONE6_6S_7_8;
+    }
+
+    if (wh === 640 / 1136 && ratio === 2) {
+      return iPHONE6_6S_7_8_DZ;
+    }
+
+    if (wh === 1242 / 2208 && ratio === 3) {
+      return iPHONE6_6S_7P_8P;
+    }
+
+    if (wh === 1125 / 2001 && ratio === 3) {
+      return iPHONE6_6S_7P_8P_DZ;
+    }
+
+    if (wh === 375 / 812 && ratio === 3) {
+      return iPHONEX;
+    }
+    return '';
+  } else {
+    return '';
+  }
+};
+
+const getIPadModel = () => {
+  // typeof window.androidBridge === 'undefined'
+  if (/iPad/.test(navigator.userAgent) && !window.MSStream) {
+    const width =
+      window.screen.width > window.screen.height ? window.screen.height : window.screen.width;
+    const height =
+      window.screen.width > window.screen.height ? window.screen.width : window.screen.height;
+    const wh = width / height;
+    const ratio = window.devicePixelRatio;
+    if (wh === 768 / 1024) {
+      if (ratio === 1) {
+        return IPAD1_2_MINI1;
+      } else {
+        return IPAD3_5_PRO_MINI2_4;
+      }
+    }
+    if (wh === 834 / 1112) {
+      return IPAD_PRO_10;
+    }
+    if (wh === 1024 / 1366) {
+      return IPAD_PRO_12;
+    }
+  } else {
+    return '';
+  }
+};
+
+const getiOSversion = () => {
+  const agent = window.navigator.userAgent;
+  const start = agent.indexOf('OS ');
+  if ((agent.indexOf('iPhone') > -1 || agent.indexOf('iPad') > -1) && start > -1) {
+    return window.Number(agent.substr(start + 3, 3).replace('_', '.'));
+  }
+  return 0;
+};
+
+/*
+ * Checks specific devices via UA and categories
+ * specific models as LOW_END
+ */
+const isOld = () => {
+  // check specific devices
+  const ua = window.navigator.userAgent;
+  if (ua.match(NEXUS_TABLET)) {
+    return true;
+  }
+  if (ua.match(GALAXY_TAB_4)) {
+    return true;
+  }
+  if (ua.match(HTC_PHONE) || ua.match(HTC_TABLET)) {
+    return true;
+  }
+  if (ua.match(SAMSUNG_TABE)) {
+    return true;
+  }
+  return !!ua.match(TESCO_HUDL);
+};
+
+const getAndroidCategory = (platform) => {
+  console.log('DEVICE : Android : ', platform);
+  if (isOld()) {
+    return PERFORMANCE_CATEGORY.LOW_END;
+  }
+  const version = (platform.version && parseInt(platform.version)) || 0;
+  /*
+   * finally check android version
+   * <= 6 = LOW_END
+   * MID_END
+   * > 9 = HIGH_END
+   */
+  if (version <= 6) {
+    return PERFORMANCE_CATEGORY.LOW_END;
+  } else if (version > 9) {
+    return PERFORMANCE_CATEGORY.HIGH_END;
+  }
+  return PERFORMANCE_CATEGORY.MID_END;
+};
+
+const getKindleCategory = (platform) => {
+  console.log('DEVICE : Kindle : ', platform.kindle.description);
+  let category = PERFORMANCE_CATEGORY.MID_END;
+  if (platform.kindle.gen < 8) {
+    category = PERFORMANCE_CATEGORY.LOW_END;
+  }
+  return category;
+};
+
+const getIosCategory = (platform) => {
+  /*
+   * Only detects older models, everything else newer is classed as high end
+   */
+  let category = PERFORMANCE_CATEGORY.HIGH_END;
+  if (platform.type === 'tablet') {
+    const model = getIPadModel();
+    console.log('DEVICE : iOS tablet : ', model);
+    if (IOS.LOW_END.includes(model)) {
+      category = PERFORMANCE_CATEGORY.LOW_END;
+    } else if (IOS.MID_END.includes(model)) {
+      category = PERFORMANCE_CATEGORY.MID_END;
+    }
+  } else if (platform.type === 'smartphone') {
+    const model = getIPhoneModel();
+    console.log('DEVICE : iOS phone : ', model);
+    if (IOS.LOW_END.includes(model)) {
+      category = PERFORMANCE_CATEGORY.LOW_END;
+    } else if (IOS.MID_END.includes(model)) {
+      category = PERFORMANCE_CATEGORY.MID_END;
+    }
+  }
+  return category;
+};
+
+const getDeviceMetric = () => {
+  /*
+   * Returns LOW_END, MID_END or HIGH_END
+   * LOW_END = oldest - served slim experience
+   * MID_END = oldish and popular - served 32 bit audio
+   * HIGH_END = newer devices, served full experience
+   */
+  let category = PERFORMANCE_CATEGORY.HIGH_END;
+  const platform = Object(utils_platformDetection__WEBPACK_IMPORTED_MODULE_0__["getPlatform"])();
+  if (platform.type === 'desktop') {
+    category = PERFORMANCE_CATEGORY.HIGH_END;
+  } else if (platform.type !== 'unknown') {
+    switch (platform.os) {
+      case 'windows':
+      case 'blackberry':
+      case 'webos':
+        category = PERFORMANCE_CATEGORY.LOW_END;
+        break;
+      case 'fire':
+        category = getKindleCategory(platform);
+        break;
+      case 'android':
+        category = getAndroidCategory(platform);
+        break;
+      case 'ios': {
+        category = getIosCategory(platform);
+        break;
+      }
+    }
+
+    return { platform, category };
+  }
+  return { platform, category };
+};
+
 
 /***/ }),
 
@@ -548,7 +5670,130 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"getPlatform\", function() { return getPlatform; });\n// prettier-ignore\nconst KINDLE_DEVICES = /KFONWI|KFMAWI|KFSUWI|KFAUWI|KFDOWI|KFGIWI|KFFOWI|KFMEWI|KFTBWI|KFARWI|KFASWI|KFSAWA|KFSAWI|KFAPWA|KFAPWI|KFSOWI|KFJWA|KFTHWI|KFTHWA|KFJWI|KFTT|KFOT|SD4930UR|Kindle|Kindle Fire/i;\n// https://en.wikipedia.org/wiki/Fire_HD\n// https://docs.aws.amazon.com/silk/latest/developerguide/screen-size.html\nconst KINDLE_GENERATIONS = {\n  KFONWI: { gen: 10, description: 'Fire HD 8, 8+ (10th Gen)' },\n\n  KFMAWI: { gen: 9, description: 'Fire HD 10 (9th Gen)' },\n  KFMUWI: { gen: 9, description: 'Fire 7 (9th Gen)' },\n\n  KFKAWI: { gen: 8, description: 'Fire HD 8 (8th Gen)' },\n\n  KFSUWI: { gen: 7, description: 'Fire 7 (7th Gen)' },\n  KFAUWI: { gen: 7, description: 'Fire HD 10 (7th Gen)' },\n  KFDOWI: { gen: 7, description: 'Fire HD 8 (7th Gen)' },\n\n  KFGIWI: { gen: 6, description: 'Fire HD 8 (6th Gen)' },\n\n  KFTBWI: { gen: 5, description: 'Fire HD 10 (5th Gen)' },\n  KFMEWI: { gen: 5, description: 'Fire HD 8 (5th Gen)' },\n  KFFOWI: { gen: 5, description: 'Fire (5th Gen)' },\n\n  KFSAWI: { gen: 4, description: 'Fire HDX 8.9 (4th Gen)' },\n  KFSAWA: { gen: 4, description: 'Fire HDX 8.9 LTE (4th Gen)' },\n  KFASWI: { gen: 4, description: 'Fire HD 7 (4th Gen)' },\n  KFARWI: { gen: 4, description: 'Fire HD 6 (4th Gen)' },\n\n  KFAPWI: { gen: 3, description: 'Fire HDX 8.9 (3rd Gen)' },\n  KFAPWA: { gen: 3, description: 'Fire HDX 8.9 LTE (3rd Gen)' },\n  KFTHWI: { gen: 3, description: 'Fire HDX 7 (3rd Gen)' },\n  KFTHWA: { gen: 3, description: 'Fire HDX 7 LTE (3rd Gen)' },\n  KFSOWI: { gen: 3, description: 'Fire HD 7 (3rd Gen)' },\n\n  SD4930UR: { gen: 1, description: 'Fire Phone' },\n};\n\nfunction detectTablet(ua) {\n  const isTablet = ua.match(/Tablet|Android.*Pixel C|PlayBook|Hudl HT7S3|Hudl 2|Nexus 7/);\n  return isTablet ? 'tablet' : 'smartphone';\n}\n\n// eslint-disable-next-line max-statements\nfunction detectPlatform() {\n  const ua = window.navigator.userAgent; // window.navigator.userAgent || window.navigator.vendor || window.opera;\n  const device = { type: 'unknown', os: 'unknown', family: 'unknown', version: 'unknown' };\n\n  const iphone = ua.match(/(iPhone\\sOS)\\s([\\d_]+)/);\n  const ipad = ua.match(/(iPad).*OS\\s([\\d_]+)/);\n  if (iphone || ipad) {\n    device.type = iphone ? 'smartphone' : 'tablet';\n    device.os = 'ios';\n    device.family = 'ios';\n    device.version = iphone ? iphone[2].replace(/_/g, '.') : ipad[2].replace(/_/g, '.');\n    return device;\n  }\n\n  const kindle = ua.match(KINDLE_DEVICES);\n  if (kindle) {\n    const generation = KINDLE_GENERATIONS[kindle] || { gen: 0, description: 'unknown' };\n    device.type = 'tablet';\n    device.os = 'fire';\n    device.family = 'android';\n    device.kindle = generation;\n    return device;\n  }\n\n  const android = ua.match(/(Android)\\s+([\\d.]+)/);\n  if (android) {\n    device.type = detectTablet(ua);\n    device.os = 'android';\n    device.family = 'android';\n    device.version = android[2];\n    return device;\n  }\n\n  const webos = ua.match(/webOS|hpwOS/);\n  if (webos) {\n    device.type = detectTablet(ua);\n    device.os = 'webos';\n    device.family = 'webos';\n    return device;\n  }\n  const blackberry = ua.match(\n    /BlackBerry|\\\\bBB10\\\\b|rim[0-9]+|\\\\b(BBA100|BBB100|BBD100|BBE100|BBF100|STH100)\\\\b-[0-9]+/\n  );\n  if (blackberry) {\n    device.type = detectTablet(ua);\n    device.os = 'blackberry';\n    device.family = 'blackberry';\n    return device;\n  }\n\n  const windowsMobileOS = ua.match(\n    /Windows CE.*(PPC|Smartphone|Mobile|[0-9]{3}x[0-9]{3})|Windows Mobile|Windows Phone [0-9.]+|WCE/\n  );\n  const WindowsPhoneOS = ua.match(\n    /Windows Phone 10.0|Windows Phone 8.1|Windows Phone 8.0|Windows Phone OS|XBLWP7|ZuneWP7|Windows NT 6.[23]; ARM/\n  );\n  if (windowsMobileOS || WindowsPhoneOS) {\n    device.type = 'smartphone';\n    device.os = 'windows';\n    device.family = 'windows';\n    return device;\n  }\n\n  const windows = ua.match(/windows/i);\n  const macintosh = ua.match(/macintosh/i);\n  const cros = ua.match(/cros/i); // linux\n  const desktop = windows || macintosh || cros;\n  if (desktop) {\n    device.type = 'desktop';\n    device.os = windows ? 'windows' : macintosh ? 'macintosh' : cros ? 'linux' : 'unknown';\n    return device;\n  }\n\n  return device;\n}\n\nconst getPlatform = () => {\n  return detectPlatform();\n};\n\n\n//# sourceURL=webpack://jollygoodgame/./src/js/utils/platformDetection.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getPlatform", function() { return getPlatform; });
+// prettier-ignore
+const KINDLE_DEVICES = /KFONWI|KFMAWI|KFSUWI|KFAUWI|KFDOWI|KFGIWI|KFFOWI|KFMEWI|KFTBWI|KFARWI|KFASWI|KFSAWA|KFSAWI|KFAPWA|KFAPWI|KFSOWI|KFJWA|KFTHWI|KFTHWA|KFJWI|KFTT|KFOT|SD4930UR|Kindle|Kindle Fire/i;
+// https://en.wikipedia.org/wiki/Fire_HD
+// https://docs.aws.amazon.com/silk/latest/developerguide/screen-size.html
+const KINDLE_GENERATIONS = {
+  KFONWI: { gen: 10, description: 'Fire HD 8, 8+ (10th Gen)' },
+
+  KFMAWI: { gen: 9, description: 'Fire HD 10 (9th Gen)' },
+  KFMUWI: { gen: 9, description: 'Fire 7 (9th Gen)' },
+
+  KFKAWI: { gen: 8, description: 'Fire HD 8 (8th Gen)' },
+
+  KFSUWI: { gen: 7, description: 'Fire 7 (7th Gen)' },
+  KFAUWI: { gen: 7, description: 'Fire HD 10 (7th Gen)' },
+  KFDOWI: { gen: 7, description: 'Fire HD 8 (7th Gen)' },
+
+  KFGIWI: { gen: 6, description: 'Fire HD 8 (6th Gen)' },
+
+  KFTBWI: { gen: 5, description: 'Fire HD 10 (5th Gen)' },
+  KFMEWI: { gen: 5, description: 'Fire HD 8 (5th Gen)' },
+  KFFOWI: { gen: 5, description: 'Fire (5th Gen)' },
+
+  KFSAWI: { gen: 4, description: 'Fire HDX 8.9 (4th Gen)' },
+  KFSAWA: { gen: 4, description: 'Fire HDX 8.9 LTE (4th Gen)' },
+  KFASWI: { gen: 4, description: 'Fire HD 7 (4th Gen)' },
+  KFARWI: { gen: 4, description: 'Fire HD 6 (4th Gen)' },
+
+  KFAPWI: { gen: 3, description: 'Fire HDX 8.9 (3rd Gen)' },
+  KFAPWA: { gen: 3, description: 'Fire HDX 8.9 LTE (3rd Gen)' },
+  KFTHWI: { gen: 3, description: 'Fire HDX 7 (3rd Gen)' },
+  KFTHWA: { gen: 3, description: 'Fire HDX 7 LTE (3rd Gen)' },
+  KFSOWI: { gen: 3, description: 'Fire HD 7 (3rd Gen)' },
+
+  SD4930UR: { gen: 1, description: 'Fire Phone' },
+};
+
+function detectTablet(ua) {
+  const isTablet = ua.match(/Tablet|Android.*Pixel C|PlayBook|Hudl HT7S3|Hudl 2|Nexus 7/);
+  return isTablet ? 'tablet' : 'smartphone';
+}
+
+// eslint-disable-next-line max-statements
+function detectPlatform() {
+  const ua = window.navigator.userAgent; // window.navigator.userAgent || window.navigator.vendor || window.opera;
+  const device = { type: 'unknown', os: 'unknown', family: 'unknown', version: 'unknown' };
+
+  const iphone = ua.match(/(iPhone\sOS)\s([\d_]+)/);
+  const ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
+  if (iphone || ipad) {
+    device.type = iphone ? 'smartphone' : 'tablet';
+    device.os = 'ios';
+    device.family = 'ios';
+    device.version = iphone ? iphone[2].replace(/_/g, '.') : ipad[2].replace(/_/g, '.');
+    return device;
+  }
+
+  const kindle = ua.match(KINDLE_DEVICES);
+  if (kindle) {
+    const generation = KINDLE_GENERATIONS[kindle] || { gen: 0, description: 'unknown' };
+    device.type = 'tablet';
+    device.os = 'fire';
+    device.family = 'android';
+    device.kindle = generation;
+    return device;
+  }
+
+  const android = ua.match(/(Android)\s+([\d.]+)/);
+  if (android) {
+    device.type = detectTablet(ua);
+    device.os = 'android';
+    device.family = 'android';
+    device.version = android[2];
+    return device;
+  }
+
+  const webos = ua.match(/webOS|hpwOS/);
+  if (webos) {
+    device.type = detectTablet(ua);
+    device.os = 'webos';
+    device.family = 'webos';
+    return device;
+  }
+  const blackberry = ua.match(
+    /BlackBerry|\\bBB10\\b|rim[0-9]+|\\b(BBA100|BBB100|BBD100|BBE100|BBF100|STH100)\\b-[0-9]+/
+  );
+  if (blackberry) {
+    device.type = detectTablet(ua);
+    device.os = 'blackberry';
+    device.family = 'blackberry';
+    return device;
+  }
+
+  const windowsMobileOS = ua.match(
+    /Windows CE.*(PPC|Smartphone|Mobile|[0-9]{3}x[0-9]{3})|Windows Mobile|Windows Phone [0-9.]+|WCE/
+  );
+  const WindowsPhoneOS = ua.match(
+    /Windows Phone 10.0|Windows Phone 8.1|Windows Phone 8.0|Windows Phone OS|XBLWP7|ZuneWP7|Windows NT 6.[23]; ARM/
+  );
+  if (windowsMobileOS || WindowsPhoneOS) {
+    device.type = 'smartphone';
+    device.os = 'windows';
+    device.family = 'windows';
+    return device;
+  }
+
+  const windows = ua.match(/windows/i);
+  const macintosh = ua.match(/macintosh/i);
+  const cros = ua.match(/cros/i); // linux
+  const desktop = windows || macintosh || cros;
+  if (desktop) {
+    device.type = 'desktop';
+    device.os = windows ? 'windows' : macintosh ? 'macintosh' : cros ? 'linux' : 'unknown';
+    return device;
+  }
+
+  return device;
+}
+
+const getPlatform = () => {
+  return detectPlatform();
+};
+
 
 /***/ }),
 
@@ -559,7 +5804,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_phaser__;\n\n//# sourceURL=webpack://jollygoodgame/external_%7B%22commonjs%22:%22Phaser%22,%22commonjs2%22:%22Phaser%22,%22amd%22:%22Phaser%22,%22root%22:%22Phaser%22%7D?");
+module.exports = __WEBPACK_EXTERNAL_MODULE_phaser__;
 
 /***/ }),
 
@@ -570,9 +5815,10 @@ eval("module.exports = __WEBPACK_EXTERNAL_MODULE_phaser__;\n\n//# sourceURL=webp
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("module.exports = __WEBPACK_EXTERNAL_MODULE_webfontloader__;\n\n//# sourceURL=webpack://jollygoodgame/external_%7B%22commonjs%22:%22webfontloader%22,%22commonjs2%22:%22webfontloader%22,%22amd%22:%22webfontloader%22,%22root%22:%22webfontloader%22%7D?");
+module.exports = __WEBPACK_EXTERNAL_MODULE_webfontloader__;
 
 /***/ })
 
 /******/ });
 });
+//# sourceMappingURL=jollygoodgame-base.js.map
