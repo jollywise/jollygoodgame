@@ -8,7 +8,6 @@ class StorageGame {
     instance = this;
     this.key = key;
     this._plugin = null;
-    this.data = this.loadData();
     return instance;
   }
 

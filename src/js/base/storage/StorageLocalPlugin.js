@@ -8,6 +8,7 @@ export class StorageLocalPlugin {
   }
   set key(val) {
     this._key = val;
+    this.data = this.loadData();
   }
 
   deleteGameData() {
@@ -17,7 +18,8 @@ export class StorageLocalPlugin {
   }
 
   setGameData(saveId, value) {
-    this.data[saveId] = value;
+    const savesString = JSON.stringify(value);
+    this.data[saveId] = savesString;
     try {
       window.localStorage.setItem(this.key, JSON.stringify(this.data));
     } catch (e) {}

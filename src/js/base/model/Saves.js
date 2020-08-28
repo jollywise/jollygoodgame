@@ -170,8 +170,7 @@ export class Saves {
   ====================================================================================================
   */
   saveData() {
-    const savesString = JSON.stringify(this.saves);
-    this.storage.setGameData(SAVES_ID, savesString);
+    this.storage.setGameData(SAVES_ID, this.saves);
   }
 
   /*
