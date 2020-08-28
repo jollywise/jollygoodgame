@@ -6,12 +6,15 @@ import {
   ViewportControllerBase,
   TrackingControllerBase,
 } from './base/controller';
+import { AppUrls } from './base/model';
 
 export class AppBase extends Phaser.Game {
-  constructor({ config }) {
+  constructor({ config, paths }) {
     super(config);
+
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
+    this._appUrls = new AppUrls(this, paths);
     this._soundController = new SoundControllerBase({ game: this });
     this._settingsController = new SettingsControllerBase({ game: this });
     this._viewportController = new ViewportControllerBase({ game: this });
