@@ -5,7 +5,8 @@ const root = path.resolve(__dirname, '../');
 const src = path.join(root, 'src');
 const dist = path.join(root, 'dist');
 
-const MODE = 'development'; // development, production
+const MODE = process.env.NODE_ENV; // development, production
+console.log('building ' + MODE + ' release');
 const DEBUG = true;
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
       root: 'webfontloader',
     },
   },
-  devtool: 'source-map',
+  devtool: process.env.NODE_ENV === 'development' ? 'inline-source-map' : 'source-map',
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(MODE),
