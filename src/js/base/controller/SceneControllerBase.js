@@ -79,4 +79,43 @@ export class SceneControllerBase {
     this.sceneManager.resume(scene);
     this.sceneManager.bringToTop(scene);
   }
+
+  showOverlayScene(sceneKey, { data, onOverlayClosed = null } = {}) {
+    if (this.overlaySceneKey) this.removeOverlayScene();
+    this.overlaySceneKey = sceneKey;
+    this.onOverlayClosed = onOverlayClosed;
+    this.pauseScene(this.currentSceneKey);
+    this.startScene(sceneKey, { data });
+  }
+
+  removeOverlayScene() {
+    if (this.overlaySceneKey) {
+      this.stopScene(this.overlaySceneKey);
+      this.resumeScene(this.currentSceneKey);
+      this.overlaySceneKey = null;
+      if (this.onOverlayClosed) {
+        const t = this.onOverlayClosed;
+        this.onOverlayClosed = null;
+        setTimeout(t, 100);
+      }
+    }
+  }
+
+  showRotate(key) {
+    console.log('SceneController.showRotate');
+    if (!this.sceneManager.isActive(key)) {
+      const pause = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
+      this.pauseScene(pause);
+      this.startScene(key, {});
+    }
+  }
+
+  removeRotate(key) {
+    console.log('SceneController.removeRotate');
+    if (this.sceneManager.isActive(key)) {
+      this.stopScene(key, {});
+      const resume = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
+      this.resumeScene(resume);
+    }
+  }
 }

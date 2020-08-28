@@ -1,4 +1,4 @@
-export default class Settings {
+export class Settings {
   constructor() {
     this._audio = true;
     this._sfx = true;

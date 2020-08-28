@@ -1,4 +1,4 @@
-class CopyModel {
+export class CopyModel {
   constructor({ xml }) {
     this.copy = {};
     if (xml) {
@@ -26,4 +26,3 @@ class CopyModel {
     return this.copy[copyId] || null;
   }
 }
-export default CopyModel;

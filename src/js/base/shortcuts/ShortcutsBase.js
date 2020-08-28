@@ -1,5 +1,5 @@
 import * as dat from 'dat.gui';
-import ShortcutTriggers from 'base/shortcuts/ShortcutTriggers';
+import { ShortcutTriggers } from 'base/shortcuts/ShortcutTriggers';
 
 const TRIGGER = '↑ ↑ ↓ ↓ ← →';
 

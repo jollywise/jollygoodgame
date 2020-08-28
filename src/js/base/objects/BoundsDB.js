@@ -4,7 +4,7 @@ export class BoundsDBStub {
   drawBounds() {}
 }
 
-export default class BoundsDB extends Phaser.GameObjects.Graphics {
+export class BoundsDB extends Phaser.GameObjects.Graphics {
   constructor(scene, shortcutsModel) {
     super(scene);
     this.shortcuts = shortcutsModel;

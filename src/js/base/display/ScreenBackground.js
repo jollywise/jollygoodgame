@@ -1,6 +1,6 @@
 import { VIEWPORT_EVENTS } from 'base/constants/Events';
 
-export default class ScreenBackground extends Phaser.GameObjects.Image {
+export class ScreenBackground extends Phaser.GameObjects.Image {
   constructor(scene, image) {
     super(
       scene,

@@ -1,4 +1,4 @@
-export default class ShortcutsStub {
+export class ShortcutsStub {
   constructor() {
     this.model = {};
   }

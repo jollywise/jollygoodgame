@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 
-export default class UIModel extends EventEmitter {
+export class UIModel extends EventEmitter {
   /*
    * UIModel saves mute state to LocalStorage via utils/Settings
    */

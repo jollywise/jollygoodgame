@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
 
-export default class TapArea extends EventEmitter {
+export class TapArea extends EventEmitter {
   constructor(scene, container, { x, y, w, h }) {
     super();
 

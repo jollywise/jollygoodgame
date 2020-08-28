@@ -163,7 +163,7 @@ function handleSequence(sequence, keyCode) {
   }
 }
 
-export default class ShortcutTriggers {
+export class ShortcutTriggers {
   constructor({ sequence = '↑ ↑ ↓ ↓ ← →', onComplete, onNext, onFail }) {
     this.touchCoords = { startX: null, startY: null, endX: null, endY: null };
     this.bindedNext = this.next.bind(this);

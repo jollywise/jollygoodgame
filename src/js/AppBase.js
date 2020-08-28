@@ -25,7 +25,7 @@ export class AppBase extends Phaser.Game {
     return this._soundController;
   }
 
-  get settingsController() {
+  get settings() {
     return this._settingsController;
   }
 
@@ -33,7 +33,7 @@ export class AppBase extends Phaser.Game {
     return this._viewportController;
   }
 
-  get trackingController() {
+  get tracking() {
     return this._trackingController;
   }
 
