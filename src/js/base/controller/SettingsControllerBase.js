@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3';
-import { Settings } from 'base/model/Settings';
-import { SETTINGS_EVENTS } from 'base/constants/Events';
+import { Settings } from '../model/Settings';
+import { SETTINGS_EVENTS } from '../constants/Events';
 
 export class SettingsControllerBase extends EventEmitter {
   constructor({ game }) {

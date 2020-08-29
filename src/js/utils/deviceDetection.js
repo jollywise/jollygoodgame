@@ -22,7 +22,7 @@ const SAMSUNG_TABE = /sm-t377|sm-t56/;
 const TESCO_HUDL = /hudl/;
 
 // prettier-ignore
-import { getPlatform } from 'utils/platformDetection';
+import { getPlatform } from './platformDetection';
 
 export const PERFORMANCE_CATEGORY = {
   LOW_END: 'LOW_END',

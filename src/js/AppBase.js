@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { getDeviceMetric } from 'utils/deviceDetection';
+import { getDeviceMetric } from './utils/deviceDetection';
 import {
   SoundControllerBase,
   SettingsControllerBase,

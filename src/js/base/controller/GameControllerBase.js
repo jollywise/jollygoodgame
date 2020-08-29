@@ -1,7 +1,7 @@
-import { UIModel } from 'base/model/UIModel';
-import { CopyModel } from 'base/model/CopyModel';
-import { ShortcutsStub } from 'base/shortcuts/ShortcutsStub';
-import { VIEWPORT_EVENTS } from 'base/constants/Events';
+import { UIModel } from '../model/UIModel';
+import { CopyModel } from '../model/CopyModel';
+import { ShortcutsStub } from '../shortcuts/ShortcutsStub';
+import { VIEWPORT_EVENTS } from '../constants/Events';
 
 export class GameControllerBase {
   constructor({ game, gameMode }) {
