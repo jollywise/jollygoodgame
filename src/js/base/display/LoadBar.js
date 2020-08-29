@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export class LoadBar extends Phaser.GameObjects.Container {
   constructor({
     scene,

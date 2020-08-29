@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export class TextBox extends Phaser.GameObjects.Text {
   constructor(scene, { x, y, text, style, type = TextBox.COPY } = {}) {
     const fontstyle = { ...TextBox.STYLES[type], ...style };

@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export class ScreenContainer extends Phaser.GameObjects.Container {
   constructor({ scene }) {
     super(scene);

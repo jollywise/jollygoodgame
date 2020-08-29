@@ -1,4 +1,5 @@
 import { VIEWPORT_EVENTS } from '../constants/Events';
+import Phaser from 'phaser';
 
 export class ScreenBackground extends Phaser.GameObjects.Image {
   constructor(scene, image) {

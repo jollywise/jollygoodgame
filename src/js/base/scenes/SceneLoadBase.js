@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 const LOADED_ASSETS = { multiatlas: [], spine: [] };
 
 export class SceneLoadBase extends Phaser.Scene {

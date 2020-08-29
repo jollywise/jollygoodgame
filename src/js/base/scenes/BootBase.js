@@ -1,4 +1,5 @@
 import WebFont from 'webfontloader';
+import Phaser from 'phaser';
 
 export class BootBase extends Phaser.Scene {
   constructor({ key, loadKey = 'Load', active = true, debug = false }) {

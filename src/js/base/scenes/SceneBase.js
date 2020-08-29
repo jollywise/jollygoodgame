@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export class SceneBase extends Phaser.Scene {
   constructor({ key, active = false }) {
     super({ key, active });
