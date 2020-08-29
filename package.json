@@ -2,7 +2,7 @@
   "name": "jollygoodgame",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/jollygoodgame-base.js",
+  "main": "dist/jollygoodgame.js",
   "scripts": {
     "build:debug": "cross-env NODE_ENV=development webpack --config ./buildtools/webpack.config.js",
     "build:release": "cross-env NODE_ENV=production webpack --config ./buildtools/webpack.config.js"
