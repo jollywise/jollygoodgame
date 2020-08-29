@@ -19,7 +19,7 @@ module.exports = {
   },
   output: {
     path: dist,
-    filename: 'jollygoodgame.js',
+    filename: 'jollygoodgame-base.js',
     library: 'jollygoodgame',
     libraryTarget: 'umd',
   },
