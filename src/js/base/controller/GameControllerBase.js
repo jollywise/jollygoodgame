@@ -1,4 +1,4 @@
-import { UIModel } from '../model/UIModel';
+// import { UIModel } from '../model/UIModel';
 import { CopyModel } from '../model/CopyModel';
 import { ShortcutsStub } from '../shortcuts/ShortcutsStub';
 import { VIEWPORT_EVENTS } from '../constants/Events';
@@ -16,8 +16,11 @@ export class GameControllerBase {
 
   assetsLoaded() {
     console.log('GameControllerBase.assetsLoaded');
-    const uiConfig = this.game.cache.json.get('ui_config');
-    this.uiModel = new UIModel({ config: uiConfig, settings: this.settings });
+    // const uiConfig = this.game.cache.json.get('ui_config');
+    // this.uiModel = new UIModel({ config: uiConfig, settings: this.settings });
+
+    // uiModel looks like duplicate functionality for settings : you can check in bbc/settings
+
     this.copyModel = new CopyModel({ xml: this.game.cache.xml.get('copy_xml') });
     this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.handleViewportUpdated, this);
     this.game.viewportController.updateViewport();

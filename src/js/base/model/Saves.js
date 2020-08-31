@@ -13,8 +13,8 @@ export class Saves {
     this.saves = {};
   }
 
-  set storagePlugin(plugin) {
-    this.storage = plugin;
+  set storage(storage) {
+    this._storage = storage;
     this.createSaveCount();
     this.saves = this.loadData(SAVES_ID, {});
   }
@@ -33,7 +33,7 @@ export class Saves {
   }
 
   loadData(id, returnVal = {}) {
-    const gameData = this.storage.getGameData();
+    const gameData = this._storage.getGameData();
     const dataString = gameData[id];
     if (dataString) {
       return JSON.parse(dataString);
@@ -48,11 +48,11 @@ export class Saves {
   */
   createSaveCount() {
     this.saveCount = this.loadData('savecount', 0);
-    this.storage.setGameData('savecount', this.saveCount);
+    this._storage.setGameData('savecount', this.saveCount);
   }
   incrementSaveCount() {
     this.saveCount++;
-    this.storage.setGameData('savecount', this.saveCount);
+    this._storage.setGameData('savecount', this.saveCount);
   }
 
   create({ saveID }) {
@@ -173,7 +173,7 @@ export class Saves {
   ====================================================================================================
   */
   saveData() {
-    this.storage.setGameData(SAVES_ID, this.saves);
+    this._storage.setGameData(SAVES_ID, this.saves);
   }
 
   /*

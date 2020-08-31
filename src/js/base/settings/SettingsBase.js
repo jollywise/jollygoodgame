@@ -6,6 +6,8 @@ import { SETTINGS_EVENTS } from '../constants/Events';
  * Moved this from controller/SettingsControllerBase
  * It looks more like PBS settings
  * Added a BBC specific implementation into jjg-bbc
+ *
+ * Perhaps we need a basic implementation with no bbc/pbs stuff for a game not using the extenions?
  */
 export class SettingsBase extends EventEmitter {
   constructor({ game }) {

@@ -1,3 +1,6 @@
+/*
+ * Saves data to localstorage
+ */
 export class StoragePlugin {
   constructor() {
     this.supported = this.isSupported();

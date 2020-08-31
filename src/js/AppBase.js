@@ -21,6 +21,11 @@ export class AppBase extends Phaser.Game {
     this._trackingController = new TrackingControllerBase({ game: this });
 
     this._saves = new Saves();
+
+    // localstorage plugin : import { StoragePlugin } from './base/storage';
+    // const storage = getStorage('hey-duggee-2');
+    // storage.plugin = new StoragePlugin();
+    // this.saves.storage = storage;
   }
 
   init() {}

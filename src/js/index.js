@@ -8,5 +8,5 @@ export * from './base/scenes';
 export * from './base/settings';
 export * from './base/shortcuts';
 export * from './base/storage';
-//
+export * from './utils';
 export * from './AppBase';

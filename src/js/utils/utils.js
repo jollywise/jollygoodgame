@@ -1,4 +1,20 @@
-'use strict';
+/*
+ * https://stackoverflow.com/questions/3698200/window-onload-vs-document-ready
+ * https://stackoverflow.com/questions/799981/document-ready-equivalent-without-jquery/55649686#55649686
+ */
+export const dOMReady = function (callback) {
+  if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    callback();
+  } else if (document.addEventListener) {
+    document.addEventListener('DOMContentLoaded', callback());
+  } else if (document.attachEvent) {
+    document.attachEvent('onreadystatechange', function () {
+      if (document.readyState !== 'loading') {
+        callback();
+      }
+    });
+  }
+};
 
 export const zeroPad = (num, length) => {
   const n = Math.abs(num);
@@ -23,21 +39,4 @@ export const closestPoint = (x, y, points) => {
     }
   }
   return closestPoint;
-};
-
-export const doScreenfull = () => {
-  // const isAndroid = /(android)/i.test(window.navigator.userAgent);
-  // if (isAndroid && screenfull.enabled) {
-  //   document.getElementById(GAME_DIV_ID).addEventListener('click', () => {
-  //     if (screenfull.enabled && !screenfull.isFullscreen) {
-  //       // screenfull.on('error', (event) => {
-  //       //   console.error('Failed to enable fullscreen', event);
-  //       // });
-  //       // screenfull.on('change', () => {
-  //       //   console.log('Am I fullscreen?', screenfull.isFullscreen ? 'Yes' : 'No');
-  //       // });
-  //       screenfull.request();
-  //     }
-  //   });
-  // }
 };
