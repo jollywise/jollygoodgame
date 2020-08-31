@@ -4,6 +4,9 @@ export class TrackingControllerBase {
     this._plugin = null;
   }
 
+  get plugin() {
+    return this._plugin;
+  }
   set plugin(plugin) {
     this._plugin = plugin;
   }

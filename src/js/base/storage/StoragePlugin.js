@@ -1,6 +1,6 @@
-export class StorageLocalPlugin {
+export class StoragePlugin {
   constructor() {
-    return this.isSupported();
+    this.supported = this.isSupported();
   }
 
   get key() {
@@ -30,9 +30,13 @@ export class StorageLocalPlugin {
   }
 
   // internal
-
   isSupported() {
-    return typeof Storage !== 'undefined';
+    if (typeof Storage !== 'undefined') {
+      console.log('LocalStorage plugin registered');
+      return true;
+    }
+    console.warn('LocalStorage plugin not available');
+    return false;
   }
 
   parseLocalStorage(key) {

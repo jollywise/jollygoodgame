@@ -1,2 +1,2 @@
 export * from './StorageGame';
-export * from './StorageLocalPlugin';
+export * from './StoragePlugin';
