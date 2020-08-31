@@ -102,7 +102,6 @@ export class SceneControllerBase {
   }
 
   showRotate(key) {
-    console.log('SceneController.showRotate');
     if (!this.sceneManager.isActive(key)) {
       const pause = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
       this.pauseScene(pause);
@@ -111,7 +110,6 @@ export class SceneControllerBase {
   }
 
   removeRotate(key) {
-    console.log('SceneController.removeRotate');
     if (this.sceneManager.isActive(key)) {
       this.stopScene(key, {});
       const resume = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;

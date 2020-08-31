@@ -15,7 +15,6 @@ export class GameControllerBase {
   }
 
   assetsLoaded() {
-    console.log('GameControllerBase.assetsLoaded');
     // const uiConfig = this.game.cache.json.get('ui_config');
     // this.uiModel = new UIModel({ config: uiConfig, settings: this.settings });
 

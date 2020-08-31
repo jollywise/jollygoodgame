@@ -4,7 +4,6 @@ import Phaser from 'phaser';
 export class BootBase extends Phaser.Scene {
   constructor({ key, loadKey = 'Load', active = true, debug = false }) {
     super({ key, active });
-    console.log('BootBase | key', key, '| active', active, '| debug', debug);
     this.key = key;
     this.loadKey = loadKey;
     this.debug = debug;

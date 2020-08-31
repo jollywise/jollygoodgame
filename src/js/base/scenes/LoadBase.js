@@ -4,7 +4,6 @@ import Phaser from 'phaser';
 export class LoadBase extends Phaser.Scene {
   constructor({ key, active = false, debug = false }) {
     super({ key, active });
-    console.log('LoadBase | key', key, '| active', active, '| debug', debug);
     this.key = key;
     this.debug = debug;
     this.fontsReady = false;
