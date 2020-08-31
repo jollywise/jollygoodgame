@@ -4,7 +4,7 @@ export const NEW_SAVE = 'NEW_SAVE';
 
 export class Saves {
   /*
-   * data structure for saves
+   * data structure for saves:
    * saveID1 : {game: {}, player: {} ...}
    * saveID2 : {game: {}, player: {} ...}
    */
