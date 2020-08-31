@@ -1,4 +1,5 @@
 import EventEmitter from 'eventemitter3';
+import { UI_EVENTS } from '../constants/Events';
 
 export class TapArea extends EventEmitter {
   constructor(scene, container, { x, y, w, h }) {
@@ -60,7 +61,7 @@ export class TapArea extends EventEmitter {
 
   onClick(pointer) {
     const { x, y } = pointer;
-    this.emit(TAP, { x, y });
+    this.emit(UI_EVENTS.TAP, { x, y });
   }
 
   destroy() {
@@ -68,5 +69,3 @@ export class TapArea extends EventEmitter {
     this.clickbox = null;
   }
 }
-
-export const TAP = 'TAP';
