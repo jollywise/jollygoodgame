@@ -43,13 +43,11 @@ export class Saves {
   */
   createSaveCount() {
     this.saveCount = this.loadData('savecount', 0);
-    const savesString = JSON.stringify(this.saveCount);
-    this.storage.setGameData('savecount', savesString);
+    this.storage.setGameData('savecount', this.saveCount);
   }
   incrementSaveCount() {
     this.saveCount++;
-    const savesString = JSON.stringify(this.saveCount);
-    this.storage.setGameData('savecount', savesString);
+    this.storage.setGameData('savecount', this.saveCount);
   }
 
   create({ saveID }) {
