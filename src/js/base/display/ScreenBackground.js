@@ -21,11 +21,13 @@ export class ScreenBackground extends Phaser.GameObjects.Image {
   }
 
   destroy() {
-    this.scene.sys.game.viewportController.off(
-      VIEWPORT_EVENTS.UPDATED,
-      this.handleViewUpdate,
-      this
-    );
+    if (this.scene) {
+      this.scene.sys.game.viewportController.off(
+        VIEWPORT_EVENTS.UPDATED,
+        this.handleViewUpdate,
+        this
+      );
+    }
     super.destroy(true);
   }
 }
