@@ -52,8 +52,8 @@ export class ShortcutsBase {
   }
 
   clearSaves() {
-    if (this.game.controller.saves) {
-      this.game.controller.saves.deleteSaves();
+    if (this.game.saves) {
+      this.game.saves.deleteSaves();
     }
   }
 

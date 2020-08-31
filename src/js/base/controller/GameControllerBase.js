@@ -6,6 +6,8 @@ import { VIEWPORT_EVENTS } from '../constants/Events';
 export class GameControllerBase {
   constructor({ game, gameMode }) {
     this.game = game;
+    this.saves = this.game.saves; // shortcut
+    this.settings = this.game.settings; // shortcut
     this.gameMode = gameMode;
     this.gamePaused = false;
   }
