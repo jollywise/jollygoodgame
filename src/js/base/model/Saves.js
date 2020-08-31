@@ -8,23 +8,28 @@ export class Saves {
    * saveID1 : {game: {}, player: {} ...}
    * saveID2 : {game: {}, player: {} ...}
    */
-  constructor({ storage }) {
-    this.storage = storage; // swap out for different storage types
-    this.saveID = null;
-    this.saves = this.loadData(SAVES_ID, {});
-    this.createSaveCount();
+  constructor() {
+    this.saveId = null;
+    this.saves = {};
   }
 
-  createSaveID() {
+  set storagePlugin(plugin) {
+    this.storage = plugin;
+    this.createSaveCount();
+    this.saves = this.loadData(SAVES_ID, {});
+  }
+
+  createSaveId() {
     this.incrementSaveCount();
     return new Date().getTime();
   }
 
-  setSaveID(val) {
-    this.saveID = val === NEW_SAVE ? this.createSaveID() : val;
+  setSaveId(val) {
+    this.saveId = val === NEW_SAVE ? this.createSaveId() : val;
+    return this.saveId;
   }
-  getSaveID() {
-    return this.saveID;
+  getSaveId() {
+    return this.saveId;
   }
 
   loadData(id, returnVal = {}) {
@@ -63,7 +68,7 @@ export class Saves {
   }
 
   load(id) {
-    const saveID = id || this.saveID;
+    const saveID = id || this.saveId;
     if (this.hasSave(saveID)) {
       // console.info(`Saves.load ${saveID}`);
       const { version } = this.saves[saveID];
@@ -74,7 +79,7 @@ export class Saves {
           )
         ) {
           this.deleteSave(saveID);
-          this.saveID = null;
+          this.saveId = null;
           location.reload();
         }
       }
@@ -83,7 +88,7 @@ export class Saves {
   }
 
   save({ id, data }) {
-    const saveID = id || this.saveID;
+    const saveID = id || this.saveId;
     // console.log('save', saveID, data);
     if (saveID) {
       const existing = this.saves[saveID] || this.create({ saveID });
@@ -94,12 +99,12 @@ export class Saves {
   }
 
   renameSave() {
-    if (this.saveID) {
-      const newSaveID = this.createSaveID();
-      this.saves[newSaveID] = { ...this.saves[this.saveID] };
+    if (this.saveId) {
+      const newSaveID = this.createSaveId();
+      this.saves[newSaveID] = { ...this.saves[this.saveId] };
       this.saves[newSaveID].id = newSaveID;
-      delete this.saves[this.saveID];
-      this.setSaveID(newSaveID);
+      delete this.saves[this.saveId];
+      this.setSaveId(newSaveID);
       this.saveData();
     }
   }
@@ -116,7 +121,7 @@ export class Saves {
   }
 
   deleteSave(id) {
-    const saveID = id || this.saveID;
+    const saveID = id || this.saveId;
     if (this.hasSave(saveID)) {
       delete this.saves[saveID];
       this.saveData();
@@ -147,8 +152,8 @@ export class Saves {
   }
 
   getSaveNumber() {
-    if (this.hasSave(this.saveID)) {
-      return this.saves[this.saveID].saveNumber;
+    if (this.hasSave(this.saveId)) {
+      return this.saves[this.saveId].saveNumber;
     } else {
       return this.saveCount;
     }
@@ -164,7 +169,7 @@ export class Saves {
 
   /*
   ====================================================================================================
-  LOCALSTORAGE
+  Save via plugin
   ====================================================================================================
   */
   saveData() {
