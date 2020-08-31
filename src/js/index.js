@@ -5,6 +5,7 @@ export * from './base/input';
 export * from './base/model';
 export * from './base/objects';
 export * from './base/scenes';
+export * from './base/settings';
 export * from './base/shortcuts';
 export * from './base/storage';
 //

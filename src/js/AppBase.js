@@ -2,7 +2,6 @@ import Phaser from 'phaser';
 import { getDeviceMetric } from './utils/deviceDetection';
 import {
   SoundControllerBase,
-  SettingsControllerBase,
   ViewportControllerBase,
   TrackingControllerBase,
 } from './base/controller';
@@ -14,11 +13,10 @@ export class AppBase extends Phaser.Game {
 
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
-    this._appUrls = new AppUrls(this, paths);
     this._defaultDimensions = { width: config.width, height: config.height };
 
+    this._appUrls = new AppUrls(this, paths);
     this._soundController = new SoundControllerBase({ game: this });
-    this._settingsController = new SettingsControllerBase({ game: this });
     this._viewportController = new ViewportControllerBase({ game: this });
     this._trackingController = new TrackingControllerBase({ game: this });
 
@@ -27,16 +25,25 @@ export class AppBase extends Phaser.Game {
 
   init() {}
 
-  get saves() {
-    return this._saves;
+  get gameConfig() {
+    return this._gameConfig;
+  }
+
+  get deviceMetric() {
+    // deviceMetric returns a profile of the device used to determine if game need to adjust loaded assets (lowend etc)
+    return this._deviceMetric;
+  }
+
+  get defaultDimensions() {
+    return this._defaultDimensions;
+  }
+
+  get appUrls() {
+    return this._appUrls;
   }
 
   get soundController() {
     return this._soundController;
-  }
-
-  get settings() {
-    return this._settingsController;
   }
 
   get viewportController() {
@@ -47,15 +54,7 @@ export class AppBase extends Phaser.Game {
     return this._trackingController;
   }
 
-  get gameConfig() {
-    return this._gameConfig;
-  }
-
-  get defaultDimensions() {
-    return this._defaultDimensions;
-  }
-
-  get deviceMetric() {
-    return this._deviceMetric;
+  get saves() {
+    return this._saves;
   }
 }
