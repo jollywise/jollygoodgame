@@ -1,4 +1,4 @@
-// This looks like a duplicate of base/settings/SettingsBase
+// This looks like a duplicate of settings/SettingsBase
 
 // import EventEmitter from 'eventemitter3';
 //

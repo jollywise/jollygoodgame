@@ -1,11 +1,7 @@
 import Phaser from 'phaser';
 import { getDeviceMetric } from './utils/deviceDetection';
-import {
-  SoundControllerBase,
-  ViewportControllerBase,
-  TrackingControllerBase,
-} from './base/controller';
-import { AppUrls, Saves } from './base/model';
+import { SoundControllerBase, ViewportControllerBase, TrackingControllerBase } from './controller';
+import { AppUrls, Saves } from './model';
 
 export class AppBase extends Phaser.Game {
   constructor({ config, paths }) {
@@ -22,7 +18,7 @@ export class AppBase extends Phaser.Game {
 
     this._saves = new Saves();
 
-    // localstorage plugin : import { StoragePlugin } from './base/storage';
+    // localstorage plugin : import { StoragePlugin } from './storage';
     // const storage = getStorage('hey-duggee-2');
     // storage.plugin = new StoragePlugin();
     // this.saves.storage = storage;

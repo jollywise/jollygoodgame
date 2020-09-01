@@ -1,4 +1,4 @@
-// Moved this to base/settings/SettingsBase
+// Moved this to settings/SettingsBase
 
 // import EventEmitter from 'eventemitter3';
 // import { Settings } from '../model/Settings';
