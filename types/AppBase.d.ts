@@ -1,3 +1,3 @@
-export class AppBase {
+declare class AppBase {
   constructor(o: any);
 }

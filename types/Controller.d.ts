@@ -1,23 +1,23 @@
-export class GameControllerBase {
+declare class GameControllerBase {
   constructor(o: any);
 }
 
-export class SceneControllerBase {
+declare class SceneControllerBase {
   constructor(o: any);
 }
 
-export class SettingsControllerBase {
+declare class SettingsControllerBase {
   constructor(o: any);
 }
 
-export class SoundControllerBase {
+declare class SoundControllerBase {
   constructor(o: any);
 }
 
-export class TrackingControllerBase {
+declare class TrackingControllerBase {
   constructor(o: any);
 }
 
-export class ViewportControllerBase {
+declare class ViewportControllerBase {
   constructor(o: any);
 }
