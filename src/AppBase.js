@@ -12,6 +12,7 @@ export class AppBase extends Phaser.Game {
     this._defaultDimensions = { width: config.width, height: config.height };
 
     this._appUrls = new AppUrls(this, paths);
+    this._gameController = null;
     this._soundController = new SoundControllerBase({ game: this });
     this._viewportController = new ViewportControllerBase({ game: this });
     this._trackingController = new TrackingControllerBase({ game: this });
@@ -43,6 +44,13 @@ export class AppBase extends Phaser.Game {
     return this._appUrls;
   }
 
+  set controller(controller) {
+    this._gameController = controller;
+  }
+  get controller() {
+    return this._gameController;
+  }
+
   get soundController() {
     return this._soundController;
   }
@@ -57,5 +65,12 @@ export class AppBase extends Phaser.Game {
 
   get saves() {
     return this._saves;
+  }
+
+  set settings(settings) {
+    this._settings = settings;
+  }
+  get settings() {
+    return this._settings;
   }
 }
