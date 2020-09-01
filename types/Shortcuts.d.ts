@@ -1,11 +1,11 @@
-declare class ShortcutsBase {
+export declare class ShortcutsBase {
   constructor(o: any);
 }
 
-declare class ShortcutsStub {
+export declare class ShortcutsStub {
   constructor(o: any);
 }
 
-declare class ShortcutTriggers {
+export declare class ShortcutTriggers {
   constructor(o: any);
 }
