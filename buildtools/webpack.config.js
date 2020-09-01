@@ -10,7 +10,7 @@ console.log('building ' + MODE + ' release');
 const DEBUG = true;
 
 module.exports = {
-  entry: './src/js/index.js',
+  entry: './src/index.js',
   mode: MODE,
   resolve: {
     alias: {},
