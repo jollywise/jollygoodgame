@@ -1,6 +1,8 @@
 export class GameControllerBase {
   constructor(opts: object);
   sceneController;
+  copyModel;
+  shortcuts;
   addSceneController();
   assetsLoaded();
   handleViewportUpdated();
