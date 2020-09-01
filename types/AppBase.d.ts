@@ -1,3 +1,3 @@
 export class AppBase {
-  constructor(o: any);
+  constructor(o: Object);
 }

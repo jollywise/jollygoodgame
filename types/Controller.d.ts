@@ -1,23 +1,23 @@
 export class GameControllerBase {
-  constructor(o: any);
+  constructor(o: Object);
 }
 
 export class SceneControllerBase {
-  constructor(o: any);
+  constructor(o: Object);
 }
 
 export class SettingsControllerBase {
-  constructor(o: any);
+  constructor(o: Object);
 }
 
 export class SoundControllerBase {
-  constructor(o: any);
+  constructor(o: Object);
 }
 
 export class TrackingControllerBase {
-  constructor(o: any);
+  constructor(o: Object);
 }
 
 export class ViewportControllerBase {
-  constructor(o: any);
+  constructor(o: Object);
 }

@@ -1,6 +1,6 @@
 let instance = null;
 
-class StorageGame {
+export class StorageGame {
   constructor(key = 'base_storage_key') {
     if (instance) {
       return instance;
