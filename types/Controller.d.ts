@@ -23,10 +23,6 @@ export class SceneControllerBase {
   resumeScene();
 }
 
-export class SettingsControllerBase {
-  constructor(opts: object);
-}
-
 export class SoundControllerBase {
   constructor(opts: object);
 }
