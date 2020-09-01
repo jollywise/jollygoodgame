@@ -9,8 +9,8 @@ export class Saves {
 }
 
 export class AppUrls {
-  constructor(game: any, paths: Object);
-  game;
+  constructor(game: Phaser.Game, paths: object);
+  game: Phaser.Game;
   basePath;
   assetsPath;
   getBaseDirectory();
@@ -21,7 +21,7 @@ export class AppUrls {
 }
 
 export class CopyModel {
-  constructor(o: Object);
+  constructor(o: object);
   copy;
   get();
   getString();
@@ -29,5 +29,5 @@ export class CopyModel {
 }
 
 export class Settings {
-  constructor(o: Object);
+  constructor(o: object);
 }

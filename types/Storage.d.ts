@@ -3,5 +3,9 @@ export class StoragePlugin {
 }
 
 export class StorageGame {
-  constructor(key: String);
+  constructor(key: string);
+  plugin;
+  deleteGameData();
+  setGameData();
+  getGameData();
 }

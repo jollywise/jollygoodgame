@@ -1,5 +1,5 @@
 export class GameControllerBase {
-  constructor(o: Object);
+  constructor(o: object);
   sceneController;
   addSceneController();
   assetsLoaded();
@@ -11,7 +11,7 @@ export class GameControllerBase {
 }
 
 export class SceneControllerBase {
-  constructor(o: Object);
+  constructor(o: object);
   sceneManager;
   addSceneMap();
   switchScene();
@@ -22,20 +22,20 @@ export class SceneControllerBase {
 }
 
 export class SettingsControllerBase {
-  constructor(o: Object);
+  constructor(o: object);
 }
 
 export class SoundControllerBase {
-  constructor(o: Object);
+  constructor(o: object);
 }
 
 export class TrackingControllerBase {
-  constructor(o: Object);
+  constructor(o: object);
   plugin;
   track();
   setPage();
 }
 
 export class ViewportControllerBase {
-  constructor(o: Object);
+  constructor(o: object);
 }
