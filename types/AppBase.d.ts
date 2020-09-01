@@ -1,5 +1,5 @@
 export class AppBase {
-  constructor(o: object);
+  constructor(opts: object);
   gameConfig;
   deviceMetric;
   defaultDimensions;

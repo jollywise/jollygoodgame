@@ -1,5 +1,5 @@
 export class BootBase extends Phaser.Scene {
-  constructor(o: object);
+  constructor(opts: object);
   init();
   preload();
   loadComplete();
@@ -9,7 +9,7 @@ export class BootBase extends Phaser.Scene {
 }
 
 export class LoadBase extends Phaser.Scene {
-  constructor(o: object);
+  constructor(opts: object);
   init();
   renderScene();
   preload();
@@ -20,7 +20,7 @@ export class LoadBase extends Phaser.Scene {
 }
 
 export class SceneBase extends Phaser.Scene {
-  constructor(o: object);
+  constructor(opts: object);
   init();
   create();
   handleGameResized();
@@ -32,7 +32,7 @@ export class SceneBase extends Phaser.Scene {
 }
 
 export class SceneLoadBase extends Phaser.Scene {
-  constructor(o: object);
+  constructor(opts: object);
   init();
   renderScene();
   preload();

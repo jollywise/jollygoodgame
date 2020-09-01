@@ -1,7 +1,7 @@
 import Phaser from 'phaser';
 
 export class ScreenContainer extends Phaser.GameObjects.Container {
-  constructor({ scene }) {
+  constructor(scene) {
     super(scene);
     this.bindedHandleResize = this.resize.bind(this);
     this.scene.scale.on('resize', this.bindedHandleResize);

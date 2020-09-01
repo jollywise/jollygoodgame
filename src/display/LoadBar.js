@@ -1,14 +1,10 @@
 import Phaser from 'phaser';
 
 export class LoadBar extends Phaser.GameObjects.Container {
-  constructor({
+  constructor(
     scene,
-    x,
-    y,
-    spritesheet = 'loadbar',
-    spriteBar = 'loading_bar',
-    spriteFill = 'loading_fill',
-  }) {
+    { x, y, spritesheet = 'loadbar', spriteBar = 'loading_bar', spriteFill = 'loading_fill' }
+  ) {
     const track = scene.add.image(x, y, spritesheet, spriteBar).setOrigin(0);
     const width = track.width;
     x -= width * 0.5;

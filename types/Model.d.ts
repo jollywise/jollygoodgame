@@ -21,7 +21,7 @@ export class AppUrls {
 }
 
 export class CopyModel {
-  constructor(o: object);
+  constructor(opts: object);
   copy;
   get();
   getString();
@@ -29,5 +29,5 @@ export class CopyModel {
 }
 
 export class Settings {
-  constructor(o: object);
+  constructor(opts: object);
 }
