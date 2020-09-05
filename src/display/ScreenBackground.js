@@ -16,8 +16,9 @@ export class ScreenBackground extends Phaser.GameObjects.Image {
   }
 
   handleViewUpdate(viewport) {
-    this.displayWidth = viewport.width;
-    this.displayHeight = viewport.height;
+    this.scale = viewport.height / this.height;
+    // this.displayWidth = viewport.width;
+    // this.displayHeight = viewport.height;
   }
 
   destroy() {
