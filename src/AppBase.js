@@ -12,15 +12,17 @@ export class AppBase extends Phaser.Game {
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
     this._defaultDimensions = { width: config.width, height: config.height };
+    this._gameController = null;
+
+    this._pointerController = new PointerController({ key: 'pointerController' });
+    this.scene.add(this._pointerController.key, this._pointerController);
+
+    this._soundController = new SoundController({ key: 'soundController' });
+    this.scene.add(this._soundController.key, this._soundController);
 
     this._appUrls = new AppUrls(this, paths);
-    this._gameController = null;
-    this._soundController = new SoundController({ key: 'soundController' });
-    this._pointerController = new PointerController({ key: 'pointerController' });
     this._viewportController = new ViewportControllerBase({ game: this });
     this._trackingController = new TrackingControllerBase({ game: this });
-    this.scene.add(this._pointerController);
-    this.scene.add(this._soundController);
 
     this._saves = new Saves();
   }
