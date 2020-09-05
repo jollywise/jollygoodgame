@@ -1,3 +1,5 @@
+import { isTouchDevice } from '../utils';
+
 /* eslint-disable */
 const KEYS = {
   backspace: 8,
@@ -173,7 +175,7 @@ export class ShortcutTriggers {
     this.bindedKeyUp = this.keyup.bind(this);
     this.bindedTouchStart = this.touchstart.bind(this);
     this.bindedTouchEnd = this.touchend.bind(this);
-    this.touchEnabled = 'ontouchstart' in window;
+    this.touchEnabled = isTouchDevice();
     this.sequence = createSequence(sequence, {
       done: onComplete || this.bindedComplete,
       next: onNext || this.bindedNext,

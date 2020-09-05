@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { isTouchDevice } from '../utils';
 
 export class PointerController extends Phaser.Scene {
   constructor({ key }) {
@@ -9,6 +10,11 @@ export class PointerController extends Phaser.Scene {
   }
 
   setPointer({ key, originX = 0.5, originY = 0.5 }) {
+    // don't show for touch devices
+    if (isTouchDevice()) {
+      return;
+    }
+
     this.input.on('gameout', this.onPointerOut, this);
     this.input.on('gameover', this.onPointerOver, this);
     this.input.setDefaultCursor('none');

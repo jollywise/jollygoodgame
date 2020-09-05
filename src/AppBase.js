@@ -34,7 +34,6 @@ export class AppBase extends Phaser.Game {
   }
 
   get deviceMetric() {
-    // deviceMetric returns a profile of the device used to determine if game need to adjust loaded assets (lowend etc)
     return this._deviceMetric;
   }
 

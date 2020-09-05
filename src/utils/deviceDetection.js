@@ -56,6 +56,10 @@ export const isIE = () => {
   return false;
 };
 
+export const isTouchDevice = () => {
+  return 'ontouchstart' in window;
+};
+
 export const isIE11 = () => {
   // detection code from https://stackoverflow.com/questions/21825157/internet-explorer-11-detection/29715168
   return !!window.MSInputMethodContext && !!document.documentMode;
