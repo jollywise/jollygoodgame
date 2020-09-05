@@ -1,8 +1,11 @@
+import Phaser from 'phaser';
+
 const SFX_VOLUME = 0.5;
 
-export class SoundControllerBase {
-  constructor({ game }) {
-    this.game = game;
+export class SoundController extends Phaser.Scene {
+  constructor({ key }) {
+    super({ key, active: true });
+    this.key = key;
     this.currentVO = null;
 
     // this.game.settings.emitter.on('settingsAudioChanged', this.handleAudioChanged, this);

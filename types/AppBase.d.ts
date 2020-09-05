@@ -6,6 +6,7 @@ export class AppBase {
   appUrls;
   controller;
   soundController;
+  pointerController;
   viewportController;
   tracking;
   saves;

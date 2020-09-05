@@ -23,10 +23,6 @@ export class SceneControllerBase {
   resumeScene();
 }
 
-export class SoundControllerBase {
-  constructor(opts: object);
-}
-
 export class TrackingControllerBase {
   constructor(opts: object);
   plugin;

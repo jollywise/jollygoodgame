@@ -44,3 +44,7 @@ export class SceneLoadBase extends Phaser.Scene {
   update(time: number, delta: number);
   shutdown();
 }
+
+export class SoundController extends Phaser.Scene {}
+
+export class PointerController extends Phaser.Scene {}

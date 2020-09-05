@@ -1,7 +1,9 @@
 import Phaser from 'phaser';
 import { getDeviceMetric } from './utils/deviceDetection';
-import { SoundControllerBase, ViewportControllerBase, TrackingControllerBase } from './controller';
+import { ViewportControllerBase, TrackingControllerBase } from './controller';
 import { AppUrls, Saves } from './model';
+import { SoundController } from './scenes/SoundController';
+import { PointerController } from './scenes/PointerController';
 
 export class AppBase extends Phaser.Game {
   constructor({ config, paths }) {
@@ -13,16 +15,14 @@ export class AppBase extends Phaser.Game {
 
     this._appUrls = new AppUrls(this, paths);
     this._gameController = null;
-    this._soundController = new SoundControllerBase({ game: this });
+    this._soundController = new SoundController({ key: 'soundController' });
+    this._pointerController = new PointerController({ key: 'pointerController' });
     this._viewportController = new ViewportControllerBase({ game: this });
     this._trackingController = new TrackingControllerBase({ game: this });
+    this.scene.add(this._pointerController);
+    this.scene.add(this._soundController);
 
     this._saves = new Saves();
-
-    // localstorage plugin : import { StoragePlugin } from './storage';
-    // const storage = getStorage('hey-duggee-2');
-    // storage.plugin = new StoragePlugin();
-    // this.saves.storage = storage;
   }
 
   init() {}
@@ -47,8 +47,13 @@ export class AppBase extends Phaser.Game {
   set controller(controller) {
     this._gameController = controller;
   }
+
   get controller() {
     return this._gameController;
+  }
+
+  get pointerController() {
+    return this._pointerController;
   }
 
   get soundController() {
@@ -70,6 +75,7 @@ export class AppBase extends Phaser.Game {
   set settings(settings) {
     this._settings = settings;
   }
+
   get settings() {
     return this._settings;
   }

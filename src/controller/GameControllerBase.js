@@ -17,11 +17,6 @@ export class GameControllerBase {
   }
 
   assetsLoaded() {
-    // const uiConfig = this.game.cache.json.get('ui_config');
-    // this.uiModel = new UIModel({ config: uiConfig, settings: this.settings });
-
-    // uiModel looks like duplicate functionality for settings : you can check in bbc/settings
-
     this.copyModel = new CopyModel({ xml: this.game.cache.xml.get('copy_xml') });
     this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.handleViewportUpdated, this);
     this.game.viewportController.updateViewport();
