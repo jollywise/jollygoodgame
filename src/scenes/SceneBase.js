@@ -12,6 +12,13 @@ export class SceneBase extends Phaser.Scene {
     this.defaultHeight = height;
   }
 
+  loadComplete() {
+    if (this.loadScreen) {
+      this.loadScreen.destroy();
+      this.loadScreen = null;
+    }
+  }
+
   create(options) {
     options;
     this.scale.on('resize', this.handleGameResized, this);
@@ -61,5 +68,10 @@ export class SceneBase extends Phaser.Scene {
       this.bg.destroy(true);
       this.bg = null;
     }
+    if (this.loadScreen) {
+      this.loadScreen.destroy(true);
+      this.loadScreen = null;
+    }
+    this.scene.stop(this._sceneKey);
   }
 }
