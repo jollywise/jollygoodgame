@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import ScreenBackground from '../display/ScreenBackground';
+import { ScreenBackground } from '../display/ScreenBackground';
 
 export class SceneBase extends Phaser.Scene {
   constructor({ key, active = false }) {
