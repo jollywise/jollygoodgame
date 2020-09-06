@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import ScreenBackground from '../display/ScreenBackground';
 
 export class SceneBase extends Phaser.Scene {
   constructor({ key, active = false }) {
@@ -10,6 +11,11 @@ export class SceneBase extends Phaser.Scene {
     const { width, height } = this.game.defaultDimensions;
     this.defaultWidth = width;
     this.defaultHeight = height;
+  }
+
+  setBackground(key) {
+    this.bg = new ScreenBackground(this, key);
+    this.add.existing(this.bg);
   }
 
   loadComplete() {
