@@ -12,7 +12,7 @@ export class GameControllerBase {
     this.gamePaused = false;
   }
 
-  addSceneController(sceneController) {
+  setSceneController(sceneController) {
     this.sceneController = sceneController;
   }
 
@@ -23,11 +23,7 @@ export class GameControllerBase {
   }
 
   handleViewportUpdated(viewport) {
-    if (!viewport.landscape) {
-      this.sceneController.showRotate();
-    } else {
-      this.sceneController.removeRotate();
-    }
+    viewport;
   }
 
   pauseGame() {}

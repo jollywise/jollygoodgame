@@ -3,7 +3,7 @@ export class GameControllerBase {
   sceneController;
   copyModel;
   shortcuts;
-  addSceneController();
+  setSceneController();
   assetsLoaded();
   handleViewportUpdated();
   pauseGame();

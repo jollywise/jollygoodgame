@@ -1,10 +1,10 @@
 export class SceneControllerBase {
   constructor(sceneManager) {
     this.sceneManager = sceneManager;
+    this.currentSceneKey = null;
   }
 
   addSceneMap(sceneMap) {
-    this.currentSceneKey = null;
     sceneMap.map(({ key, state }) => {
       if (!this.sceneManager.keys[key]) {
         this.sceneManager.add(key, state);
