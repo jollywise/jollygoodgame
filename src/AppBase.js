@@ -4,6 +4,7 @@ import { ViewportControllerBase, TrackingControllerBase } from './controller';
 import { AppUrls, Saves } from './model';
 import { SoundController } from './scenes/SoundController';
 import { PointerController } from './scenes/PointerController';
+import { SettingsBase } from './settings/SettingsBase';
 
 export class AppBase extends Phaser.Game {
   constructor({ config, paths }) {
@@ -13,6 +14,8 @@ export class AppBase extends Phaser.Game {
     this._deviceMetric = getDeviceMetric();
     this._defaultDimensions = { width: config.width, height: config.height };
     this._gameController = null;
+
+    this._settings = new SettingsBase({ game: this });
 
     this._pointerController = new PointerController({ key: 'pointerController' });
     this.scene.add(this._pointerController.key, this._pointerController);
@@ -71,10 +74,6 @@ export class AppBase extends Phaser.Game {
 
   get saves() {
     return this._saves;
-  }
-
-  set settings(settings) {
-    this._settings = settings;
   }
 
   get settings() {

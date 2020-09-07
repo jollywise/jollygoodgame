@@ -16,6 +16,11 @@ export class GameControllerBase {
     this.sceneController = sceneController;
   }
 
+  // can return false, then show our own settings page
+  showSettings() {
+    return this.game.settings.showSettings();
+  }
+
   assetsLoaded() {
     this.copyModel = new CopyModel({ xml: this.game.cache.xml.get('copy_xml') });
     this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.handleViewportUpdated, this);

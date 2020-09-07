@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { SETTINGS_EVENTS } from '../constants/Events';
 
 const SFX_VOLUME = 0.5;
 
@@ -8,12 +9,12 @@ export class SoundController extends Phaser.Scene {
     this.key = key;
     this.currentVO = null;
 
-    // this.game.settings.emitter.on('settingsAudioChanged', this.handleAudioChanged, this);
-    // this.handleAudioChanged();
+    this.game.settings.on(SETTINGS_EVENTS.AUDIO_CHANGED, this.handleAudioChanged, this);
+    this.handleAudioChanged();
   }
 
   handleAudioChanged() {
-    this.mute = !this.game.settings.getAudio();
+    this.mute = !this.game.settings.audio;
   }
 
   set mute(value) {
