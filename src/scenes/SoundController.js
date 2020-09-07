@@ -22,15 +22,24 @@ export class SoundController extends Phaser.Scene {
     this.game.sound.mute = value;
   }
 
-  playGelVO(id) {
+  playVO(spriteID, id) {
     if (this.currentVO) {
       this.currentVO.stop();
       this.currentVO = null;
     }
-    this.currentVO = this.playAudioSprite('gelvo', id, { volume: 1 });
+    this.currentVO = this._playAudioSprite(spriteID, id, { volume: 1 });
+    return this.currentVO;
   }
 
-  playAudioSprite(spriteID, id, opts = {}, sprite = null) {
+  playSFX(spriteID, id) {
+    return this._playAudioSprite(spriteID, id);
+  }
+
+  playButtonSound(spriteID, id) {
+    return this._playAudioSprite(spriteID, id);
+  }
+
+  _playAudioSprite(spriteID, id, opts = {}, sprite = null) {
     // console.log('playAudioSprite', spriteID, id, opts);
     const { volume = SFX_VOLUME, loop = false, delay = null } = opts;
     if (delay) {
@@ -53,9 +62,5 @@ export class SoundController extends Phaser.Scene {
       return audioSprite;
     }
     return false;
-  }
-
-  stopAudioSprite(sprite) {
-    sprite.stop();
   }
 }

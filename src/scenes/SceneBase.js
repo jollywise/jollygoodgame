@@ -33,13 +33,7 @@ export class SceneBase extends Phaser.Scene {
     this.events.on('resume', this.onSceneResumed, this);
   }
 
-  handleGameResized() {
-    const viewport = this.getViewport();
-    if (this.bg) {
-      this.bg.width = viewport.width;
-      this.bg.height = viewport.height;
-    }
-  }
+  handleGameResized() {}
 
   onScenePaused() {
     this.disableScene();
