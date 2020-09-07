@@ -4,8 +4,9 @@ import { SETTINGS_EVENTS } from '../constants/Events';
 const SFX_VOLUME = 0.5;
 
 export class SoundController extends Phaser.Scene {
-  constructor({ key }) {
+  constructor({ game, key }) {
     super({ key, active: true });
+    this.game = game;
     this.key = key;
     this.currentVO = null;
 

@@ -18,10 +18,10 @@ export class AppBase extends Phaser.Game {
 
     this._settings = new SettingsBase({ game: this });
 
-    this._pointerController = new PointerController({ key: 'pointerController' });
+    this._pointerController = new PointerController({ game: this, key: 'pointerController' });
     this.scene.add(this._pointerController.key, this._pointerController);
 
-    this._soundController = new SoundController({ key: 'soundController' });
+    this._soundController = new SoundController({ game: this, key: 'soundController' });
     this.scene.add(this._soundController.key, this._soundController);
 
     this._viewportController = new ViewportControllerBase({ game: this });
