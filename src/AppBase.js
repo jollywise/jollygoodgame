@@ -5,6 +5,7 @@ import { AppUrls, Saves } from './model';
 import { SoundController } from './scenes/SoundController';
 import { PointerController } from './scenes/PointerController';
 import { SettingsBase } from './settings/SettingsBase';
+import { Shortcuts } from './shortcuts';
 
 export class AppBase extends Phaser.Game {
   constructor({ config, paths }) {
@@ -28,6 +29,17 @@ export class AppBase extends Phaser.Game {
     this._trackingController = new TrackingControllerBase({ game: this });
 
     this._saves = new Saves();
+    this._shortcuts = new Shortcuts(this);
+    this._shortcuts.addShortcut({
+      field: 'clearSaves',
+      title: 'Clear saves',
+      value: this._saves.deleteSaves.bind(this._saves),
+    });
+    this._shortcuts.addShortcut({
+      field: 'boundsDebug',
+      title: 'Debug bounds',
+      value: false,
+    });
   }
 
   init() {}
@@ -78,5 +90,9 @@ export class AppBase extends Phaser.Game {
 
   get settings() {
     return this._settings;
+  }
+
+  get shortcuts() {
+    return this._shortcuts;
   }
 }

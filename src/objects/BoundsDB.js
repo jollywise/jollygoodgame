@@ -1,15 +1,8 @@
 import Phaser from 'phaser';
 
-export class BoundsDBStub {
-  constructor() {}
-  clearGraphics() {}
-  drawBounds() {}
-}
-
 export class BoundsDB extends Phaser.GameObjects.Graphics {
-  constructor(scene, shortcutsModel) {
+  constructor(scene) {
     super(scene);
-    this.shortcuts = shortcutsModel;
   }
 
   clearGraphics() {
@@ -17,7 +10,7 @@ export class BoundsDB extends Phaser.GameObjects.Graphics {
   }
 
   drawBounds({ x, y, width, height }, colour = CLR.GENERAL) {
-    if (this.shortcuts.boundsDebug) {
+    if (this.scene.sys.game.shortcuts.model.boundsDebug) {
       this.lineStyle(2, colour, 1);
       this.strokeRect(x, y, width, height);
     }
@@ -29,7 +22,7 @@ export class BoundsDB extends Phaser.GameObjects.Graphics {
   }
 
   drawCircle(x, y, radius, colour = CLR.GENERAL) {
-    if (this.shortcuts.boundsDebug) {
+    if (this.scene.sys.game.shortcuts.model.boundsDebug) {
       this.lineStyle(2, colour, 1);
       this.strokeCircle(x, y, radius);
     }

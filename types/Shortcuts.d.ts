@@ -1,9 +1,5 @@
-export class ShortcutsBase {
-  constructor(game: Phaser.Game, opts: object);
-}
-
-export class ShortcutsStub {
-  constructor();
+export class Shortcuts {
+  constructor(game: Phaser.Game);
 }
 
 export class ShortcutTriggers {

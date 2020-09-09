@@ -1,3 +1,2 @@
-export * from './ShortcutsBase';
-export * from './ShortcutsStub';
+export * from './Shortcuts';
 export * from './ShortcutTriggers';

@@ -1,13 +1,12 @@
 // import { UIModel } from '../model/UIModel';
 import { CopyModel } from '../model/CopyModel';
-import { ShortcutsStub } from '../shortcuts/ShortcutsStub';
 import { VIEWPORT_EVENTS } from '../constants/Events';
 
 export class GameControllerBase {
   constructor({ game, gameMode }) {
     this.game = game;
-    this.saves = this.game.saves; // shortcut
-    this.settings = this.game.settings; // shortcut
+    this.saves = this.game.saves;
+    this.settings = this.game.settings;
     this.gameMode = gameMode;
     this.gamePaused = false;
   }
@@ -16,7 +15,7 @@ export class GameControllerBase {
     this.sceneController = sceneController;
   }
 
-  // can return false, then show our own settings page
+  // try to open external settings, if it fails we will need to show our own settings page
   showSettings() {
     return this.game.settings.showSettings();
   }
@@ -34,16 +33,4 @@ export class GameControllerBase {
   pauseGame() {}
 
   resumeGame() {}
-
-  addShortcuts(shortcuts) {
-    this.shortcuts = shortcuts || new ShortcutsStub();
-    this.shortcuts.create();
-  }
-
-  updateShortcuts({ prop, value }) {
-    if (this.shortcuts) {
-      this.shortcuts.model[prop] = value;
-      this.shortcuts.update();
-    }
-  }
 }
