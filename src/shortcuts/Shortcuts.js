@@ -8,7 +8,7 @@ export class Shortcuts {
     this.game = game;
     this.model = {};
     this.controls = [];
-    this.isVisible = false;
+    this.isVisible = __WATCH__;
 
     this.boundToggle = this.toggleDisplay.bind(this);
     this.trigger = new ShortcutTriggers({
