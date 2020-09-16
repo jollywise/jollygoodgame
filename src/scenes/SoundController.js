@@ -198,7 +198,7 @@ export class SoundController extends Phaser.Scene {
       audioSprite.play(id);
       this._fadeIn(audioSprite, targetVolume, fadeIn);
     } else {
-      audioSprite.play();
+      audioSprite.play(id);
     }
     return audioSprite;
   }
