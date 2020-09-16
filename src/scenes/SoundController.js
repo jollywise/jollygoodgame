@@ -151,17 +151,16 @@ export class SoundController extends Phaser.Scene {
 
     const audio = this.game.sound.add(spriteID);
     audio.volume = volume;
-    audio.loop = loop;
     if (group) {
       this.addAudioToGroup(audio, group);
     }
     if (fadeIn) {
       const targetVolume = audio.volume;
       audio.volume = 0;
-      audio.play();
+      audio.play({ loop });
       this._fadeIn(audio, targetVolume, fadeIn);
     } else {
-      audio.play();
+      audio.play({ loop });
     }
     return audio;
   }
@@ -188,17 +187,16 @@ export class SoundController extends Phaser.Scene {
 
     const audioSprite = this.game.sound.addAudioSprite(spriteID);
     audioSprite.volume = volume;
-    audioSprite.loop = loop;
     if (group) {
       this.addAudioToGroup(audioSprite, group);
     }
     if (fadeIn) {
       const targetVolume = audioSprite.volume;
       audioSprite.volume = 0;
-      audioSprite.play(id);
+      audioSprite.play(id, { loop });
       this._fadeIn(audioSprite, targetVolume, fadeIn);
     } else {
-      audioSprite.play(id);
+      audioSprite.play(id, { loop });
     }
     return audioSprite;
   }
@@ -220,7 +218,6 @@ export class SoundController extends Phaser.Scene {
     this.audioGroups[group].sounds.push({ audio: audio, volume: audio.volume });
 
     audio.volume *= this.audioGroups[group].volume;
-    audio.on('complete', () => this.removeAudioFromGroup(audio, group));
     audio.on('stop', () => this.removeAudioFromGroup(audio, group));
   }
 
