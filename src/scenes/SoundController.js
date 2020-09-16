@@ -138,17 +138,6 @@ export class SoundController extends Phaser.Scene {
     console.log('SoundController::_playAudioSound', spriteID, group, opts);
 
     const { volume = 1, loop = false, delay = null, fadeIn = false } = opts;
-    if (delay) {
-      opts.delay = null;
-      this.time.addEvent({
-        delay: delay,
-        callback: this._playAudio,
-        callbackScope: this,
-        args: [spriteID, opts, group],
-      });
-      return true;
-    }
-
     const audio = this.game.sound.add(spriteID);
     audio.volume = volume;
     if (group) {
@@ -156,11 +145,10 @@ export class SoundController extends Phaser.Scene {
     }
     if (fadeIn) {
       const targetVolume = audio.volume;
-      audio.volume = 0;
-      audio.play({ loop });
+      audio.play({ loop, delay, volume: 0 });
       this._fadeIn(audio, targetVolume, fadeIn);
     } else {
-      audio.play({ loop });
+      audio.play({ loop, delay, volume });
     }
     return audio;
   }
@@ -174,17 +162,6 @@ export class SoundController extends Phaser.Scene {
     console.log('SoundController::_playAudioSprite', spriteID, id, group, opts);
 
     const { volume = 1, loop = false, delay = null, fadeIn = false } = opts;
-    if (delay) {
-      opts.delay = null;
-      this.time.addEvent({
-        delay: delay,
-        callback: this._playAudioSprite,
-        callbackScope: this,
-        args: [spriteID, id, opts, group],
-      });
-      return true;
-    }
-
     const audioSprite = this.game.sound.addAudioSprite(spriteID);
     audioSprite.volume = volume;
     if (group) {
@@ -192,11 +169,10 @@ export class SoundController extends Phaser.Scene {
     }
     if (fadeIn) {
       const targetVolume = audioSprite.volume;
-      audioSprite.volume = 0;
-      audioSprite.play(id, { loop });
+      audioSprite.play(id, { loop, delay, volume: 0 });
       this._fadeIn(audioSprite, targetVolume, fadeIn);
     } else {
-      audioSprite.play(id, { loop });
+      audioSprite.play(id, { loop, delay, volume });
     }
     return audioSprite;
   }
