@@ -12,7 +12,7 @@ export class ScreenBackground extends Phaser.GameObjects.Image {
     scene.add.existing(this);
     this.setScrollFactor(0);
     this.scene.sys.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.handleViewUpdate, this);
-    this.handleViewUpdate(this.scene.sys.game.viewportController);
+    this.handleViewUpdate(this.scene.sys.game.viewportController.viewport);
   }
 
   handleViewUpdate(viewport) {

@@ -23,7 +23,7 @@ export class SceneBase extends Phaser.Scene {
   constructor(opts: object);
   init();
   create();
-  handleGameResized();
+  handleViewUpdate(viewport: object);
   enableScene();
   disableScene();
   getViewport();

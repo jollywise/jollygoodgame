@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { VIEWPORT_EVENTS } from '../constants/Events';
 import { ScreenBackground } from '../display/ScreenBackground';
 
 export class SceneBase extends Phaser.Scene {
@@ -27,13 +28,17 @@ export class SceneBase extends Phaser.Scene {
 
   create(options) {
     options;
-    this.scale.on('resize', this.handleGameResized, this);
     this.events.on('shutdown', this.shutdown, this);
     this.events.on('pause', this.onScenePaused, this);
     this.events.on('resume', this.onSceneResumed, this);
+
+    this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.handleViewUpdate, this);
+    this.handleViewUpdate(this.game.viewportController.viewport);
   }
 
-  handleGameResized() {}
+  handleViewUpdate(viewport) {
+    viewport;
+  }
 
   onScenePaused() {
     this.disableScene();
@@ -60,7 +65,8 @@ export class SceneBase extends Phaser.Scene {
   }
 
   shutdown() {
-    this.scale.off('resize', this.handleGameResized, this);
+    this.game.viewportController.off(VIEWPORT_EVENTS.UPDATED, this.handleViewUpdate, this);
+
     this.events.off('shutdown', this.shutdown, this);
     this.events.off('pause', this.onScenePaused, this);
     this.events.off('resume', this.onSceneResumed, this);

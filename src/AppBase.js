@@ -31,7 +31,8 @@ export class AppBase extends Phaser.Game {
     this._saves = new Saves();
     if (__SHORTCUTS_ENABLED__) {
       this._shortcuts = new Shortcuts(this);
-    } else {
+    }
+    if (!__SHORTCUTS_ENABLED__) {
       this._shortcuts = new ShortcutStub(this);
     }
     this._shortcuts.addShortcut({
