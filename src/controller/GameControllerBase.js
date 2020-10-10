@@ -8,7 +8,7 @@ export class GameControllerBase {
     this.saves = this.game.saves;
     this.settings = this.game.settings;
     this.forceRotation = forceRotation;
-    this.gamePaused = false;
+    this.paused = false;
     this.rotatePaused = false;
   }
 
@@ -46,31 +46,31 @@ export class GameControllerBase {
   }
 
   pauseGame() {
-    if (this.gamePaused) {
+    if (this.paused) {
       return;
     }
-    this.gamePaused = true;
+    this.paused = true;
+    this.game.scene.pause('soundController');
     if (this.sceneController) {
-      this.sceneController.pauseCurrentScene();
+      this.sceneController.pause();
     }
-    this.game.sound.pauseAll();
-    this.onGamePaused();
+    this.onPaused();
   }
 
   resumeGame() {
     // can't override rotation paused state
-    if (!this.gamePaused || this.rotatePaused) {
+    if (!this.paused || this.rotatePaused) {
       return;
     }
-    this.gamePaused = false;
+    this.paused = false;
+    this.game.scene.resume('soundController');
     if (this.sceneController) {
-      this.sceneController.resumeCurrentScene();
+      this.sceneController.resume();
     }
-    this.game.sound.resumeAll();
-    this.onGameResumed();
+    this.onResumed();
   }
 
-  onGamePaused() {}
+  onPaused() {}
 
-  onGameResumed() {}
+  onResumed() {}
 }

@@ -2,6 +2,7 @@ export class SceneControllerBase {
   constructor(sceneManager) {
     this.sceneManager = sceneManager;
     this.currentSceneKey = null;
+    this.paused = false;
   }
 
   addSceneMap(sceneMap) {
@@ -43,14 +44,6 @@ export class SceneControllerBase {
     }
   }
 
-  pause(key) {
-    this.sceneManager.pause(key);
-  }
-
-  resume(key) {
-    this.sceneManager.resume(key);
-  }
-
   switchScene(sceneKey, { data } = {}) {
     // console.log('switchScene', sceneKey);
     if (this.currentSceneKey) {
@@ -58,6 +51,9 @@ export class SceneControllerBase {
     }
     this.currentSceneKey = sceneKey;
     this.startScene(this.currentSceneKey, { data });
+    if (this.paused) {
+      this.pauseScene(this.currentSceneKey);
+    }
   }
 
   startScene(scene, data) {
@@ -86,12 +82,17 @@ export class SceneControllerBase {
     this.onOverlayClosed = onOverlayClosed;
     this.pauseScene(this.currentSceneKey);
     this.startScene(sceneKey, { data });
+    if (this.paused) {
+      this.pauseScene(sceneKey);
+    }
   }
 
   removeOverlayScene() {
     if (this.overlaySceneKey) {
       this.stopScene(this.overlaySceneKey);
-      this.resumeScene(this.currentSceneKey);
+      if (!this.paused) {
+        this.resumeScene(this.currentSceneKey);
+      }
       this.overlaySceneKey = null;
       if (this.onOverlayClosed) {
         const t = this.onOverlayClosed;
@@ -101,13 +102,15 @@ export class SceneControllerBase {
     }
   }
 
-  pauseCurrentScene() {
-    const pause = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
-    this.pauseScene(pause);
+  pause() {
+    this.paused = true;
+    this.pauseScene('soundController');
+    this.pauseScene(this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey);
   }
 
-  resumeCurrentScene() {
-    const resume = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
-    this.resumeScene(resume);
+  resume() {
+    this.paused = false;
+    this.resumeScene('soundController');
+    this.resumeScene(this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey);
   }
 }

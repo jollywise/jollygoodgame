@@ -16,6 +16,7 @@ export class SoundController extends Phaser.Scene {
     super({ key, active: true });
     this.game = game;
     this.key = key;
+    this.paused = false;
 
     this.sfxVolume = SFX_VOLUME;
     this.voVolume = VO_VOLUME;
@@ -29,6 +30,11 @@ export class SoundController extends Phaser.Scene {
 
     this.game.settings.on(SETTINGS_EVENTS.AUDIO_CHANGED, this.handleAudioChanged, this);
     this.handleAudioChanged();
+  }
+
+  create() {
+    this.events.on('pause', this.onPaused, this);
+    this.events.on('resume', this.onResumed, this);
   }
 
   handleAudioChanged() {
@@ -150,6 +156,9 @@ export class SoundController extends Phaser.Scene {
     } else {
       audio.play({ loop, delay, volume });
     }
+    if (this.paused) {
+      audio.pause();
+    }
     return audio;
   }
 
@@ -173,6 +182,9 @@ export class SoundController extends Phaser.Scene {
       this._fadeIn(audioSprite, targetVolume, fadeIn);
     } else {
       audioSprite.play(id, { loop, delay, volume });
+    }
+    if (this.paused) {
+      audioSprite.pause();
     }
     return audioSprite;
   }
@@ -227,5 +239,15 @@ export class SoundController extends Phaser.Scene {
       this._stopAudio(el.audio, opts);
     });
     this.audioGroups[group].sounds = [];
+  }
+
+  onPaused() {
+    this.paused = true;
+    this.game.sound.pauseAll();
+  }
+
+  onResumed() {
+    this.paused = false;
+    this.game.sound.resumeAll();
   }
 }

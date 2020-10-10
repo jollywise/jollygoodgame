@@ -8,8 +8,8 @@ export class GameControllerBase {
   handleViewportUpdated();
   pauseGame();
   resumeGame();
-  onGamePaused();
-  onGameResumed();
+  onPaused();
+  onResumed();
   addShortcuts();
   updateShortcuts();
 }
