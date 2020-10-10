@@ -30,9 +30,9 @@ export class GameControllerBase {
   handleViewportUpdated(viewport) {
     const rotationOK =
       this.forceRotation === 'landscape'
-        ? viewport.width < viewport.height
-        : this.forceRotation === 'portrait'
         ? viewport.width > viewport.height
+        : this.forceRotation === 'portrait'
+        ? viewport.width < viewport.height
         : true;
     if (!rotationOK) {
       console.log('Pausing due to unsupported rotation');
