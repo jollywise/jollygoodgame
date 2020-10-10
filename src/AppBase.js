@@ -14,6 +14,7 @@ export class AppBase extends Phaser.Game {
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
     this._defaultDimensions = { width: config.width, height: config.height };
+    this._safeDimensions = { width: config.safeWidth, height: config.safeHeight };
     this._gameController = null;
     this._appUrls = new AppUrls(this, paths);
 
@@ -59,6 +60,14 @@ export class AppBase extends Phaser.Game {
 
   get defaultDimensions() {
     return this._defaultDimensions;
+  }
+
+  get centerPoint() {
+    return { x: this._defaultDimensions.width / 2, y: this._defaultDimensions.height / 2 };
+  }
+
+  get safeDimensions() {
+    return this._safeDimensions;
   }
 
   get appUrls() {

@@ -40,17 +40,9 @@ export class SceneBase extends Phaser.Scene {
     viewport;
   }
 
-  onScenePaused() {
-    this.disableScene();
-  }
+  onScenePaused() {}
 
-  onSceneResumed() {
-    this.enableScene();
-  }
-
-  enableScene() {}
-
-  disableScene() {}
+  onSceneResumed() {}
 
   getViewport() {
     const windowAspect = this.game.scale.parentSize.aspectRatio;

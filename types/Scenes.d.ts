@@ -24,8 +24,8 @@ export class SceneBase extends Phaser.Scene {
   init();
   create();
   handleViewUpdate(viewport: object);
-  enableScene();
-  disableScene();
+  onScenePaused();
+  onSceneResumed();
   getViewport();
   update(time: number, delta: number);
   shutdown();

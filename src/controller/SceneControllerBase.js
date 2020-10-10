@@ -101,19 +101,13 @@ export class SceneControllerBase {
     }
   }
 
-  showRotate(key) {
-    if (!this.sceneManager.isActive(key)) {
-      const pause = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
-      this.pauseScene(pause);
-      this.startScene(key, {});
-    }
+  pauseCurrentScene() {
+    const pause = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
+    this.pauseScene(pause);
   }
 
-  removeRotate(key) {
-    if (this.sceneManager.isActive(key)) {
-      this.stopScene(key, {});
-      const resume = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
-      this.resumeScene(resume);
-    }
+  resumeCurrentScene() {
+    const resume = this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey;
+    this.resumeScene(resume);
   }
 }

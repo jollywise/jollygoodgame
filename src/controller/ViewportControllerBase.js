@@ -38,12 +38,15 @@ export class ViewportControllerBase extends EventEmitter {
   get y() {
     return this.viewport.y;
   }
+
   get centerY() {
     return this.y + this.height * 0.5;
   }
+
   get centerX() {
     return this.x + this.width * 0.5;
   }
+
   get center() {
     return { x: this.centerX, y: this.centerY };
   }
@@ -90,8 +93,8 @@ export class ViewportControllerBase extends EventEmitter {
       this.game.defaultDimensions.width,
       this.game.defaultDimensions.height * windowAspect
     );
-    const x = Math.max(0, this.game.defaultDimensions.width * 0.5 - width * 0.5);
-    const y = Math.max(0, this.game.defaultDimensions.height * 0.5 - height * 0.5);
+    const x = Math.max(0, this.game.centerPoint.x - width * 0.5);
+    const y = Math.max(0, this.game.centerPoint.y - height * 0.5);
     const padding = Math.max(width * 0.02, height * 0.02);
     let paddingBottom = padding;
 
