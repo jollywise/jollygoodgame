@@ -1,4 +1,6 @@
-class ButtonSimple extends Phaser.GameObjects.Sprite {
+import Phaser from 'phaser';
+
+export class ButtonSimple extends Phaser.GameObjects.Sprite {
   constructor(scene, opts) {
     // init
     const {
@@ -12,8 +14,6 @@ class ButtonSimple extends Phaser.GameObjects.Sprite {
       ariaLabel = false,
       event = false,
     } = opts;
-
-    console.log('ButtonSimple', sheet, costume, opts);
 
     super(scene, x, y, sheet || 'buttons', costume);
 
@@ -31,7 +31,7 @@ class ButtonSimple extends Phaser.GameObjects.Sprite {
     this.bindedEnterButtonRestState = this.enterButtonRestState.bind(this);
     this.bindedEnterButtonActiveState = this.enterButtonActiveState.bind(this);
     this.bindedEnterButtonClickState = this.enterButtonClickState.bind(this);
-    this.bindedEnterClickState = this.enterButtonClickSteate.bind(this);
+    this.bindedEnterClickState = this.enterButtonClickState.bind(this);
 
     // accesibility dom node
     if (this.ariaLabel) {
@@ -171,5 +171,3 @@ class ButtonSimple extends Phaser.GameObjects.Sprite {
     super.destroy(fromScene);
   }
 }
-
-export default ButtonSimple;

@@ -1,10 +1,10 @@
-import ButtonSimple from './ButtonSimple';
 import { SETTINGS_EVENTS } from '@jollywise/jollygoodgame';
+import { ButtonSimple } from '@jollywise/jollygoodgame/src/input/ButtonSimple';
 
 const ON = '_on';
 const OFF = '_off';
 
-class ButtonSound extends ButtonSimple {
+export class ButtonSound extends ButtonSimple {
   constructor(scene, opts) {
     // init
     const { id, enabled = true } = opts;
@@ -38,4 +38,3 @@ class ButtonSound extends ButtonSimple {
     super.destroy(fromScene);
   }
 }
-export default ButtonSound;
