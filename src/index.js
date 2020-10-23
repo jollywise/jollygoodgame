@@ -9,4 +9,5 @@ export * from './settings';
 export * from './shortcuts';
 export * from './storage';
 export * from './utils';
+export * from './hud';
 export * from './AppBase';
