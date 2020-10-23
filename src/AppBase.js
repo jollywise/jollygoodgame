@@ -11,8 +11,6 @@ export class AppBase extends Phaser.Game {
   constructor({ config, paths }) {
     super(config);
 
-    console.log('AbbBase#paul-temp');
-
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
     this._defaultDimensions = { width: config.width, height: config.height };
