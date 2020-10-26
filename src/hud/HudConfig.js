@@ -109,7 +109,7 @@ const states = {
   },
   PAUSE: {
     modal: true,
-    buttons: ['home', 'settings', 'howtoplay', 'pause_resume'],
+    buttons: ['home', 'sound', 'settings', 'pause_resume', 'howtoplay'],
   },
 };
 
