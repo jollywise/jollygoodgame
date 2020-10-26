@@ -1,6 +1,7 @@
 import { SceneBase, ButtonSimple, ButtonSound } from '@jollywise/jollygoodgame';
 import { HUD_CONFIG } from './HudConfig';
 import HudButtonGroup from './HudButtonGroup';
+import { HudEventMapBase, HudEventMapConfigBase } from './HudEventMapBase';
 
 export const HUD_EVENTS = {
   BUTTON_SELECT: 'BUTTON_SELECT',
@@ -28,6 +29,10 @@ export class Hud extends SceneBase {
     this._state = false;
     this._stateButtons = {};
     this._buttonGroups = {};
+  }
+
+  addEventMap(controller, mapConfig = HudEventMapConfigBase) {
+    this.hudEventMap = new HudEventMapBase(this, controller, mapConfig);
   }
 
   /*
@@ -225,12 +230,11 @@ export class Hud extends SceneBase {
   */
 
   handleButtonInteraction(e) {
-    this.events.emit(HUD_EVENTS.BUTTON_SELECT, e.id);
-
     const btn = this._stateButtons[e.id];
     if (btn.event) {
       this.events.emit(btn.event);
     }
+    this.events.emit(HUD_EVENTS.BUTTON_SELECT, e.id);
   }
 
   /*

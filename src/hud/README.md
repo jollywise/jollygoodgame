@@ -45,3 +45,50 @@ The HudButtonGroup manages groups of buttons, by controlling their layouts withi
 
 A default configuration for the Hud that can be overwritten as needed.
 This is a collection of general button data ( costumes, ids, group allocations ), scene configs ( what buttons to show when triggered and button group position data.
+
+## HudEventMapBase
+
+Accepts hud, controller and a map of events and functions.
+Listens for events triggers by Hud, and calls events founds in the map.
+Has a default map for common methods found in GameControllerBase.
+
+it can be instatiated through the hud
+
+```javascript
+this.hud.addEventMap({ CONTROLLER }, { EVENT_MAP });
+```
+
+or instatiate your own class object
+
+```javascript
+this.hudEventMap = new HudEventMapBase({ HUD }, { CONTROLLER }, { EVENT_MAP });
+```
+
+The HudEventMapBase has a default MapConfig it will use if one is not passed through.
+
+```javascript
+export const HudEventMapConfigBase = {
+  PAUSE_GAME: 'pauseGame',
+  RESUME_GAME: 'resumeGame',
+  EXIT_GAME: 'exitGame',
+  RETURN_HOME: 'returnHome',
+  TOGGLE_SOUND: 'toggleSound',
+  START_GAME: 'startGame',
+};
+```
+
+### HudEventMapConfigBase
+
+General key/value config of event names and functions to call.
+Will pass the supplied controller through as scope when registering event listeners.
+
+```javascript
+{
+  buttons: {
+    BUTTON_ID : 'FUNCTION_NAME',
+  },
+  events: {
+    EVENT_NAME : 'FUNCTION_NAME',
+  },
+};
+```
