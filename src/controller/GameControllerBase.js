@@ -73,4 +73,8 @@ export class GameControllerBase {
   onPaused() {}
 
   onResumed() {}
+
+  exitGame() {}
+
+  returnHome() {}
 }
