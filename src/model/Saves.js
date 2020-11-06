@@ -1,6 +1,7 @@
 const VERSION = 1;
 const SAVES_ID = 'saves';
 export const NEW_SAVE = 'NEW_SAVE';
+import { StorageGame } from '../storage/';
 
 export class Saves {
   /*
@@ -11,6 +12,7 @@ export class Saves {
   constructor() {
     this.saveId = null;
     this.saves = {};
+    this.storage = new StorageGame(SAVES_ID);
   }
 
   set storage(storage) {
