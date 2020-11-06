@@ -241,6 +241,8 @@ export const getDeviceMetric = () => {
 };
 
 /*
+ * https://everyi.com/by-capability/maximum-supported-ios-version-for-ipod-iphone-ipad.html
+ *
  * iPad iOS 13 and 14 (drops iPad Air 1, iPad Mini 2)
  * -------------------
  * iPad Air 2 (2014)
@@ -256,6 +258,8 @@ export const getDeviceMetric = () => {
  */
 
 /*
+ * http://dorianroy.com/blog/category/ios-support-matrix/
+ *
  * iOS 13 and 14 (drops iPhone 5S and iPhone 6, iPhone 6 Plus)
  * -------------------
  * iPhone 6S, iPhone 6S Plus
