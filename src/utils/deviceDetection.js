@@ -239,3 +239,41 @@ export const getDeviceMetric = () => {
   }
   return { platform, category };
 };
+
+/*
+ * iPad iOS 13 and 14 (drops iPad Air 1, iPad Mini 2)
+ * -------------------
+ * iPad Air 2 (2014)
+ * iPad Air (2019)
+ * iPad mini 4 (2015)
+ * iPad mini (2019)
+ * iPad (2017, 2018, 2019)
+ * iPad Pro 9.7in (2016)
+ * iPad Pro 10.5in (2017)
+ * iPad Pro 11in (2018, 2020)
+ * iPad Pro 12.9in (2015, 2017, 2018, 2020)
+ *
+ */
+
+/*
+ * iOS 13 and 14 (drops iPhone 5S and iPhone 6, iPhone 6 Plus)
+ * -------------------
+ * iPhone 6S, iPhone 6S Plus
+ * iPhone SE (1st generation), iPhone SE (2nd generation)
+ * iPhone 7, iPhone 7 Plus
+ * iPhone 8, iPhone 8 Plus
+ * iPhone X, iPhone XS, iPhone XS Max, iPhone XR
+ * iPhone 11, iPhone 11 Pro, iPhone 11 Pro Max
+ * iPhone 12 Mini, iPhone 12, iPhone 12 Pro, iPhone 12 Pro Max
+ *
+ * iOS 12
+ * -------------------
+ * iPhone 5S
+ * iPhone 6, iPhone 6 Plus
+ * iPhone 6S, iPhone 6S Plus
+ * iPhone SE (1st generation), iPhone SE (2nd generation)
+ * iPhone 7, iPhone 7 Plus
+ * iPhone 8, iPhone 8 Plus
+ * iPhone X, iPhone XS, iPhone XS Max, iPhone XR
+ *
+ */
