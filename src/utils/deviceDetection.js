@@ -184,16 +184,15 @@ const getKindleCategory = (platform) => {
 };
 
 const getIosCategory = (platform) => {
-  /*
-   * Only detects older models, everything else newer is classed as high end
-   */
   let category = PERFORMANCE_CATEGORY.HIGH_END;
   if (platform.type === 'tablet') {
     const model = getIPadModel();
     if (IOS.LOW_END.includes(model)) {
       category = PERFORMANCE_CATEGORY.LOW_END;
     } else if (IOS.MID_END.includes(model)) {
-      category = PERFORMANCE_CATEGORY.MID_END;
+      // if device is running < ios 13 then it is likely to be an older mid end device
+      category =
+        platform.majorVersion < 13 ? PERFORMANCE_CATEGORY.LOW_END : PERFORMANCE_CATEGORY.MID_END;
     }
   } else if (platform.type === 'smartphone') {
     const model = getIPhoneModel();
@@ -213,7 +212,7 @@ export const getDeviceMetric = () => {
    * MID_END = oldish and popular - served 32 bit audio
    * HIGH_END = newer devices, served full experience
    */
-  let category = PERFORMANCE_CATEGORY.HIGH_END;
+  let category = PERFORMANCE_CATEGORY.MID_END;
   const platform = getPlatform();
   if (platform.type === 'desktop') {
     category = PERFORMANCE_CATEGORY.HIGH_END;
