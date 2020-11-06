@@ -41,17 +41,41 @@ function detectTablet(ua) {
 
 // eslint-disable-next-line max-statements
 function detectPlatform() {
+  const platform = window.navigator.platform;
   const ua = window.navigator.userAgent; // window.navigator.userAgent || window.navigator.vendor || window.opera;
   const device = { type: 'unknown', os: 'unknown', family: 'unknown', version: 'unknown' };
 
-  const iphone = ua.match(/(iPhone\sOS)\s([\d_]+)/);
-  const ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
-  if (iphone || ipad) {
-    device.type = iphone ? 'smartphone' : 'tablet';
-    device.os = 'ios';
-    device.family = 'ios';
-    device.version = iphone ? iphone[2].replace(/_/g, '.') : ipad[2].replace(/_/g, '.');
-    return device;
+  if (!window.MSStream) {
+    const iphone = ua.match(/(iPhone\sOS)\s([\d_]+)/);
+    const ipad = ua.match(/(iPad).*OS\s([\d_]+)/);
+    if (iphone || ipad) {
+      device.os = 'ios';
+      device.family = 'ios';
+    }
+    if (iphone) {
+      device.type = 'smartphone';
+      device.version = iphone[2] ? iphone[2].replace(/_/g, '.') : iphone.toString();
+      return device;
+    }
+    if (ipad) {
+      device.type = 'tablet';
+      device.version = ipad[2] ? ipad[2].replace(/_/g, '.') : ipad.toString();
+      return device;
+    }
+
+    const ipadOS13 =
+      platform === 'MacIntel' && navigator.maxTouchPoints && navigator.maxTouchPoints > 2;
+    const version = navigator.userAgent.match(/Version\/(\d+)\.(\d+)\.?(\d+)?/);
+    const major = version && version[1] ? version[1] : '';
+    // const minor = version && version[2] ? version[2] : '';
+    // const patch = version && version[3] ? version[3] : '';
+    if (ipadOS13) {
+      device.type = 'tablet';
+      device.os = 'ios';
+      device.family = 'ios';
+      device.version = major;
+      return device;
+    }
   }
 
   const kindle = ua.match(KINDLE_DEVICES);

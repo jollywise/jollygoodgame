@@ -48,11 +48,6 @@ export const isIE = () => {
     const rv = ua.indexOf('rv:');
     return parseInt(ua.substring(rv + 3, ua.indexOf('.', rv)), 10);
   }
-  // const edge = ua.indexOf('Edge/');
-  // if (edge > 0) {
-  //     // Edge (IE 12+) => return version number
-  //     return parseInt(ua.substring(edge + 5, ua.indexOf('.', edge)), 10);
-  // }
   return false;
 };
 
@@ -67,75 +62,66 @@ export const isIE11 = () => {
 
 // iOS
 export const getIPhoneModel = () => {
-  if (/iPhone/.test(navigator.userAgent) && !window.MSStream) {
-    const width =
-      window.screen.width > window.screen.height ? window.screen.height : window.screen.width;
-    const height =
-      window.screen.width > window.screen.height ? window.screen.width : window.screen.height;
-    const wh = width / height;
-    const ratio = window.devicePixelRatio;
+  const width =
+    window.screen.width > window.screen.height ? window.screen.height : window.screen.width;
+  const height =
+    window.screen.width > window.screen.height ? window.screen.width : window.screen.height;
+  const wh = width / height;
+  const ratio = window.devicePixelRatio;
 
-    if (wh === 320 / 480 && ratio === 1) {
-      return iPHONE1_3;
-    }
-
-    if (wh === 640 / 960 && ratio === 2) {
-      return iPHONE4_4S;
-    }
-
-    if (wh === 640 / 1136 && ratio === 2) {
-      return iPHONE5_5C_5S;
-    }
-
-    if (wh === 750 / 1334 && ratio === 2) {
-      return iPHONE6_6S_7_8;
-    }
-
-    if (wh === 640 / 1136 && ratio === 2) {
-      return iPHONE6_6S_7_8_DZ;
-    }
-
-    if (wh === 1242 / 2208 && ratio === 3) {
-      return iPHONE6_6S_7P_8P;
-    }
-
-    if (wh === 1125 / 2001 && ratio === 3) {
-      return iPHONE6_6S_7P_8P_DZ;
-    }
-
-    if (wh === 375 / 812 && ratio === 3) {
-      return iPHONEX;
-    }
-    return '';
-  } else {
-    return '';
+  if (wh === 320 / 480 && ratio === 1) {
+    return iPHONE1_3;
   }
+
+  if (wh === 640 / 960 && ratio === 2) {
+    return iPHONE4_4S;
+  }
+
+  if (wh === 640 / 1136 && ratio === 2) {
+    return iPHONE5_5C_5S;
+  }
+
+  if (wh === 750 / 1334 && ratio === 2) {
+    return iPHONE6_6S_7_8;
+  }
+
+  if (wh === 640 / 1136 && ratio === 2) {
+    return iPHONE6_6S_7_8_DZ;
+  }
+
+  if (wh === 1242 / 2208 && ratio === 3) {
+    return iPHONE6_6S_7P_8P;
+  }
+
+  if (wh === 1125 / 2001 && ratio === 3) {
+    return iPHONE6_6S_7P_8P_DZ;
+  }
+
+  if (wh === 375 / 812 && ratio === 3) {
+    return iPHONEX;
+  }
+  return '';
 };
 
 export const getIPadModel = () => {
-  // typeof window.androidBridge === 'undefined'
-  if (/iPad/.test(navigator.userAgent) && !window.MSStream) {
-    const width =
-      window.screen.width > window.screen.height ? window.screen.height : window.screen.width;
-    const height =
-      window.screen.width > window.screen.height ? window.screen.width : window.screen.height;
-    const wh = width / height;
-    const ratio = window.devicePixelRatio;
-    if (wh === 768 / 1024) {
-      if (ratio === 1) {
-        return IPAD1_2_MINI1;
-      } else {
-        return IPAD3_5_PRO_MINI2_4;
-      }
+  const width =
+    window.screen.width > window.screen.height ? window.screen.height : window.screen.width;
+  const height =
+    window.screen.width > window.screen.height ? window.screen.width : window.screen.height;
+  const wh = width / height;
+  const ratio = window.devicePixelRatio;
+  if (wh === 768 / 1024) {
+    if (ratio === 1) {
+      return IPAD1_2_MINI1;
+    } else {
+      return IPAD3_5_PRO_MINI2_4;
     }
-    if (wh === 834 / 1112) {
-      return IPAD_PRO_10;
-    }
-    if (wh === 1024 / 1366) {
-      return IPAD_PRO_12;
-    }
-  } else {
-    return '';
+  }
+  if (wh === 834 / 1112) {
+    return IPAD_PRO_10;
+  }
+  if (wh === 1024 / 1366) {
+    return IPAD_PRO_12;
   }
 };
 
@@ -171,7 +157,6 @@ export const isOld = () => {
 };
 
 const getAndroidCategory = (platform) => {
-  console.log('DEVICE : Android : ', platform);
   if (isOld()) {
     return PERFORMANCE_CATEGORY.LOW_END;
   }
@@ -191,7 +176,6 @@ const getAndroidCategory = (platform) => {
 };
 
 const getKindleCategory = (platform) => {
-  console.log('DEVICE : Kindle : ', platform.kindle.description);
   let category = PERFORMANCE_CATEGORY.MID_END;
   if (platform.kindle.gen < 8) {
     category = PERFORMANCE_CATEGORY.LOW_END;
@@ -206,7 +190,6 @@ const getIosCategory = (platform) => {
   let category = PERFORMANCE_CATEGORY.HIGH_END;
   if (platform.type === 'tablet') {
     const model = getIPadModel();
-    console.log('DEVICE : iOS tablet : ', model);
     if (IOS.LOW_END.includes(model)) {
       category = PERFORMANCE_CATEGORY.LOW_END;
     } else if (IOS.MID_END.includes(model)) {
@@ -214,7 +197,6 @@ const getIosCategory = (platform) => {
     }
   } else if (platform.type === 'smartphone') {
     const model = getIPhoneModel();
-    console.log('DEVICE : iOS phone : ', model);
     if (IOS.LOW_END.includes(model)) {
       category = PERFORMANCE_CATEGORY.LOW_END;
     } else if (IOS.MID_END.includes(model)) {
