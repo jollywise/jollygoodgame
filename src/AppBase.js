@@ -41,11 +41,6 @@ export class AppBase extends Phaser.Game {
       title: 'Clear saves',
       value: this._saves.deleteSaves.bind(this._saves),
     });
-    this._shortcuts.addShortcut({
-      field: 'boundsDebug',
-      title: 'Debug bounds',
-      value: false,
-    });
   }
 
   init() {}
