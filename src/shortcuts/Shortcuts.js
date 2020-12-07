@@ -4,7 +4,7 @@ import { ShortcutTriggers } from './ShortcutTriggers';
 const TRIGGER = '↑ ↑ ↓ ↓ ← →';
 
 export class Shortcuts {
-  constructor(game) {
+  constructor(game, containerId) {
     this.game = game;
     this.model = {};
     this.groups = {};
@@ -21,7 +21,7 @@ export class Shortcuts {
       },
     });
 
-    this.create();
+    this.create(containerId);
   }
 
   toggleDisplay() {
@@ -50,14 +50,18 @@ export class Shortcuts {
     this.isVisible ? this.show() : this.hide();
   }
 
-  create() {
+  create(containerId) {
     dat.GUI.TEXT_CLOSED = 'Close Shortcuts';
     dat.GUI.TEXT_OPEN = 'Open Shortcuts';
     this.gui = new dat.GUI({ name: 'Shortcuts', closed: false, autoPlace: false });
     this.gui.domElement.id = 'gui';
     this.gui.domElement.style.position = 'absolute';
     this.gui.domElement.style.top = 0;
-    this.game.scale.parent.appendChild(this.gui.domElement);
+    if (containerId) {
+      document.getElementById(containerId).appendChild(this.gui.domElement);
+    } else {
+      this.game.scale.parent.appendChild(this.gui.domElement);
+    }
     this.addShortcutGroup({ title: 'Game', open: true });
     this.close();
     this.setVisible();

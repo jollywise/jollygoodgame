@@ -1,5 +1,5 @@
 export class Shortcuts {
-  constructor(game: Phaser.Game);
+  constructor(game: Phaser.Game, containerId: string);
   model: object;
   groups: object;
   controls: [];

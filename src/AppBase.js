@@ -8,7 +8,7 @@ import { SettingsBase } from './settings/SettingsBase';
 import { Shortcuts, ShortcutStub } from './shortcuts';
 
 export class AppBase extends Phaser.Game {
-  constructor({ config, paths }) {
+  constructor({ config, paths, shortcutsContainerId }) {
     super(config);
 
     this._gameConfig = config;
@@ -31,7 +31,7 @@ export class AppBase extends Phaser.Game {
 
     this._saves = new Saves();
     if (__SHORTCUTS_ENABLED__) {
-      this._shortcuts = new Shortcuts(this);
+      this._shortcuts = new Shortcuts(this, shortcutsContainerId);
     }
     if (!__SHORTCUTS_ENABLED__) {
       this._shortcuts = new ShortcutStub(this);
