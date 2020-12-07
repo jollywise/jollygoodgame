@@ -32,6 +32,7 @@ export class TrackingControllerBase {
   setPage();
 }
 
+export const VIEWPORT_TYPE: { DEFAULT: string; CANVAS_BOUNDS: string };
 export class ViewportControllerBase {
   constructor(opts: object);
 }

@@ -2,13 +2,20 @@ import EventEmitter from 'eventemitter3';
 import { checkRects, checkPoint } from '../objects/Collision';
 import { VIEWPORT_EVENTS } from '../constants/Events';
 
+export const VIEWPORT_TYPE = {
+  DEFAULT: 'DEFAULT',
+  CANVAS_BOUNDS: 'CANVAS_BOUNDS',
+};
 export class ViewportControllerBase extends EventEmitter {
-  constructor({ game }) {
+  constructor({ game, viewPortType = VIEWPORT_TYPE.DEFAULT }) {
     super();
     this.game = game;
+    this.viewPortType = viewPortType;
     this._viewport = { x: 0, y: 0, width: 0, height: 0, padding: 0, paddingBottom: 0 };
-    this.game.scale.on('resize', this.updateViewport, this);
-    this.updateViewport();
+    if (this.viewPortType === VIEWPORT_TYPE.DEFAULT) {
+      this.game.scale.on('resize', this.updateViewport, this);
+      this.updateViewport();
+    }
   }
 
   get viewport() {
@@ -83,7 +90,7 @@ export class ViewportControllerBase extends EventEmitter {
   }
 
   get isLandscape() {
-    return this.width >= this.height;
+    return this.viewport.landscape;
   }
 
   updateViewport() {
@@ -114,6 +121,16 @@ export class ViewportControllerBase extends EventEmitter {
     this.emit(VIEWPORT_EVENTS.UPDATED, this._viewport);
   }
 
+  // Springroll scaling
+  updateViewportCanvasBounds(opts) {
+    if (opts) {
+      const { x, y, width, height } = opts.viewArea;
+      const landscape = width >= height;
+      this._viewport = { x, y, width, height, padding: 0, paddingBottom: 0, landscape };
+      this.emit(VIEWPORT_EVENTS.UPDATED, this._viewport);
+    }
+  }
+
   overlapsViewport(rect) {
     return checkRects(rect, this);
   }
@@ -123,6 +140,7 @@ export class ViewportControllerBase extends EventEmitter {
   }
 
   destroy() {
+    this.calculateViewport = null;
     this.game.scale.off('resize', this.updateViewport, this);
   }
 }

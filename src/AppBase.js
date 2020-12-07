@@ -8,9 +8,9 @@ import { SettingsBase } from './settings/SettingsBase';
 import { Shortcuts, ShortcutStub } from './shortcuts';
 
 export class AppBase extends Phaser.Game {
-  constructor({ config, paths, shortcutsContainerId }) {
+  constructor({ config, paths, options }) {
     super(config);
-
+    const { shortcutsContainerId, viewPortType } = options;
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
     this._defaultDimensions = { width: config.width, height: config.height };
@@ -26,7 +26,7 @@ export class AppBase extends Phaser.Game {
     this._soundController = new SoundController({ game: this, key: 'soundController' });
     this.scene.add(this._soundController.key, this._soundController);
 
-    this._viewportController = new ViewportControllerBase({ game: this });
+    this._viewportController = new ViewportControllerBase({ game: this, viewPortType });
     this._trackingController = new TrackingControllerBase({ game: this });
 
     this._saves = new Saves();
