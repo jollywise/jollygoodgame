@@ -8,7 +8,7 @@ import { SettingsBase } from './settings/SettingsBase';
 import { Shortcuts, ShortcutStub } from './shortcuts';
 
 export class AppBase extends Phaser.Game {
-  constructor({ config, paths, options }) {
+  constructor({ config, paths, options = {} }) {
     super(config);
     const { shortcutsContainerId, viewPortType } = options;
     this._gameConfig = config;
