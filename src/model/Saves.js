@@ -12,7 +12,7 @@ export class Saves {
   constructor() {
     this.saveId = null;
     this.saves = {};
-    this.storage = new StorageGame(SAVES_ID);
+    this._storage = new StorageGame(SAVES_ID);
   }
 
   set storage(storage) {
