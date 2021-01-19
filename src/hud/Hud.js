@@ -1,5 +1,4 @@
 import { SceneBase, ButtonSimple, ButtonSound } from '@jollywise/jollygoodgame';
-import { HUD_CONFIG } from './HudConfig';
 import HudButtonGroup from './HudButtonGroup';
 import { HudEventMapBase, HudEventMapConfigBase } from './HudEventMapBase';
 
@@ -14,17 +13,7 @@ export class Hud extends SceneBase {
   }
 
   init(config) {
-    this._hudConfig = {};
-    for (const key in HUD_CONFIG) {
-      if (HUD_CONFIG.hasOwnProperty(key)) {
-        if (config && config[key]) {
-          this._hudConfig[key] = { ...HUD_CONFIG[key], ...config[key] };
-        } else {
-          this._hudConfig[key] = { ...HUD_CONFIG[key] };
-        }
-      }
-    }
-
+    this._hudConfig = config || {};
     this._savedStates = [];
     this._state = false;
     this._stateButtons = {};
@@ -95,7 +84,8 @@ export class Hud extends SceneBase {
   createModalBackground() {
     if (!this._modalBackground) {
       this._modalBackground = this.add.graphics();
-      this._modalBackground.fillStyle(0x000000, 0.5);
+      console.log(this._hudConfig)
+      this._modalBackground.fillStyle( this._hudConfig.modal ? this._hudConfig.modal.colour : 0x000000, this._hudConfig.modal ? this._hudConfig.modal.alpha : 0.5);
       this._modalBackground.fillRect(0, 0, 1680, 720);
       this._modalBackground.setScrollFactor(0);
       this.children.sendToBack(this._modalBackground);

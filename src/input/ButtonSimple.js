@@ -153,9 +153,12 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
   }
 
   enterButtonActiveState() {
-    if (!this.scene.sys.game.device.os.desktop && this.scene.sys.game.device.input.touch && this.gelvo) {
+    if (
+      !this.scene.sys.game.device.os.desktop &&
+      this.scene.sys.game.device.input.touch &&
+      this.gelvo
+    ) {
       this.scene.sys.game.soundController.playButtonAudio('gelvo', this.gelvo);
-      console.log("playvo")
     }
     this.scale = 1.2;
     // this.setFrame(this.costume + DOWN);
