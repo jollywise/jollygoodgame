@@ -139,8 +139,8 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
       if (this.ariaLabel) {
         this.scene.sys.game.controller.hud.showSubtitle(this.ariaLabel);
       }
-      if (this.gelvo) {
-        this.scene.sys.game.soundController.playVO('gelvo', this.gelvo);
+      if (this.scene.sys.game.device.os.desktop && this.gelvo) {
+        this.scene.sys.game.soundController.playButtonAudio('gelvo', this.gelvo);
       }
       // this.setFrame(this.costume + OVER);
       this.scale = 1.2;
@@ -153,12 +153,16 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
   }
 
   enterButtonActiveState() {
+    if (!this.scene.sys.game.device.os.desktop && this.scene.sys.game.device.input.touch && this.gelvo) {
+      this.scene.sys.game.soundController.playButtonAudio('gelvo', this.gelvo);
+      console.log("playvo")
+    }
     this.scale = 1.2;
     // this.setFrame(this.costume + DOWN);
   }
 
   enterButtonClickState() {
-    this.scene.sys.game.soundController.playButtonAudio('general', 'click');
+    // this.scene.sys.game.soundController.playButtonAudio('general', 'click');
     this.emit('click', { id: this.id });
   }
 

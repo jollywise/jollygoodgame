@@ -99,7 +99,7 @@ export class SoundController extends Phaser.Scene {
   // Button Audio - playButtonAudio
 
   playButtonAudio(spriteID, id, opts = {}) {
-    return this._playAudioSprite(spriteID, id, BUTTONAUDIO_GROUP, opts);
+    return this._playAudioSprite(spriteID, id, BUTTONAUDIO_GROUP, {force:true, ...opts});
   }
 
   // VO - playVO, stopVO
@@ -162,7 +162,7 @@ export class SoundController extends Phaser.Scene {
     return audio;
   }
 
-  _playAudioSprite(spriteID, id, group, opts = {}) {
+  _playAudioSprite(spriteID, id, group, opts = { }) {
     if (!this.game.cache.audio.exists(spriteID)) {
       console.error('SoundController::_playAudioSprite not found', spriteID);
       return false;
@@ -183,7 +183,7 @@ export class SoundController extends Phaser.Scene {
     } else {
       audioSprite.play(id, { loop, delay, volume });
     }
-    if (this.paused) {
+    if (this.paused && !opts.force) {
       audioSprite.pause();
     }
     return audioSprite;
@@ -241,13 +241,44 @@ export class SoundController extends Phaser.Scene {
     this.audioGroups[group].sounds = [];
   }
 
+  
+  pauseGroup(group) {
+    if (!this.audioGroups[group]) {
+      console.error('Unknown audio group', group);
+      return;
+    }
+    this.audioGroups[group].sounds.forEach((el) => {
+      el.audio.pause();
+    });
+  }
+
+  resumeGroup(group) {
+    if (!this.audioGroups[group]) {
+      console.error('Unknown audio group', group);
+      return;
+    }
+    this.audioGroups[group].sounds.forEach((el) => {
+      el.audio.resume();
+    });
+  }
+
   onPaused() {
     this.paused = true;
-    this.game.sound.pauseAll();
+    //  this.game.sound.pauseAll();
+    Object.keys(this.audioGroups).forEach((group) => {
+      if(group != BUTTONAUDIO_GROUP){
+        this.pauseGroup(group);
+      }
+    })
   }
 
   onResumed() {
     this.paused = false;
-    this.game.sound.resumeAll();
+    // this.game.sound.resumeAll();
+    Object.keys(this.audioGroups).forEach((group) => {
+      if(group != BUTTONAUDIO_GROUP){
+        this.resumeGroup(group);
+      }
+    })
   }
 }
