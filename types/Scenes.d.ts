@@ -23,6 +23,7 @@ export class SceneBase extends Phaser.Scene {
   constructor(opts: object);
   init();
   create();
+  setBackground(key: string);
   handleViewUpdate(viewport: object);
   onScenePaused();
   onSceneResumed();

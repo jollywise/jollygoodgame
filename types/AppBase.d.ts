@@ -1,4 +1,4 @@
-export class AppBase {
+export class AppBase extends Phaser.Game {
   constructor(opts: object);
   gameConfig;
   deviceMetric;
