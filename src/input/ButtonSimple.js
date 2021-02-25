@@ -1,5 +1,9 @@
 import Phaser from 'phaser';
 
+const OVER = '_over';
+const DOWN = '_down';
+const DISABLED = '_disabled';
+
 export class ButtonSimple extends Phaser.GameObjects.Sprite {
   constructor(scene, opts) {
     // init
@@ -13,6 +17,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
       enabled = true,
       ariaLabel = false,
       event = false,
+      scaleOnHover = 0.2
     } = opts;
 
     super(scene, x, y, sheet || 'buttons', costume);
@@ -20,6 +25,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
     // button props
     this._x = x;
     this._y = y;
+    this._scaleOnHover = scaleOnHover;
     this.id = id;
     this.costume = costume;
     this.gelvo = gelvo;
@@ -46,6 +52,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
     } else {
       this.disable();
     }
+
   }
 
   // add an additional dom node to act as an accessibility element
@@ -87,7 +94,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
   disable() {
     this.removeListeners();
     this.buttonEnabled = false;
-    // this.setFrame(this.costume + DISABLED);
+    this.setDisplay(this.costume + DISABLED);
     this.alpha = 0.25;
     this.disableInteractive();
   }
@@ -139,34 +146,37 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
       if (this.ariaLabel) {
         this.scene.sys.game.controller.hud.showSubtitle(this.ariaLabel);
       }
-      if (this.scene.sys.game.device.os.desktop && this.gelvo) {
-        this.scene.sys.game.soundController.playButtonAudio('gelvo', this.gelvo);
+      if (this.gelvo) {
+        this.scene.sys.game.soundController.playVO('gelvo', this.gelvo);
       }
-      // this.setFrame(this.costume + OVER);
-      this.scale = 1.2;
+      this.setDisplay(this.costume + OVER);
+      if(this.scaleOnHover){
+        this.scale += this.scaleOnHover;
+      }
     }
   }
 
   enterButtonRestState() {
     this.scale = 1;
-    this.setFrame(this.costume);
+    this.setDisplay(this.costume);
   }
 
   enterButtonActiveState() {
-    if (
-      !this.scene.sys.game.device.os.desktop &&
-      this.scene.sys.game.device.input.touch &&
-      this.gelvo
-    ) {
-      this.scene.sys.game.soundController.playButtonAudio('gelvo', this.gelvo);
+    if(this.scaleOnHover){
+      this.scale += this.scaleOnHover;
     }
-    this.scale = 1.2;
-    // this.setFrame(this.costume + DOWN);
+    this.setDisplay(this.costume + DOWN);
   }
 
   enterButtonClickState() {
-    // this.scene.sys.game.soundController.playButtonAudio('general', 'click');
+    this.scene.sys.game.soundController.playButtonAudio('general', 'click');
     this.emit('click', { id: this.id });
+  }
+
+  setDisplay(frame){
+    if( this.texture.has(frame)){
+      this.setTexture(this.texture.key, frame);
+    }
   }
 
   // clean up
