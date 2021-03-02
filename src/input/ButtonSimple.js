@@ -17,7 +17,8 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
       enabled = true,
       ariaLabel = false,
       event = false,
-      scaleOnHover = 0.2
+      scaleOnHover = 0.2,
+      clickSFX = false
     } = opts;
 
     super(scene, x, y, sheet || 'buttons', costume);
@@ -26,6 +27,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
     this._x = x;
     this._y = y;
     this._scaleOnHover = scaleOnHover;
+    this._clickSFX = clickSFX;
     this.id = id;
     this.costume = costume;
     this.gelvo = gelvo;
@@ -170,6 +172,9 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
 
   enterButtonClickState() {
     this.scene.sys.game.soundController.playButtonAudio('general', 'click');
+    if( this._clickSFX){
+      this.scene.game.soundController.playSFX(this._clickSFX.sprite, this._clickSFX.id, { volume : this._clickSFX.volume || 1 });
+    }
     this.emit('click', { id: this.id });
   }
 
