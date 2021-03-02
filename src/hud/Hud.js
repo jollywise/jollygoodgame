@@ -1,4 +1,4 @@
-import { SceneBase, ButtonSimple, ButtonSound } from '@jollywise/jollygoodgame';
+import { SceneBase, ButtonSimple, ButtonSound, VIEWPORT_EVENTS } from '@jollywise/jollygoodgame';
 import HudButtonGroup from './HudButtonGroup';
 import { HudEventMapBase, HudEventMapConfigBase } from './HudEventMapBase';
 
@@ -18,6 +18,16 @@ export class Hud extends SceneBase {
     this._state = false;
     this._stateButtons = {};
     this._buttonGroups = {};
+  }
+  
+  create(){
+    this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.updatePosition, this);
+  }
+
+  updatePosition(){
+    Object.keys(this._buttonGroups).forEach((key) => {
+      this._buttonGroups[key].updatePosition(this.game.viewportController);
+    })
   }
 
   addEventMap(controller, mapConfig = HudEventMapConfigBase) {
@@ -234,6 +244,7 @@ export class Hud extends SceneBase {
   */
 
   shutdown() {
+    this.game.viewportController.off(VIEWPORT_EVENTS.UPDATED, this.updatePosition, this);
     this._hudConfig = null;
     this.clearModalBackground();
     this.clearStateButtons();
