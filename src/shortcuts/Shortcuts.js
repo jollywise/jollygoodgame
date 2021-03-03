@@ -88,6 +88,14 @@ export class Shortcuts {
     return control;
   }
 
+  addSlider({ group = this.defaultGroup, field, title, value = false, min, max, step, onChange = null }) {
+    this.model[field] = value;
+    const control = this.groups[group].add(this.model, field, min, max, step).name(title);
+    onChange && control.onChange(onChange);
+    this.controls.push(control);
+    return control;
+  }
+
   addToggle({ group = this.defaultGroup, field, title, value = false, onChange = null }) {
     this.model[field] = value;
     const control = this.groups[group].add(this.model, field).name(title);
