@@ -18,7 +18,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
       ariaLabel = false,
       event = false,
       scaleOnHover = 0.2,
-      clickSFX = false
+      clickSFX = false,
     } = opts;
 
     super(scene, x, y, sheet || 'buttons', costume);
@@ -54,7 +54,6 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
     } else {
       this.disable();
     }
-
   }
 
   // add an additional dom node to act as an accessibility element
@@ -145,14 +144,11 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
   // button events
   enterButtonHoverState() {
     if (this.buttonEnabled) {
-      if (this.ariaLabel) {
-        this.scene.sys.game.controller.hud.showSubtitle(this.ariaLabel);
-      }
       if (this.gelvo) {
         this.scene.sys.game.soundController.playVO('gelvo', this.gelvo);
       }
       this.setDisplay(this.costume + OVER);
-      if(this.scaleOnHover){
+      if (this.scaleOnHover) {
         this.scale += this.scaleOnHover;
       }
     }
@@ -164,7 +160,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
   }
 
   enterButtonActiveState() {
-    if(this.scaleOnHover){
+    if (this.scaleOnHover) {
       this.scale += this.scaleOnHover;
     }
     this.setDisplay(this.costume + DOWN);
@@ -172,14 +168,16 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
 
   enterButtonClickState() {
     this.scene.sys.game.soundController.playButtonAudio('general', 'click');
-    if( this._clickSFX){
-      this.scene.game.soundController.playSFX(this._clickSFX.sprite, this._clickSFX.id, { volume : this._clickSFX.volume || 1 });
+    if (this._clickSFX) {
+      this.scene.game.soundController.playSFX(this._clickSFX.sprite, this._clickSFX.id, {
+        volume: this._clickSFX.volume || 1,
+      });
     }
     this.emit('click', { id: this.id });
   }
 
-  setDisplay(frame){
-    if( this.texture.has(frame)){
+  setDisplay(frame) {
+    if (this.texture.has(frame)) {
       this.setTexture(this.texture.key, frame);
     }
   }
