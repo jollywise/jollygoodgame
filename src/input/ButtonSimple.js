@@ -173,7 +173,14 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
         volume: this._clickSFX.volume || 1,
       });
     }
+    this.vibrate();
     this.emit('click', { id: this.id });
+  }
+
+  vibrate() {
+    if (this.scene.vibrate) {
+      this.scene.vibrate.trigger(100);
+    }
   }
 
   setDisplay(frame) {

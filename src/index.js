@@ -10,4 +10,5 @@ export * from './shortcuts';
 export * from './storage';
 export * from './utils';
 export * from './hud';
+export * from './plugins';
 export * from './AppBase';
