@@ -32,7 +32,6 @@ export class SubtitlesPlugin extends Phaser.Plugins.ScenePlugin {
         ...SubtitlesPlugin.CONFIG,
         align: 'center',
       })
-      .setDepth(99999999)
       .setOrigin(0.5);
     this.label.setScrollFactor(0);
     this.scene.children.remove(this.label);
@@ -48,12 +47,15 @@ export class SubtitlesPlugin extends Phaser.Plugins.ScenePlugin {
   }
 
   show(message, duration) {
-    if (!this.label) this.createLabel();
-    this.label.text = message;
-    this.label.y =
-      this.scene.game.scale.height - this.label.height * 0.5 - SubtitlesPlugin.CONFIG.edgePadding;
-    this.scene.add.existing(this.label);
-    this.scene.time.delayedCall(duration || SubtitlesPlugin.CONFIG.duration, this.hide, null, this);
+    if(SubtitlesPlugin.CONFIG.enabled){
+      if (!this.label) this.createLabel();
+      this.label.text = message;
+      this.label.setDepth(SubtitlesPlugin.CONFIG.sceneDepth)
+      this.label.y =
+        this.scene.game.scale.height - this.label.height * 0.5 - SubtitlesPlugin.CONFIG.edgePadding;
+      this.scene.add.existing(this.label);
+      this.scene.time.delayedCall(duration || SubtitlesPlugin.CONFIG.duration, this.hide, null, this);
+    }
   }
 
   hide() {
@@ -73,7 +75,18 @@ SubtitlesPlugin.CONFIG = {
   padding: 20,
   duration: 1250,
   edgePadding: 20,
+  enabled : false,
+  sceneDepth : 9999999
 };
+
+SubtitlesPlugin.SetEnabled = (value) => {
+  SubtitlesPlugin.CONFIG.enabled = value;
+};
+
+SubtitlesPlugin.SetSceneDepth = (value) => {
+  SubtitlesPlugin.CONFIG.sceneDepth = value;
+};
+
 
 SubtitlesPlugin.SetColour = (value) => {
   SubtitlesPlugin.CONFIG.color = value;
@@ -112,5 +125,6 @@ SubtitlesPlugin.SetConfig = (value) => {
     padding: value.padding || 20,
     duration: value.duration || 1250,
     edgePadding: value.edgePadding || 20,
+    enabled : value.enabled || SubtitlesPlugin.CONFIG 
   };
 };
