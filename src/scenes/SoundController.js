@@ -106,7 +106,6 @@ export class SoundController extends Phaser.Scene {
 
   _playVOScript() {
     if (!this._voScript || this._voScript.length === 0) {
-      console.log('No VO script to play');
       return;
     }
     let next = this._voScript.shift();
@@ -116,7 +115,6 @@ export class SoundController extends Phaser.Scene {
       opts = next;
       next = this._voScript.shift();
     }
-    console.log('Playing VO script', next, opts);
     if (next) {
       const audio = this._playAudioSprite(this._voSprite, next, VO_GROUP, opts);
       audio.once('complete', this._playVOScript, this);
@@ -138,7 +136,6 @@ export class SoundController extends Phaser.Scene {
   }
 
   stopVO(opts = {}) {
-    console.log('stopVO');
     this.stopGroup(VO_GROUP, opts);
     this._voSprite = null;
     this._voScript = null;
