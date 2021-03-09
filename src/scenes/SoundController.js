@@ -116,7 +116,7 @@ export class SoundController extends Phaser.Scene {
       next = this._voScript.shift();
     }
     if (next) {
-      const audio = this._playAudioSprite(this._voSprite, next, VO_GROUP, opts);
+      const audio = this._playAudioSprite(this._voSprite, next, VO_GROUP, { force: true, ...opts });
       audio.once('complete', this._playVOScript, this);
       return audio;
     } else {
@@ -127,7 +127,7 @@ export class SoundController extends Phaser.Scene {
   playVO(spriteID, id, opts = {}) {
     this.stopVO();
     if (typeof id === 'string') {
-      return this._playAudioSprite(spriteID, id, VO_GROUP, opts);
+      return this._playAudioSprite(spriteID, id, VO_GROUP, { force: true, ...opts });
     } else {
       this._voSprite = spriteID;
       this._voScript = id;
