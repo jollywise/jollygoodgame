@@ -99,18 +99,49 @@ export class SoundController extends Phaser.Scene {
   // Button Audio - playButtonAudio
 
   playButtonAudio(spriteID, id, opts = {}) {
-    return this._playAudioSprite(spriteID, id, BUTTONAUDIO_GROUP, {force:true, ...opts});
+    return this._playAudioSprite(spriteID, id, BUTTONAUDIO_GROUP, { force: true, ...opts });
   }
 
   // VO - playVO, stopVO
 
+  _playVOScript() {
+    if (!this._voScript || this._voScript.length === 0) {
+      console.log('No VO script to play');
+      return;
+    }
+    let next = this._voScript.shift();
+    let opts = {};
+    // check for 'opts' instead of a VO id (i.e. { delay: 800 })
+    if (typeof next !== 'string') {
+      opts = next;
+      next = this._voScript.shift();
+    }
+    console.log('Playing VO script', next, opts);
+    if (next) {
+      const audio = this._playAudioSprite(this._voSprite, next, VO_GROUP, opts);
+      audio.once('complete', this._playVOScript, this);
+      return audio;
+    } else {
+      return null;
+    }
+  }
+
   playVO(spriteID, id, opts = {}) {
     this.stopVO();
-    return this._playAudioSprite(spriteID, id, VO_GROUP, opts);
+    if (typeof id === 'string') {
+      return this._playAudioSprite(spriteID, id, VO_GROUP, opts);
+    } else {
+      this._voSprite = spriteID;
+      this._voScript = id;
+      return this._playVOScript();
+    }
   }
 
   stopVO(opts = {}) {
+    console.log('stopVO');
     this.stopGroup(VO_GROUP, opts);
+    this._voSprite = null;
+    this._voScript = null;
   }
 
   // Music - playMusic, stopMusic
@@ -162,7 +193,7 @@ export class SoundController extends Phaser.Scene {
     return audio;
   }
 
-  _playAudioSprite(spriteID, id, group, opts = { }) {
+  _playAudioSprite(spriteID, id, group, opts = {}) {
     if (!this.game.cache.audio.exists(spriteID)) {
       console.error('SoundController::_playAudioSprite not found', spriteID);
       return false;
@@ -241,7 +272,6 @@ export class SoundController extends Phaser.Scene {
     this.audioGroups[group].sounds = [];
   }
 
-  
   pauseGroup(group) {
     if (!this.audioGroups[group]) {
       console.error('Unknown audio group', group);
@@ -266,19 +296,19 @@ export class SoundController extends Phaser.Scene {
     this.paused = true;
     //  this.game.sound.pauseAll();
     Object.keys(this.audioGroups).forEach((group) => {
-      if(group != BUTTONAUDIO_GROUP){
+      if (group != BUTTONAUDIO_GROUP) {
         this.pauseGroup(group);
       }
-    })
+    });
   }
 
   onResumed() {
     this.paused = false;
     // this.game.sound.resumeAll();
     Object.keys(this.audioGroups).forEach((group) => {
-      if(group != BUTTONAUDIO_GROUP){
+      if (group != BUTTONAUDIO_GROUP) {
         this.resumeGroup(group);
       }
-    })
+    });
   }
 }
