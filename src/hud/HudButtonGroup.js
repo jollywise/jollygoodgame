@@ -24,11 +24,11 @@ export default class HudButtonGroup {
       }
       this.buttons.push({
         sprite: button,
-        groupx: this.groupwidth + button.width * 0.5,
-        groupy: button.height * 0.5,
+        groupx: this.groupwidth + button.displayWidth * 0.5,
+        groupy: button.displayHeight * 0.5,
       });
-      this.groupwidth += button.width;
-      this.groupheight = Math.max(this.groupheight, button.height);
+      this.groupwidth += button.displayWidth;
+      this.groupheight = Math.max(this.groupheight, button.displayHeight);
       this.updatePosition(this.viewport);
     }
   }
@@ -67,6 +67,17 @@ export default class HudButtonGroup {
   updatePosition(viewport) {
     this.viewport = viewport || this.viewport;
 
+    
+    this.groupwidth = 0;
+    this.groupheight = 0;
+    this.buttons.forEach((button) => {
+      button.groupx = this.groupwidth + button.sprite.displayWidth * 0.5;
+      button.groupy = button.sprite.displayHeight * 0.5;
+      this.groupwidth += button.sprite.displayWidth + this.buttonPadding;
+      this.groupheight = Math.max(this.groupheight, button.sprite.displayHeight);
+    });
+    this.groupwidth -= this.buttonPadding;
+
     const vx = (viewport.width - viewport.padding * 2) * this.screenAnchor.x;
     const gx = this.groupwidth * this.groupAnchor.x;
     const tx = viewport.x + viewport.padding + (vx - gx);
@@ -82,7 +93,6 @@ export default class HudButtonGroup {
     this.buttons.forEach((button) => {
       button.sprite.x = tx + button.groupx;
       button.sprite.y = ty + button.groupy;
-
       if (this.buttonAlign === 'center') {
         button.sprite.y += this.groupheight * 0.5 - button.sprite.height * 0.5;
       }
