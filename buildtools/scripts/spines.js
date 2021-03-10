@@ -13,7 +13,7 @@ const { execSync } = require('child_process');
 const ROOT_DIRECTORY = path.resolve('.');
 const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/spines/');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
-const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/spine_manifest.json');
+const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/spines_manifest.json');
 const EXPORT_CONFIG_PATH = path.resolve(__dirname, './spinexportconfig.json'); // temporary file
 const DRYRUN = false;
 
