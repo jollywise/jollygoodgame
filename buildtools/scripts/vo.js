@@ -10,7 +10,7 @@ const md5 = require('md5');
 const csv = require('csv-parser');
 const AWS = require('aws-sdk');
 
-const ROOT_DIRECTORY = path.resolve(__dirname, '../..');
+const ROOT_DIRECTORY = path.resolve('.');
 const SRC_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/vo.csv');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites/audiosprites');
 const CAPTIONS_FILE = path.resolve(ROOT_DIRECTORY, 'src/assets/data/captions.json');

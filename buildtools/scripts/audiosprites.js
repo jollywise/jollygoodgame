@@ -21,7 +21,7 @@ const EXPORT_FORMATS = [
   { bitrate: 32, samplerate: 22050 },
   { bitrate: 64, samplerate: 44100 },
 ];
-const ROOT_DIRECTORY = path.resolve(__dirname, '../..');
+const ROOT_DIRECTORY = path.resolve('.');
 const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites/');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites_manifest.json');

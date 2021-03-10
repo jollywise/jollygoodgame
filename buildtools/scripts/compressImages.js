@@ -11,7 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const md5File = require('md5-file');
 
-const ROOT_DIRECTORY = path.resolve(__dirname, '../..');
+const ROOT_DIRECTORY = path.resolve('.');
 const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'src_assets/compressImages_manifest.json');

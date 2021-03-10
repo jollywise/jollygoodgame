@@ -11,7 +11,7 @@ const texturepacker = require('./texturepacker-command-line');
 const FORMAT = 'phaser'; // PHASER 3 FORMAT
 const MAXSIZE = 2048;
 
-const ROOT_DIRECTORY = path.resolve(__dirname, '../..');
+const ROOT_DIRECTORY = path.resolve('.');
 const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/spritesheets/');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const DRYRUN = false;

@@ -10,7 +10,7 @@ const path = require('path');
 const md5File = require('md5-file');
 
 const EXPORT_FILETYPES = 'ogg,m4a,mp3';
-const ROOT_DIRECTORY = path.resolve(__dirname, '../..');
+const ROOT_DIRECTORY = path.resolve('.');
 const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/music/');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/music_manifest.json');
