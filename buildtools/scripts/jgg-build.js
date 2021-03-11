@@ -6,21 +6,14 @@
  */
 const fs = require('fs');
 const path = require('path');
-const exec = require('child_process').exec;
 
-if (process.argv.length === 0) {
+if (process.argv.length < 3) {
   return;
 }
-const script = process.env[0].replace('/', '').replace('\\', '');
+const script = process.argv[2].replace('/', '').replace('\\', '');
 if (!fs.existsSync(path.resolve(__dirname, script + '.js'))) {
   console.log('Unknown build script ' + script);
   return;
 }
 
-exec('node ' + path.resolve(__dirname, script + '.js'), function (error, stdout, stderr) {
-  console.log('stdout: ' + stdout);
-  console.log('stderr: ' + stderr);
-  if (error !== null) {
-    console.log('exec error: ' + error);
-  }
-});
+require('./' + script + '.js');
