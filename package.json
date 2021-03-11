@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "types": "types/index.d.ts",
   "bin": {
-    "jgg-build": "buildtools/scripts/jgg-build.js"
+    "jgg": "buildtools/scripts/jgg.js"
   },
   "engines": {
     "node": ">=4.0"

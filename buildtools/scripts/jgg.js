@@ -12,7 +12,7 @@ if (process.argv.length < 3) {
 }
 const script = process.argv[2].replace('/', '').replace('\\', '');
 if (!fs.existsSync(path.resolve(__dirname, script + '.js'))) {
-  console.log('Unknown build script ' + script);
+  console.log('Unknown jgg command ' + script);
   return;
 }
 
