@@ -94,7 +94,6 @@ async function compressImage(id, srcDir, outDir, imageId, manifestWrite) {
     });
     const statsAfter = fs.statSync(dest);
     const filesizeAfter = statsAfter['size'];
-    manifestWrite[imageId] = md5File.sync(dest);
 
     console.log(
       `Compressed ${getRelativeName(src, SRC_DIRECTORY)} : ${filesize} -> ${filesizeAfter}`
@@ -102,6 +101,7 @@ async function compressImage(id, srcDir, outDir, imageId, manifestWrite) {
   } else {
     console.log(`Compressing ${getRelativeName(src, SRC_DIRECTORY)} : ${filesize}`);
   }
+  manifestWrite[imageId] = md5File.sync(dest);
 }
 
 const manifestRead = readManifest(MANIFEST_FILE);

@@ -143,16 +143,14 @@ const createSpine = (input, destination) => {
       require('mkdirp').sync(destination);
     }
 
-    if (!DRYRUN) {
-      const settings = { ...EXPORT_JSON };
-      settings.project = input;
-      settings.output = destination;
-      try {
-        fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
-        execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
-      } catch (err) {
-        console.log(`Error creating ${TEMP_CONFIG_PATH}`, err);
-      }
+    let settings = { ...EXPORT_JSON };
+    settings.project = input;
+    settings.output = destination;
+    try {
+      fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
+      execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
+    } catch (err) {
+      console.log(`Error creating ${TEMP_CONFIG_PATH}`, err);
     }
 
     let scale = 0;
@@ -177,17 +175,15 @@ const createSpine = (input, destination) => {
       scale = 1;
     }
 
-    if (!DRYRUN) {
-      const settings = { ...EXPORT };
-      settings.project = input;
-      settings.output = destination;
-      settings.packAtlas.scale = [scale];
-      try {
-        fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
-        execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
-      } catch (err) {
-        console.log(`Error creating ${TEMP_CONFIG_PATH}`, err);
-      }
+    settings = { ...EXPORT };
+    settings.project = input;
+    settings.output = destination;
+    settings.packAtlas.scale = [scale];
+    try {
+      fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
+      execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
+    } catch (err) {
+      console.log(`Error creating ${TEMP_CONFIG_PATH}`, err);
     }
   }
 };
