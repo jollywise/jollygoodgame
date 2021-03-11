@@ -14,7 +14,7 @@ const md5File = require('md5-file');
 const ROOT_DIRECTORY = path.resolve('.');
 const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
-const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'src_assets/compressImages_manifest.json');
+const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/compressImages_manifest.json');
 const DRYRUN = false;
 
 // prettier-ignore
