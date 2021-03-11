@@ -145,7 +145,8 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
   const plan = [];
   getContents(srcDir).forEach((file) => {
     const hash = md5File.sync(file);
-    const spineId = file.split(SRC_DIRECTORY)[1].replace('/', '').replace(/\//g, '_');
+    const relativeFile = file.split(SRC_DIRECTORY)[1].substr(1);
+    const spineId = relativeFile.replace(/[\\\/]/g, '_');
     const manifestHash = manifestRead[spineId] || null;
     manifestWrite[spineId] = hash;
     if (hash !== manifestHash) {

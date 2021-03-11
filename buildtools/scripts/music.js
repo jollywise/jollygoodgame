@@ -43,7 +43,9 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
   const plan = [];
   getContents(srcDir).forEach((file) => {
     const hash = md5File.sync(file);
-    const musicId = file.split(SRC_DIRECTORY)[1].replace('/', '').replace(/\//g, '_');
+    const relativeFile = file.split(SRC_DIRECTORY)[1].substr(1);
+    const musicId = relativeFile.replace(/[\\\/]/g, '_');
+    
     const manifestHash = manifestRead[musicId] || null;
     manifestWrite[musicId] = hash;
     if (hash !== manifestHash) {

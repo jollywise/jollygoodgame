@@ -49,7 +49,8 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
       } else {
         const file = `${srcDir}/${item}`;
         const hash = md5File.sync(file);
-        const spriteId = srcDir.split(SRC_DIRECTORY)[1].substr(1).replace(/[\\\/]/g, '_');
+        const relativeFile = srcDir.split(SRC_DIRECTORY)[1].substr(1);
+        const spriteId = relativeFile.replace(/[\\\/]/g, '_');
 
         manifestFiles = (manifestRead[spriteId] && manifestRead[spriteId].files) || [];
 
