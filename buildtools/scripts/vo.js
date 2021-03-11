@@ -9,12 +9,21 @@ const path = require('path');
 const md5 = require('md5');
 const csv = require('csv-parser');
 const AWS = require('aws-sdk');
+const { cosmiconfigSync } = require('cosmiconfig');
 
-const ROOT_DIRECTORY = path.resolve('.');
-const SRC_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/vo.csv');
-const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites/audiosprites');
-const CAPTIONS_FILE = path.resolve(ROOT_DIRECTORY, 'src/assets/data/captions.json');
-const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/vo_manifest.json');
+const cosmiconfig = cosmiconfigSync('vo').search();
+const config = cosmiconfig ? cosmiconfig.config || {} : {};
+console.log('Loaded config', config);
+
+const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
+const SRC_FILE = config.srcFile || path.resolve(ROOT_DIRECTORY, 'assets_src/vo.csv');
+const OUTPUT_DIRECTORY =
+  config.outputDirectory || path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites/audiosprites');
+const CAPTIONS_FILE =
+  config.captionsFile || path.resolve(ROOT_DIRECTORY, 'src/assets/data/captions.json');
+const MANIFEST_FILE =
+  config.manifestFile || path.resolve(ROOT_DIRECTORY, 'assets_src/vo_manifest.json');
+const POLLY_VOICE = config.pollyVoice || 'Justin';
 const DRYRUN = false;
 
 const Polly = new AWS.Polly({ region: 'eu-west-1' });
@@ -68,7 +77,7 @@ const createVO = (text, outputFile, attempt = 1) => {
       OutputFormat: 'mp3',
       Text: text,
       TextType: 'text',
-      VoiceId: 'Justin',
+      VoiceId: POLLY_VOICE,
     };
 
     Polly.synthesizeSpeech(speechParams, function (err, res) {

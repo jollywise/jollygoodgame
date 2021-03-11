@@ -9,17 +9,25 @@ const fs = require('fs');
 const path = require('path');
 const md5File = require('md5-file');
 const { execSync } = require('child_process');
+const { cosmiconfigSync } = require('cosmiconfig');
 
-const ROOT_DIRECTORY = path.resolve('.');
-const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/spines/');
-const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
-const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/spines_manifest.json');
-const EXPORT_CONFIG_PATH = path.resolve(__dirname, './spinexportconfig.json'); // temporary file
+const cosmiconfig = cosmiconfigSync('spines').search();
+const config = cosmiconfig ? cosmiconfig.config || {} : {};
+console.log('Loaded config', config);
+
+const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
+const SRC_DIRECTORY = config.srcDirectory || path.resolve(ROOT_DIRECTORY, 'assets_src/spines/');
+const OUTPUT_DIRECTORY = config.outputDirectory || path.resolve(ROOT_DIRECTORY, 'src/assets/');
+const MANIFEST_FILE =
+  config.manifestFile || path.resolve(ROOT_DIRECTORY, 'assets_src/spines_manifest.json');
+const TEMP_CONFIG_PATH = path.resolve(__dirname, './spinexportconfig.json'); // temporary file
+const EXCLUDE_FOLDERS = config.excludeFolders || [];
 const DRYRUN = false;
 
-const excludefolders = ['cutscenes'];
-
-let SPINE = 'C:\\Program Files (x86)\\Spine\\Spine.exe';
+let SPINE = config.spine || '';
+if (!SPINE || SPINE === '' || !fs.existsSync(SPINE)) {
+  SPINE = 'C:\\Program Files (x86)\\Spine\\Spine.exe';
+}
 if (!fs.existsSync(SPINE)) {
   SPINE = 'C:\\Program Files\\Spine\\Spine.exe';
 }
@@ -122,7 +130,7 @@ const getContents = (dir) => {
 };
 
 const isExcluded = (dir) => {
-  const found = excludefolders.find((e) => {
+  const found = EXCLUDE_FOLDERS.find((e) => {
     const excludePath = path.resolve(SRC_DIRECTORY, e);
     if (excludePath === dir) return true;
     const relative = path.relative(path.resolve(SRC_DIRECTORY, e), dir);
@@ -163,8 +171,8 @@ const createSpine = (input, destination) => {
       settings.project = input;
       settings.output = destination;
       try {
-        fs.writeFileSync(EXPORT_CONFIG_PATH, JSON.stringify(settings));
-        execSync(SPINE + ' -e ' + EXPORT_CONFIG_PATH, { stdio: 'inherit' });
+        fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
+        execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
       } catch (err) {
         console.log(err);
       }
@@ -198,8 +206,8 @@ const createSpine = (input, destination) => {
       settings.output = destination;
       settings.packAtlas.scale = [scale];
       try {
-        fs.writeFileSync(EXPORT_CONFIG_PATH, JSON.stringify(settings));
-        execSync(SPINE + ' -e ' + EXPORT_CONFIG_PATH, { stdio: 'inherit' });
+        fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
+        execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
       } catch (err) {
         console.log(err);
       }
@@ -238,6 +246,6 @@ getWorkPlan({ manifestRead, manifestWrite }).forEach((data) => {
   createSpine(data.input, data.outputBase);
 });
 try {
-  fs.unlinkSync(EXPORT_CONFIG_PATH);
+  fs.unlinkSync(TEMP_CONFIG_PATH);
 } catch (err) {}
 writeManifest(manifestWrite);

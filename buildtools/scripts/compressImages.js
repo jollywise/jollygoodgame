@@ -10,11 +10,17 @@ const imageminPngquant = require('imagemin-pngquant');
 const fs = require('fs');
 const path = require('path');
 const md5File = require('md5-file');
+const { cosmiconfigSync } = require('cosmiconfig');
 
-const ROOT_DIRECTORY = path.resolve('.');
-const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
-const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
-const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/compressImages_manifest.json');
+const cosmiconfig = cosmiconfigSync('compressImages').search();
+const config = cosmiconfig ? cosmiconfig.config || {} : {};
+console.log('Loaded config', config);
+
+const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
+const SRC_DIRECTORY = config.rootDirectory || path.resolve(ROOT_DIRECTORY, 'src/assets/');
+const OUTPUT_DIRECTORY = config.outputDirectory || path.resolve(ROOT_DIRECTORY, 'src/assets/');
+const MANIFEST_FILE =
+  config.manifestFile || path.resolve(ROOT_DIRECTORY, 'assets_src/compressImages_manifest.json');
 const DRYRUN = false;
 
 // prettier-ignore

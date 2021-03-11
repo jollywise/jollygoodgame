@@ -7,13 +7,19 @@
 const fs = require('fs');
 const path = require('path');
 const texturepacker = require('./texturepacker-command-line');
+const { cosmiconfigSync } = require('cosmiconfig');
+
+const cosmiconfig = cosmiconfigSync('spritesheets').search();
+const config = cosmiconfig ? cosmiconfig.config || {} : {};
+console.log('Loaded config', config);
 
 const FORMAT = 'phaser'; // PHASER 3 FORMAT
 const MAXSIZE = 2048;
 
-const ROOT_DIRECTORY = path.resolve('.');
-const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/spritesheets/');
-const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
+const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
+const SRC_DIRECTORY =
+  config.srcDirectory || path.resolve(ROOT_DIRECTORY, 'assets_src/spritesheets/');
+const OUTPUT_DIRECTORY = config.outputDirectory || path.resolve(ROOT_DIRECTORY, 'src/assets/');
 const DRYRUN = false;
 
 const getWorkPlan = (srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY) => {

@@ -15,17 +15,25 @@ const path = require('path');
 const md5 = require('md5');
 const md5File = require('md5-file');
 const audiosprite = require('audiosprite');
+const { cosmiconfigSync } = require('cosmiconfig');
 
-const EXPORT_FILETYPES = 'mp3';
-const EXPORT_FORMATS = [
+const cosmiconfig = cosmiconfigSync('audiosprites').search();
+const config = cosmiconfig ? cosmiconfig.config || {} : {};
+console.log('Loaded config', config);
+
+const EXPORT_FILETYPES = config.exportFiletypes || 'mp3,mp4,ogg';
+const EXPORT_FORMATS = config.exportFormats || [
   { bitrate: 32, samplerate: 22050 },
   { bitrate: 64, samplerate: 44100 },
 ];
-const ROOT_DIRECTORY = path.resolve('.');
-const SRC_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites/');
-const OUTPUT_DIRECTORY = path.resolve(ROOT_DIRECTORY, 'src/assets/');
-const MANIFEST_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites_manifest.json');
-const CAPTIONS_FILE = path.resolve(ROOT_DIRECTORY, 'assets_src/captions.json');
+const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
+const SRC_DIRECTORY =
+  config.srcDirectory || path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites/');
+const OUTPUT_DIRECTORY = config.outputDirectory || path.resolve(ROOT_DIRECTORY, 'src/assets/');
+const MANIFEST_FILE =
+  config.mainfestFile || path.resolve(ROOT_DIRECTORY, 'assets_src/audiosprites_manifest.json');
+const CAPTIONS_FILE =
+  config.captionsFile || path.resolve(ROOT_DIRECTORY, 'assets_src/captions.json');
 const DRYRUN = false;
 const FORCE = false;
 
