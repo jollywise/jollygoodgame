@@ -8,10 +8,10 @@ const fs = require('fs');
 const path = require('path');
 const texturepacker = require('./texturepacker-command-line');
 const { cosmiconfigSync } = require('cosmiconfig');
+const { getRelativeName } = require('./jgg-libs');
 
 const cosmiconfig = cosmiconfigSync('spritesheets').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
-console.log('Loaded config', config);
 
 const FORMAT = 'phaser'; // PHASER 3 FORMAT
 const MAXSIZE = 2048;
@@ -50,11 +50,12 @@ const getWorkPlan = (srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY) => {
 };
 
 const createSprite = (id, srcDir, outDir, scale = 1) => {
-  console.log(`Creating spritesheet ${outDir}/${id} from ${srcDir}`);
+  const outBase = path.join(outDir, id);
+  console.log(`Creating spritesheet ${getRelativeName(outBase, OUTPUT_DIRECTORY)}`);
   if (!DRYRUN) {
     texturepacker.exec(`${srcDir}/`, {
-      sheet: `${outDir}/${id}-{n}.png`,
-      data: `${outDir}/${id}{n}.json`,
+      sheet: `${outBase}-{n}.png`,
+      data: `${outBase}{n}.json`,
       textureFormat: 'png',
       trimSpriteNames: true,
       format: FORMAT,

@@ -10,10 +10,10 @@ const md5 = require('md5');
 const csv = require('csv-parser');
 const AWS = require('aws-sdk');
 const { cosmiconfigSync } = require('cosmiconfig');
+const { readManifest, writeManifest, getRelativeName } = require('./jbb-libs');
 
 const cosmiconfig = cosmiconfigSync('vo').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
-console.log('Loaded config', config);
 
 const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
 const SRC_FILE = config.srcFile || path.resolve(ROOT_DIRECTORY, 'assets_src/vo.csv');
@@ -42,7 +42,7 @@ const getWorkPlan = ({ srcFile = SRC_FILE, outDir = OUTPUT_DIRECTORY, manifestRe
         const area = row[2].trim();
 
         if (keys.indexOf(id) > -1) {
-          console.log('Text ID', id, 'repeated, ignoring');
+          console.log(`Text ID ${id} repeated, ignoring`);
           return;
         }
 
@@ -55,6 +55,8 @@ const getWorkPlan = ({ srcFile = SRC_FILE, outDir = OUTPUT_DIRECTORY, manifestRe
         manifestWrite[id] = hash;
         if (hash !== manifestHash) {
           plan.push({ text: text, outputFile: outputFile });
+        } else {
+          console.log(`Skipping ${id}`);
         }
       }).on('end', () => {
         resolve({plan, captions});
@@ -64,8 +66,7 @@ const getWorkPlan = ({ srcFile = SRC_FILE, outDir = OUTPUT_DIRECTORY, manifestRe
 
 const createVO = (text, outputFile, attempt = 1) => {
   if (attempt === 1) {
-    const relativeFile = outputFile.split(OUTPUT_DIRECTORY)[1].substr(1);
-    console.log(`Creating VO file ${relativeFile}`);
+    console.log(`Creating ${getRelativeName(outputFile, OUTPUT_DIRECTORY)}`);
   }
   if (!DRYRUN) {
     if (!fs.existsSync(path.dirname(outputFile))) {
@@ -87,7 +88,7 @@ const createVO = (text, outputFile, attempt = 1) => {
             createVO(text, outputFile, attempt + 1);
           }, 500);
         } else {
-          console.log('err', err);
+          console.log('Error synthesizing speech', err);
         }
       } else if (res && res.AudioStream instanceof Buffer) {
         fs.writeFileSync(outputFile, res.AudioStream);
@@ -96,32 +97,8 @@ const createVO = (text, outputFile, attempt = 1) => {
   }
 };
 
-const readManifest = () => {
-  let manifest = {};
-  try {
-    const rawData = fs.readFileSync(MANIFEST_FILE);
-    manifest = JSON.parse(rawData);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('Creating manifest');
-    } else {
-      throw err;
-    }
-  }
-  return manifest;
-};
-
-const writeManifest = (manifest) => {
-  try {
-    const rawData = JSON.stringify(manifest);
-    fs.writeFileSync(MANIFEST_FILE, rawData);
-  } catch (err) {
-    throw err;
-  }
-};
-
 if (fs.existsSync(SRC_FILE)) {
-  const manifestRead = readManifest();
+  const manifestRead = readManifest(MANIFEST_FILE);
   const manifestWrite = {};
   getWorkPlan({ manifestRead, manifestWrite }).then(({ plan, captions }) => {
     if (plan.length > 0) {
@@ -130,6 +107,6 @@ if (fs.existsSync(SRC_FILE)) {
       });
     }
     fs.writeFileSync(CAPTIONS_FILE, JSON.stringify(captions));
-    writeManifest(manifestWrite);
+    writeManifest(MANIFEST_FILE, manifestWrite);
   });
 }

@@ -10,10 +10,16 @@ const path = require('path');
 const md5File = require('md5-file');
 const { execSync } = require('child_process');
 const { cosmiconfigSync } = require('cosmiconfig');
+const {
+  getContents,
+  readManifest,
+  writeManifest,
+  getManifestID,
+  getRelativeName,
+} = require('./jgg-libs');
 
 const cosmiconfig = cosmiconfigSync('spines').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
-console.log('Loaded config', config);
 
 const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
 const SRC_DIRECTORY = config.srcDirectory || path.resolve(ROOT_DIRECTORY, 'assets_src/spines/');
@@ -109,60 +115,29 @@ const EXPORT = {
   warnings: true,
 };
 
-const isExcluded = (dir) => {
-  const found = EXCLUDE_FOLDERS.find((e) => {
-    const excludePath = path.resolve(SRC_DIRECTORY, e);
-    if (excludePath === dir) return true;
-    const relative = path.relative(path.resolve(SRC_DIRECTORY, e), dir);
-    return relative && !relative.startsWith('..') && !path.isAbsolute(relative);
-  });
-  return found != null;
-};
-
-const getContents = (dir) => {
-  let results = [];
-  if (isExcluded(dir)) {
-    const relativePath = dir.split(SRC_DIRECTORY)[1].substr(1);
-    console.log(`Excluding ${relativePath}`);
-    return [];
-  }
-  fs.readdirSync(dir).forEach(function (item) {
-    if (!/^\..*/.test(item)) {
-      const file = path.join(dir, item);
-      const stat = fs.lstatSync(file);
-      if (stat && stat.isDirectory()) {
-        results = results.concat(getContents(file));
-      } else if (path.extname(file) === '.spine') {
-        results.push(file);
-      }
-    }
-  });
-  return results;
-};
-
 // prettier-ignore
 const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manifestRead, manifestWrite }) => {
   const plan = [];
-  getContents(srcDir).forEach((file) => {
-    const hash = md5File.sync(file);
-    const relativeFile = file.split(SRC_DIRECTORY)[1].substr(1);
-    const spineId = relativeFile.replace(/[\\\/]/g, '_');
-    const manifestHash = manifestRead[spineId] || null;
-    manifestWrite[spineId] = hash;
-    if (hash !== manifestHash) {
-      const output = path.dirname(path.dirname(file.replace(srcDir, outDir)));
-      plan.push({ input: file, outputBase: output });
-    } else {
-      const relativeFile = file.split(SRC_DIRECTORY)[1].substr(1);
-      console.log(`Skipping ${relativeFile}`);
+  getContents(srcDir, SRC_DIRECTORY, EXCLUDE_FOLDERS).forEach((file) => {
+    if (path.extname(file) === '.spine') {
+      const hash = md5File.sync(file);
+      const spineId = getManifestID(file, SRC_DIRECTORY);
+      const manifestHash = manifestRead[spineId] || null;
+      manifestWrite[spineId] = hash;
+      if (hash !== manifestHash) {
+        const output = path.dirname(path.dirname(file.replace(srcDir, outDir)));
+        plan.push({ input: file, outputBase: output });
+      } else {
+        console.log(`Skipping ${getRelativeName(file, SRC_DIRECTORY)}`);
+      }
     }
   });
   return plan;
 };
 
+// eslint-disable-next-line max-statements
 const createSpine = (input, destination) => {
-  const relativeFile = input.split(SRC_DIRECTORY)[1].substr(1);
-  console.log(`Processing spine ${relativeFile}`);
+  console.log(`Processing spine ${getRelativeName(input, SRC_DIRECTORY)}`);
   if (!DRYRUN) {
     if (!fs.existsSync(destination)) {
       require('mkdirp').sync(destination);
@@ -176,7 +151,7 @@ const createSpine = (input, destination) => {
         fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
         execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
       } catch (err) {
-        console.log(err);
+        console.log(`Error creating ${TEMP_CONFIG_PATH}`, err);
       }
     }
 
@@ -195,7 +170,7 @@ const createSpine = (input, destination) => {
           }
         }
       } catch (err) {
-        console.log(err);
+        console.log(`Error parsing ${outfile}`, err);
       }
     }
     if (scale === 0) {
@@ -211,43 +186,18 @@ const createSpine = (input, destination) => {
         fs.writeFileSync(TEMP_CONFIG_PATH, JSON.stringify(settings));
         execSync(SPINE + ' -e ' + TEMP_CONFIG_PATH, { stdio: 'inherit' });
       } catch (err) {
-        console.log(err);
+        console.log(`Error creating ${TEMP_CONFIG_PATH}`, err);
       }
     }
   }
 };
 
-const readManifest = () => {
-  let manifest = {};
-  try {
-    const rawData = fs.readFileSync(MANIFEST_FILE);
-    manifest = JSON.parse(rawData);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('Creating manifest');
-    } else {
-      throw err;
-    }
-  }
-  return manifest;
-};
-
-const writeManifest = (manifest) => {
-  try {
-    const rawData = JSON.stringify(manifest);
-    fs.writeFileSync(MANIFEST_FILE, rawData);
-  } catch (err) {
-    throw err;
-  }
-};
-
-const manifestRead = readManifest();
+const manifestRead = readManifest(MANIFEST_FILE);
 const manifestWrite = {};
-console.log('Using spine executable path', SPINE);
 getWorkPlan({ manifestRead, manifestWrite }).forEach((data) => {
   createSpine(data.input, data.outputBase);
 });
 try {
   fs.unlinkSync(TEMP_CONFIG_PATH);
 } catch (err) {}
-writeManifest(manifestWrite);
+writeManifest(MANIFEST_FILE, manifestWrite);

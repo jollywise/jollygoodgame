@@ -16,10 +16,10 @@ const md5 = require('md5');
 const md5File = require('md5-file');
 const audiosprite = require('audiosprite');
 const { cosmiconfigSync } = require('cosmiconfig');
+const { readManifest, writeManifest, getManifestID, getRelativeName } = require('./jgg-libs');
 
 const cosmiconfig = cosmiconfigSync('audiosprites').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
-console.log('Loaded config', config);
 
 const EXPORT_FILETYPES = config.exportFiletypes || 'ogg,m4a,mp3';
 const EXPORT_FORMATS = config.exportFormats || [
@@ -35,7 +35,6 @@ const MANIFEST_FILE =
 const CAPTIONS_FILE =
   config.captionsFile || path.resolve(ROOT_DIRECTORY, 'assets_src/captions.json');
 const DRYRUN = false;
-const FORCE = false;
 
 // prettier-ignore
 const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manifestRead, manifestWrite, subDir }) => {
@@ -49,8 +48,7 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
       } else {
         const file = `${srcDir}/${item}`;
         const hash = md5File.sync(file);
-        const relativeFile = srcDir.split(SRC_DIRECTORY)[1].substr(1);
-        const spriteId = relativeFile.replace(/[\\\/]/g, '_');
+        const spriteId = getManifestID(srcDir, SRC_DIRECTORY);
 
         manifestFiles = (manifestRead[spriteId] && manifestRead[spriteId].files) || [];
 
@@ -82,15 +80,15 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
 
   if (dirContents.files.length > 0) {
     const existingHash = md5(JSON.stringify(manifestFiles));
-    const newHash =md5(JSON.stringify(dirContents.files))
-    if (existingHash !== newHash || FORCE) {
+    const newHash = md5(JSON.stringify(dirContents.files))
+    if (existingHash !== newHash) {
       plan.push({
         id    : path.basename(srcDir),
         srcDir: srcDir,
         outDir: path.dirname(outDir),
       });
     } else {
-      console.log(`Skipping ${path.basename(srcDir)}`);
+      console.log(`Skipping ${getRelativeName(srcDir, SRC_DIRECTORY)}`);
     }
   }
   return plan;
@@ -150,7 +148,7 @@ const createSprite = (id, srcDir, outDir, captions) => {
     const samplerate = format.samplerate;
     const output = `${outDir}/${bitrate}/${id}`;
 
-    console.log(`Creating audiosprite ${output} from ${srcDir}`);
+    console.log(`Creating audiosprite ${getRelativeName(output, OUTPUT_DIRECTORY)}`);
     if (!DRYRUN) {
       const files = [srcDir + '/*.mp3', srcDir + '/*.wav', srcDir + '/*.m4a'];
       const opts = {
@@ -185,43 +183,17 @@ const readCaptions = () => {
     const rawData = fs.readFileSync(CAPTIONS_FILE);
     captions = JSON.parse(rawData);
   } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('No captions');
-    } else {
+    if (err.code !== 'ENOENT') {
       throw err;
     }
   }
   return captions;
 };
 
-const readManifest = () => {
-  let manifest = {};
-  try {
-    const rawData = fs.readFileSync(MANIFEST_FILE);
-    manifest = JSON.parse(rawData);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('Creating manifest');
-    } else {
-      throw err;
-    }
-  }
-  return manifest;
-};
-
-const writeManifest = (manifest) => {
-  try {
-    const rawData = JSON.stringify(manifest);
-    fs.writeFileSync(MANIFEST_FILE, rawData);
-  } catch (err) {
-    throw err;
-  }
-};
-
 const captions = readCaptions();
-const manifestRead = readManifest();
+const manifestRead = readManifest(MANIFEST_FILE);
 const manifestWrite = {};
 getWorkPlan({ manifestRead, manifestWrite }).forEach((data) => {
   createSprite(data.id, data.srcDir, data.outDir, captions);
 });
-writeManifest(manifestWrite);
+writeManifest(MANIFEST_FILE, manifestWrite);

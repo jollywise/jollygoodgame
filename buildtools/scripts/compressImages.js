@@ -11,10 +11,10 @@ const fs = require('fs');
 const path = require('path');
 const md5File = require('md5-file');
 const { cosmiconfigSync } = require('cosmiconfig');
+const { readManifest, writeManifest, getManifestID, getRelativeName } = require('./jgg-libs');
 
 const cosmiconfig = cosmiconfigSync('compressImages').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
-console.log('Loaded config', config);
 
 const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
 const SRC_DIRECTORY = config.rootDirectory || path.resolve(ROOT_DIRECTORY, 'src/assets/');
@@ -35,8 +35,7 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
       } else if (path.extname(item) === '.png') {
         const file = path.join(srcDir, item);
         const hash = md5File.sync(file);
-        const relativeFile = file.split(SRC_DIRECTORY)[1].substr(1);
-        const imageId = relativeFile.replace(/[\\\/]/g, '_');
+        const imageId = getManifestID(file, SRC_DIRECTORY);
 
         const manifestHash = manifestRead[imageId] || false;
         if (manifestHash !== hash) {
@@ -48,7 +47,7 @@ const getWorkPlan = ({ srcDir = SRC_DIRECTORY, outDir = OUTPUT_DIRECTORY, manife
           });  
         } else {
           manifestWrite[imageId] = hash;
-          console.log(`Skipping ${relativeFile}`);
+          console.log(`Skipping ${getRelativeName(file, SRC_DIRECTORY)}`);
         }
       }
     }
@@ -75,7 +74,6 @@ async function compressImage(id, srcDir, outDir, imageId, manifestWrite) {
 
   const stats = fs.statSync(src);
   const filesize = stats['size'];
-  const relativeFile = src.split(SRC_DIRECTORY)[1].substr(1);
 
   if (!DRYRUN) {
     await imagemin([src], {
@@ -98,39 +96,15 @@ async function compressImage(id, srcDir, outDir, imageId, manifestWrite) {
     const filesizeAfter = statsAfter['size'];
     manifestWrite[imageId] = md5File.sync(dest);
 
-    console.log(`Compressed ${relativeFile} : ${filesize} -> ${filesizeAfter}`);
+    console.log(
+      `Compressed ${getRelativeName(src, SRC_DIRECTORY)} : ${filesize} -> ${filesizeAfter}`
+    );
   } else {
-    console.log(`Compressing ${relativeFile} : ${filesize}`);
+    console.log(`Compressing ${getRelativeName(src, SRC_DIRECTORY)} : ${filesize}`);
   }
 }
 
-const readManifest = () => {
-  let manifest = {};
-  try {
-    const rawData = fs.readFileSync(MANIFEST_FILE);
-    manifest = JSON.parse(rawData);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      console.log('Creating manifest');
-    } else {
-      throw err;
-    }
-  }
-  return manifest;
-};
-
-const writeManifest = (manifest) => {
-  if (!DRYRUN) {
-    try {
-      const rawData = JSON.stringify(manifest);
-      fs.writeFileSync(MANIFEST_FILE, rawData);
-    } catch (err) {
-      throw err;
-    }
-  }
-};
-
-const manifestRead = readManifest();
+const manifestRead = readManifest(MANIFEST_FILE);
 const manifestWrite = {};
 (async () => {
   const workPlan = getWorkPlan({ manifestRead, manifestWrite });
@@ -138,5 +112,5 @@ const manifestWrite = {};
     const data = workPlan[i];
     await compressImage(data.id, data.srcDir, data.outDir, data.imageId, manifestWrite);
   }
-  writeManifest(manifestWrite);
+  writeManifest(MANIFEST_FILE, manifestWrite);
 })();
