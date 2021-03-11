@@ -109,10 +109,21 @@ const EXPORT = {
   warnings: true,
 };
 
+const isExcluded = (dir) => {
+  const found = EXCLUDE_FOLDERS.find((e) => {
+    const excludePath = path.resolve(SRC_DIRECTORY, e);
+    if (excludePath === dir) return true;
+    const relative = path.relative(path.resolve(SRC_DIRECTORY, e), dir);
+    return relative && !relative.startsWith('..') && !path.isAbsolute(relative);
+  });
+  return found != null;
+};
+
 const getContents = (dir) => {
   let results = [];
   if (isExcluded(dir)) {
-    console.log('excluding ' + dir);
+    const relativePath = dir.split(SRC_DIRECTORY)[1].substr(1);
+    console.log(`Excluding ${relativePath}`);
     return [];
   }
   fs.readdirSync(dir).forEach(function (item) {
@@ -127,16 +138,6 @@ const getContents = (dir) => {
     }
   });
   return results;
-};
-
-const isExcluded = (dir) => {
-  const found = EXCLUDE_FOLDERS.find((e) => {
-    const excludePath = path.resolve(SRC_DIRECTORY, e);
-    if (excludePath === dir) return true;
-    const relative = path.relative(path.resolve(SRC_DIRECTORY, e), dir);
-    return relative && !relative.startsWith('..') && !path.isAbsolute(relative);
-  });
-  return found != null;
 };
 
 // prettier-ignore
