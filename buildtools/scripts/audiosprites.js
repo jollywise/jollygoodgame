@@ -21,7 +21,7 @@ const cosmiconfig = cosmiconfigSync('audiosprites').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
 console.log('Loaded config', config);
 
-const EXPORT_FILETYPES = config.exportFiletypes || 'mp3,mp4,ogg';
+const EXPORT_FILETYPES = config.exportFiletypes || 'ogg,m4a,mp3';
 const EXPORT_FORMATS = config.exportFormats || [
   { bitrate: 32, samplerate: 22050 },
   { bitrate: 64, samplerate: 44100 },
