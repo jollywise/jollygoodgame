@@ -99,5 +99,76 @@
     "dat.gui": "^0.7.6",
     "phaser": "3.24.1",
     "webfontloader": "^1.6.26"
+  },
+  "prettier": {
+    "printWidth": 100,
+    "useTabs": false,
+    "tabWidth": 2,
+    "semi": true,
+    "bracketSpacing": true,
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "jsxBracketSameLine": false,
+    "requirePragma": false,
+    "arrowParens": "always"
+  },
+  "browserslist": [
+    "last 1 version",
+    "ie >= 11",
+    "> 1%",
+    "iOS >= 9",
+    "android >= 4.4",
+    "not dead"
+  ],
+  "eslintIgnore": [
+    "node_modules"
+  ],
+  "eslintConfig": {
+    "extends": [
+      "prettier",
+      "plugin:compat/recommended"
+    ],
+    "plugins": [
+      "prettier"
+    ],
+    "parser": "babel-eslint",
+    "env": {
+      "browser": true,
+      "node": true,
+      "commonjs": true,
+      "es6": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 6,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "modules": true,
+        "arrowFunctions": true,
+        "restParams": true,
+        "experimentalObjectRestSpread": true
+      }
+    },
+    "settings": {
+      "import/resolver": "webpack"
+    },
+    "rules": {
+      "prettier/prettier": [
+        "error",
+        {
+          "endOfLine": "auto"
+        }
+      ],
+      "compat/compat": "off",
+      "no-console": "off",
+      "new-cap": "off",
+      "max-statements": "off"
+    },
+    "globals": {
+      "__DEBUG__": false,
+      "__DEBUG_BOUNDS__": false,
+      "__WATCH__": false,
+      "__SHORTCUTS_ENABLED__": false,
+      "Phaser": false
+    }
   }
 }

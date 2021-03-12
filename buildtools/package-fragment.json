@@ -9,7 +9,7 @@
     "jgg:compressImages": "jgg compressImages",
     "jgg:music": "jgg music",
     "jgg:spines": "jgg spines",
-    "jgg:spritesheets": "jgg spritesheets",
+    "jgg:spritesheets": "jgg spritesheets"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
@@ -86,25 +86,11 @@
     "requirePragma": false,
     "arrowParens": "always"
   },
-  "browserslist": [
-    "last 1 version",
-    "ie >= 11",
-    "> 1%",
-    "iOS >= 9",
-    "android >= 4.4",
-    "not dead"
-  ],
-  "eslintIgnore": [
-    "node_modules"
-  ],
+  "browserslist": ["last 1 version", "ie >= 11", "> 1%", "iOS >= 9", "android >= 4.4", "not dead"],
+  "eslintIgnore": ["node_modules"],
   "eslintConfig": {
-    "extends": [
-      "prettier",
-      "plugin:compat/recommended"
-    ],
-    "plugins": [
-      "prettier"
-    ],
+    "extends": ["prettier", "plugin:compat/recommended"],
+    "plugins": ["prettier"],
     "parser": "babel-eslint",
     "env": {
       "browser": true,
