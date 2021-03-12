@@ -1,5 +1,11 @@
 {
+  "name": "project",
+  "version": "1.0.0",
+  "description": "",
   "main": "main.js",
+  "webpackBuild": {
+    "title": "Project Title"
+  },
   "scripts": {
     "watch": "webpack-dev-server --config ./buildtools/webpack.config.js --env.target=local --env.buildtype=watch --env.minimize=false",
     "build:jollywise": "cross-env NODE_ENV=production webpack --config ./buildtools/webpack.config.js --env.target=jollywise --env.buildtype=dist --env.minimize=true",
