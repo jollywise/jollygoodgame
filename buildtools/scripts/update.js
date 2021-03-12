@@ -58,12 +58,18 @@ const mergePackageData = (current, merge) => {
   });
 };
 
-const current = readPackage(PACKAGE_FRAGMENT);
-getJGGModules().forEach((el) => {
-  const fragment = path.join(NODE_MODULES, `${el}/buildtools/package-fragment.json`);
-  if (fs.existsSync(fragment)) {
-    mergePackageData(current, readPackage(fragment));
-  }
-});
-mergePackageData(current, readPackage(PACKAGE_FRAGMENT));
-writePackage(PACKAGE_JSON, current);
+if (fs.existsSync(PACKAGE_FRAGMENT)) {
+  const current = readPackage(PACKAGE_FRAGMENT);
+  getJGGModules().forEach((el) => {
+    const fragment = path.join(NODE_MODULES, `${el}/buildtools/package-fragment.json`);
+    if (fs.existsSync(fragment)) {
+      mergePackageData(current, readPackage(fragment));
+    }
+  });
+  mergePackageData(current, readPackage(PACKAGE_FRAGMENT));
+  writePackage(PACKAGE_JSON, current);
+
+  console.log('Rebuilt package.json');
+} else {
+  console.log('No package-fragment.json file found - cannot continue');
+}
