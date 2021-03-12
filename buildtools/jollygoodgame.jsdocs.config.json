@@ -1,12 +1,13 @@
 {
   "source": {
     "includePattern": ".+\\.js(doc|x)?$",
-    "include": ["."],
-    "exclude": ["node_modules"]
+    "include": ["./src"],
+    "exclude": ["node_modules", "buildtools"]
   },
   "recurseDepth": 10,
   "opts": {
     "destination": "./docs/",
+    "template": "node_modules/ink-docstrap/template",
     "recurse": true
   }
 }
