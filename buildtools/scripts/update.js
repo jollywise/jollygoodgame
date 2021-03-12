@@ -4,14 +4,10 @@
 
 const fs = require('fs');
 const path = require('path');
-const { cosmiconfigSync } = require('cosmiconfig');
 
-const cosmiconfig = cosmiconfigSync('jggUpdate').search();
-const config = cosmiconfig ? cosmiconfig.config || {} : {};
-
-const ROOT_DIRECTORY = config.rootDirectory || path.resolve('.');
-const PACKAGE_JSON = config.packageJson || path.resolve(ROOT_DIRECTORY, 'package.json');
-const NODE_MODULES = config.nodeModules || path.resolve(ROOT_DIRECTORY, 'node_modules/@jollywise');
+const ROOT_DIRECTORY = path.resolve('.');
+const PACKAGE_JSON = path.resolve(ROOT_DIRECTORY, 'package.json');
+const NODE_MODULES = path.resolve(ROOT_DIRECTORY, 'node_modules/@jollywise');
 const PACKAGE_FRAGMENT = path.resolve(ROOT_DIRECTORY, 'package-fragment.json');
 
 const readPackage = (file) => {
