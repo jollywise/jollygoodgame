@@ -23,7 +23,7 @@ const readPackage = (file) => {
 
 const writePackage = (file, data) => {
   try {
-    fs.writeFileSync(file, JSON.stringify(data));
+    fs.writeFileSync(file, JSON.stringify(data, null, '\t'));
   } catch (err) {
     console.log('Error writing ' + file, err);
   }
