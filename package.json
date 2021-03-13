@@ -13,7 +13,7 @@
   "scripts": {
     "build:debug": "cross-env NODE_ENV=development webpack --config ./buildtools/jollygoodgame.webpack.config.js",
     "build:release": "cross-env NODE_ENV=production webpack --config ./buildtools/jollygoodgame.webpack.config.js",
-    "jsdoc": "jsdoc -c ./buildtools/jollygoodgame.jsdocs.config.json ./buildtools/tutorials"
+    "jsdoc": "jsdoc -c ./buildtools/jollygoodgame.jsdocs.config.json -u ./buildtools/tutorials"
   },
   "repository": {
     "type": "git",

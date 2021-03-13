@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Index</title>
+	<title>Documentation Tutorial: ComponentManager</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -74,46 +74,90 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
+			<section class="tutorial-section">
 
-	
-	
+<header>
+    
 
+    <h2>ComponentManager</h2>
+</header>
 
+<article>
+    <h2>summary</h2>
+<p>JollyGoodGame is built on a component system, providing access to a wide variety of pre-installed components.<br>
+Core components are mandatory and as such cannot be disabled, but can be extended and overwritten if needed.<br>
+Other components will only be included on request.</p>
+<h2>core components</h2>
+<ul>
+<li>copy</li>
+<li>settings</li>
+<li>soundController</li>
+<li>captions</li>
+</ul>
+<h2>optional components</h2>
+<ul>
+<li>vibrate</li>
+<li>gamehud</li>
+</ul>
+<h2>enabling optional components</h2>
+<p>Core components will always be installed. How-ever, you can turn optional ones on as desired.</p>
+<pre>
+const components = {
+  gamehud : true,
+  vibrate : true,
+}
+</pre>
+<h2>overwriting components</h2>
+<p>You can overwrite any of the components.<br>
+To do so, extend the default component class and pass through the extended class instead.</p>
+<p>You can also include a config object that will be passed to the components init method when it is installed.</p>
+<pre>
+const components = {
+  settings : ExtendedSettingsClass,
+  gamehud : { component : ExtendedGameHudClass, config : {} },
+  vibrate : true,
+}
+</pre>
+<h2>adding new components</h2>
+<p>Components are injected via the ComponentMap, which is used to define the core and optional components, along with their default classes to be used.</p>
+<p>A component should extend Phaser.Plugins.BasePlugin (https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.BasePlugin.html)</p>
+<p>It should then be added to either the CORE or OPTIONAL arrays of the component map.</p>
+<pre>
+{
+    component: NewComponentClass,
+    key: 'new_component_key',  
+    gameKey: true, 
+    sceneKey: true,
+}</pre>
+<ul>
+<li>component : The Component Class to install</li>
+<li>key : The key to use when adding to Phsers Plugin Manager</li>
+<li>gamekey : Optional, if true the key will be added to game scope</li>
+<li>sceneKey : Optional, if true the key will be added to scene scope</li>
+</ul>
+<h2>extending the component map</h2>
+<p>JollyGoodGame has its own default component map that it will check component options against.</p>
+<p>How-ever, if you are extending JollyGoodGame for a new framework base ( eg/ PBS/BBC ), you can include a component map specific to the new framework.</p>
+<p>To do this, create a component map that follows the same structure as the base one, and pass that through along with your component configuration when extending AppBase.</p>
+<p>The game will merge your new component map into it's default base one, and so all components will become available.</p>
+<pre>
+const componentMap = {
+  CORE : [], // an array of core components using the above configuration
+  OPTIONAL : [] // an array of optional components using the above configuration
+}
+</pre>
+</article>
 
-
-
-
-
-
-
-
-
-	
-	
-
-
-
-
-
-
-
-
-
-
+</section>
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
