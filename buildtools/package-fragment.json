@@ -7,9 +7,9 @@
     "title": "Project Title"
   },
   "scripts": {
-    "watch": "webpack-dev-server --config ./buildtools/webpack.config.js --env.target=local --env.buildtype=watch --env.minimize=false",
-    "build:jollywise": "cross-env NODE_ENV=production webpack --config ./buildtools/webpack.config.js --env.target=jollywise --env.buildtype=dist --env.minimize=true",
-    "dist:local": "cross-env NODE_ENV=production webpack --config ./buildtools/webpack.config.js --env.target=jollywise --env.buildtype=dist --env.minimize=true",
+    "watch": "webpack-dev-server --config ./node_modules/@jollywise/jollygoodgame/buildtools/webpack.config.js --env.target=local --env.buildtype=watch --env.minimize=false",
+    "build:jollywise": "cross-env NODE_ENV=production webpack --config ./node_modules/@jollywise/jollygoodgame/buildtools/webpack.config.js --env.target=jollywise --env.buildtype=dist --env.minimize=true",
+    "dist:local": "cross-env NODE_ENV=production webpack --config ./node_modules/@jollywise/jollygoodgame/buildtools/webpack.config.js --env.target=jollywise --env.buildtype=dist --env.minimize=true",
     "dist": "npm-run-all dist:local",
     "jgg:audiosprites": "jgg audiosprites",
     "jgg:compressImages": "jgg compressImages",
