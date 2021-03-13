@@ -59,7 +59,9 @@ const mergePackageData = (current, merge) => {
 };
 
 if (fs.existsSync(PACKAGE_FRAGMENT)) {
-  const current = readPackage(PACKAGE_FRAGMENT);
+  const current = {
+    '_jgg:generated': 'This package.json is generated. Please modify package-fragment.json instead',
+  };
   getJGGModules().forEach((el) => {
     const fragment = path.join(NODE_MODULES, `${el}/buildtools/package-fragment.json`);
     if (fs.existsSync(fragment)) {
