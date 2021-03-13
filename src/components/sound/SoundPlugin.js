@@ -1,5 +1,4 @@
-import Phaser from 'phaser';
-import { SETTINGS_EVENTS } from '../constants/Events';
+import { SETTINGS_EVENTS } from '@jollywise/jollygoodgame';
 
 const SFX_VOLUME = 0.5;
 const VO_VOLUME = 1;
@@ -10,12 +9,13 @@ const SFX_GROUP = 'sfx';
 const VO_GROUP = 'vo';
 const MUSIC_GROUP = 'music';
 const BUTTONAUDIO_GROUP = 'buttonAudio';
+const SCENE_ID = 'jggsoundcontroller';
 
-export class SoundController extends Phaser.Scene {
-  constructor({ game, key }) {
-    super({ key, active: true });
-    this.game = game;
-    this.key = key;
+export class SoundPlugin extends Phaser.Plugins.BasePlugin {
+  constructor(pluginManager) {
+    super(pluginManager);
+    this._events = new Phaser.Events.EventEmitter();
+    this._enableLogs = false;
     this.paused = false;
 
     this.sfxVolume = SFX_VOLUME;
@@ -27,14 +27,29 @@ export class SoundController extends Phaser.Scene {
     this.audioGroups[VO_GROUP] = { sounds: [], volume: this.voVolume };
     this.audioGroups[MUSIC_GROUP] = { sounds: [], volume: this.musicVolume };
     this.audioGroups[BUTTONAUDIO_GROUP] = { sounds: [], volume: this.buttonAudioVolume };
+  }
 
+  init() {
+    this.game.scene.add(SCENE_ID, {}, true);
     this.game.settings.on(SETTINGS_EVENTS.AUDIO_CHANGED, this.handleAudioChanged, this);
+    this.events.on('pause', this.onPaused, this);
+    this.events.on('resume', this.onResumed, this);
     this.handleAudioChanged();
   }
 
-  create() {
-    this.events.on('pause', this.onPaused, this);
-    this.events.on('resume', this.onResumed, this);
+  set enableLogs(value) {
+    this._enableLogs = value;
+  }
+
+  get events() {
+    return this._events;
+  }
+
+  get scene() {
+    if (!this._scene) {
+      this._scene = this.game.scene.getScene(SCENE_ID);
+    }
+    return this._scene;
   }
 
   handleAudioChanged() {
@@ -156,20 +171,20 @@ export class SoundController extends Phaser.Scene {
   // internal methods
 
   _fadeOut(audio, duration, onComplete = null, onCompleteScope = null) {
-    this.tweens.add({ targets: audio, volume: 0, duration, onComplete, onCompleteScope });
+    this.scene.tweens.add({ targets: audio, volume: 0, duration, onComplete, onCompleteScope });
   }
 
   _fadeIn(audio, volume, duration, onComplete = null, onCompleteScope = null) {
-    this.tweens.add({ targets: audio, volume, duration, onComplete, onCompleteScope });
+    this.scene.tweens.add({ targets: audio, volume, duration, onComplete, onCompleteScope });
   }
 
   _playAudioSound(spriteID, group, opts = {}) {
     if (!this.game.cache.audio.exists(spriteID)) {
-      console.error('SoundController::_playAudioSound not found', spriteID);
+      this.logError('SoundController::_playAudioSound not found', spriteID);
       return false;
     }
 
-    console.log('SoundController::_playAudioSound', spriteID, group, opts);
+    this.log('SoundController::_playAudioSound', spriteID, group, opts);
 
     const { volume = 1, loop = false, delay = null, fadeIn = false } = opts;
     const audio = this.game.sound.add(spriteID);
@@ -192,11 +207,11 @@ export class SoundController extends Phaser.Scene {
 
   _playAudioSprite(spriteID, id, group, opts = {}) {
     if (!this.game.cache.audio.exists(spriteID)) {
-      console.error('SoundController::_playAudioSprite not found', spriteID);
+      this.logError('SoundController::_playAudioSprite not found', spriteID);
       return false;
     }
 
-    console.log('SoundController::_playAudioSprite', spriteID, id, group, opts);
+    this.log('SoundController::_playAudioSprite', spriteID, id, group, opts);
 
     const { volume = 1, loop = false, delay = null, fadeIn = false } = opts;
     const audioSprite = this.game.sound.addAudioSprite(spriteID);
@@ -228,7 +243,7 @@ export class SoundController extends Phaser.Scene {
 
   addAudioToGroup(audio, group) {
     if (!this.audioGroups[group]) {
-      console.error('Unknown audio group', group);
+      this.logError('Unknown audio group', group);
       return;
     }
     this.audioGroups[group].sounds.push({ audio: audio, volume: audio.volume });
@@ -239,7 +254,7 @@ export class SoundController extends Phaser.Scene {
 
   removeAudioFromGroup(audio, group) {
     if (!this.audioGroups[group]) {
-      console.error('Unknown audio group', group);
+      this.logError('Unknown audio group', group);
       return;
     }
     this.audioGroups[group].sounds = this.audioGroups[group].sounds.filter(
@@ -249,7 +264,7 @@ export class SoundController extends Phaser.Scene {
 
   setGroupVolume(group, volume) {
     if (!this.audioGroups[group]) {
-      console.error('Unknown audio group', group);
+      this.logError('Unknown audio group', group);
       return;
     }
     this.audioGroups[group].volume = volume;
@@ -260,7 +275,7 @@ export class SoundController extends Phaser.Scene {
 
   stopGroup(group, opts = {}) {
     if (!this.audioGroups[group]) {
-      console.error('Unknown audio group', group);
+      this.logError('Unknown audio group', group);
       return;
     }
     this.audioGroups[group].sounds.forEach((el) => {
@@ -271,7 +286,7 @@ export class SoundController extends Phaser.Scene {
 
   pauseGroup(group) {
     if (!this.audioGroups[group]) {
-      console.error('Unknown audio group', group);
+      this.logError('Unknown audio group', group);
       return;
     }
     this.audioGroups[group].sounds.forEach((el) => {
@@ -281,7 +296,7 @@ export class SoundController extends Phaser.Scene {
 
   resumeGroup(group) {
     if (!this.audioGroups[group]) {
-      console.error('Unknown audio group', group);
+      this.logError('Unknown audio group', group);
       return;
     }
     this.audioGroups[group].sounds.forEach((el) => {
@@ -307,5 +322,17 @@ export class SoundController extends Phaser.Scene {
         this.resumeGroup(group);
       }
     });
+  }
+
+  logError(...args) {
+    if (this._enableLogs) {
+      console.error(...args);
+    }
+  }
+
+  log(...args) {
+    if (this._enableLogs) {
+      console.log(...args);
+    }
   }
 }

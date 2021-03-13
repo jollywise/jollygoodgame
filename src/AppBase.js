@@ -1,14 +1,14 @@
 import Phaser from 'phaser';
 import { getDeviceMetric } from './utils/deviceDetection';
-import { ViewportControllerBase, TrackingControllerBase } from './controller';
+import { ViewportControllerBase } from './controller';
 import { AppUrls, Saves } from './model';
-import { SoundController } from './scenes/SoundController';
-import { PointerController } from './scenes/PointerController';
-import { SettingsBase } from './settings/SettingsBase';
 import { Shortcuts, ShortcutStub } from './shortcuts';
+import { ComponentManager } from '@jollywise/jollygoodgame/src/components/ComponentManager';
+import { ComponentMap } from '@jollywise/jollygoodgame/src/components/ComponentMap';
 
+/** */
 export class AppBase extends Phaser.Game {
-  constructor({ config, paths, options = {} }) {
+  constructor({ config, paths, options = {}, components = {}, componentMap = {} }) {
     super(config);
     const { shortcutsContainerId, viewPortType } = options;
     this._gameConfig = config;
@@ -18,16 +18,7 @@ export class AppBase extends Phaser.Game {
     this._gameController = null;
     this._appUrls = new AppUrls(this, paths);
 
-    this._settings = new SettingsBase({ game: this });
-
-    this._pointerController = new PointerController({ game: this, key: 'pointerController' });
-    this.scene.add(this._pointerController.key, this._pointerController);
-
-    this._soundController = new SoundController({ game: this, key: 'soundController' });
-    this.scene.add(this._soundController.key, this._soundController);
-
     this._viewportController = new ViewportControllerBase({ game: this, viewPortType });
-    this._trackingController = new TrackingControllerBase({ game: this });
 
     this._saves = new Saves();
     if (__SHORTCUTS_ENABLED__) {
@@ -41,6 +32,13 @@ export class AppBase extends Phaser.Game {
       title: 'Clear saves',
       value: this._saves.deleteSaves.bind(this._saves),
     });
+
+    //  install components
+    ComponentManager.InstallGameComponents(
+      this,
+      components,
+      ComponentManager.MergeComponentMaps(ComponentMap, componentMap)
+    );
   }
 
   init() {}
@@ -77,28 +75,12 @@ export class AppBase extends Phaser.Game {
     return this._gameController;
   }
 
-  get pointerController() {
-    return this._pointerController;
-  }
-
-  get soundController() {
-    return this._soundController;
-  }
-
   get viewportController() {
     return this._viewportController;
   }
 
-  get tracking() {
-    return this._trackingController;
-  }
-
   get saves() {
     return this._saves;
-  }
-
-  get settings() {
-    return this._settings;
   }
 
   get shortcuts() {

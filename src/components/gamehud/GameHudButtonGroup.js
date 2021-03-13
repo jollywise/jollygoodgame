@@ -1,4 +1,4 @@
-export default class HudButtonGroup {
+export class GameHudButtonGroup {
   constructor(scene, { positiondata, viewport }) {
     this.scene = scene;
     this.groupAnchor = positiondata.anchor_group || { x: 0, y: 0 };
@@ -67,7 +67,6 @@ export default class HudButtonGroup {
   updatePosition(viewport) {
     this.viewport = viewport || this.viewport;
 
-    
     this.groupwidth = 0;
     this.groupheight = 0;
     this.buttons.forEach((button) => {

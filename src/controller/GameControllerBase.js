@@ -1,5 +1,3 @@
-// import { UIModel } from '../model/UIModel';
-import { CopyModel } from '../model/CopyModel';
 import { VIEWPORT_EVENTS } from '../constants/Events';
 
 export class GameControllerBase {
@@ -22,7 +20,6 @@ export class GameControllerBase {
   }
 
   assetsLoaded() {
-    this.copyModel = new CopyModel({ xml: this.game.cache.xml.get('copy_xml') });
     this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.handleViewportUpdated, this);
     this.game.viewportController.updateViewport();
   }
