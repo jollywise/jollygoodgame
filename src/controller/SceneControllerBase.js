@@ -100,7 +100,7 @@ export class SceneControllerBase {
    *
    */
 
-  switchScene(sceneKey, cdatafig) {
+  switchScene(sceneKey, data) {
     // console.log('switchScene', sceneKey);
     if (this.currentSceneKey) {
       this.stopScene(this.currentSceneKey);
