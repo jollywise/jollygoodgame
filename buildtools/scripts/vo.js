@@ -10,7 +10,7 @@ const md5 = require('md5');
 const csv = require('csv-parser');
 const AWS = require('aws-sdk');
 const { cosmiconfigSync } = require('cosmiconfig');
-const { readManifest, writeManifest, getRelativeName } = require('./jbb-libs');
+const { readManifest, writeManifest, getRelativeName } = require('./jgg-libs');
 
 const cosmiconfig = cosmiconfigSync('vo').search();
 const config = cosmiconfig ? cosmiconfig.config || {} : {};
@@ -48,7 +48,7 @@ const getWorkPlan = ({ srcFile = SRC_FILE, outDir = OUTPUT_DIRECTORY, manifestRe
 
         keys.push(id);
         captions[id] = text;
-        
+
         const outputFile = path.join(outDir, area, id + '.mp3');
         const hash = md5(text);
         const manifestHash = manifestRead[id] || null;
