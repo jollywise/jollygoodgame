@@ -69,6 +69,7 @@ if (fs.existsSync(PACKAGE_FRAGMENT)) {
     }
   });
   mergePackageData(current, readPackage(PACKAGE_FRAGMENT));
+  delete current.scripts['jgg:init'];
   writePackage(PACKAGE_JSON, current);
 
   console.log('Rebuilt package.json');
