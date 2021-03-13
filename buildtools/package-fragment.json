@@ -17,7 +17,7 @@
     "jgg:spines": "jgg spines",
     "jgg:spritesheets": "jgg spritesheets",
     "jgg:vo": "jgg vo",
-    "preinstall": "jgg update"
+    "jgg:update": "jgg update"
   },
   "devDependencies": {
     "@babel/core": "^7.13.10",
