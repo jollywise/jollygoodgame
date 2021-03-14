@@ -1,7 +1,12 @@
 import { SETTINGS_EVENTS } from '@jollywise/jollygoodgame';
 import * as dat from 'dat.gui';
-
-export class SettingsPlugin extends Phaser.Plugins.BasePlugin {
+/**
+ *
+ * @alias components.SettingsPlugin
+ * @classdesc A Settings component allowing access to some standard items
+ * @todo write documentation
+ */
+class SettingsPlugin extends Phaser.Plugins.BasePlugin {
   constructor(scene, pluginManager) {
     super(scene, pluginManager);
     this._model = {
@@ -149,3 +154,5 @@ export class SettingsPlugin extends Phaser.Plugins.BasePlugin {
     this._model = null;
   }
 }
+
+export { SettingsPlugin };

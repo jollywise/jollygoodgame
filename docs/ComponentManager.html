@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Tutorials</title>
+	<title>Documentation Class: ComponentManager</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="AppBase.html">AppBase</a></li><li><a href="components.CaptionsPlugin.html">components.CaptionsPlugin</a></li><li><a href="components.ComponentManager.html">components.ComponentManager</a></li><li><a href="components.CopyPlugin.html">components.CopyPlugin</a></li><li><a href="components.GameHudPlugin.html">components.GameHudPlugin</a></li><li><a href="components.SettingsPlugin.html">components.SettingsPlugin</a></li><li><a href="components.SoundPlugin.html">components.SoundPlugin</a></li><li><a href="components.VibratePlugin.html">components.VibratePlugin</a></li><li><a href="SceneControllerBase.html">SceneControllerBase</a></li>
+					<li><a href="AppBase.html">AppBase</a></li><li><a href="component.CaptionsPlugin.html">component.CaptionsPlugin</a></li><li><a href="ComponentManager.html">ComponentManager</a></li><li><a href="CopyPlugin.html">CopyPlugin</a></li><li><a href="SceneControllerBase.html">SceneControllerBase</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-ComponentManager.html">ComponentManager</a></li>
+					<li><a href="tutorial-ComponentManager_.html">ComponentManager</a></li>
 				</ul>
 			</li>
 			
@@ -72,14 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Tutorials</h1>
+	<h1 class="page-title">Class: ComponentManager</h1>
 <section>
 
 <header>
     
         <h2>
-        
+        ComponentManager
         </h2>
+        
+            <div class="class-description"><p>Installs components into the game instance, based on supplied map and options</p></div>
         
     
 </header>
@@ -89,8 +91,24 @@
     <div class="container-overview">
     
         
+<hr>
+<dt>
+    <h4 class="name" id="ComponentManager"><span class="type-signature"></span>new ComponentManager()</h4>
+    
+    
+</dt>
+<dd>
 
-        
+    
+
+    
+
+    
+
+    
+    
+
+    
 <dl class="details">
     
 
@@ -130,7 +148,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -139,44 +171,251 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-            <dt><a href="AppBase.html">AppBase</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id=".InstallGameComponents"><span class="type-signature">&lt;static> </span>InstallGameComponents(game, componentMap [, userconfig])</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Installs the Components, ensuring mandatory Components are installed while allowing for overrides by user</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
         
-            <dt><a href="components.CaptionsPlugin.html">CaptionsPlugin</a></dt>
-            <dd></dd>
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
         
-            <dt><a href="components.ComponentManager.html">ComponentManager</a></dt>
-            <dd></dd>
+        <th>Name</th>
         
-            <dt><a href="components.CopyPlugin.html">CopyPlugin</a></dt>
-            <dd></dd>
+
+        <th>Type</th>
+
         
-            <dt><a href="components.GameHudPlugin.html">GameHudPlugin</a></dt>
-            <dd></dd>
+        <th>Argument</th>
         
-            <dt><a href="components.SettingsPlugin.html">SettingsPlugin</a></dt>
-            <dd></dd>
+
         
-            <dt><a href="components.SoundPlugin.html">SoundPlugin</a></dt>
-            <dd></dd>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>game</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Phaser.Game</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The Phaser game instance to install the Components</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>componentMap</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The component map to check against</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>userconfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>The user config for component options</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Examples</h5>
         
-            <dt><a href="components.VibratePlugin.html">VibratePlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="SceneControllerBase.html">SceneControllerBase</a></dt>
-            <dd></dd>
+        <p class="code-caption">example of userconfig</p>
+    
+    <pre class="sunlight-highlight-javascript">{
+    // enable component, using default class
+    gamehud : true, 
+    // enable component, overriding with a custom class that extends the default
+    settings : ExtendedSettingsClass,
+    // enable component, overriding with a custom class, and pass a config to component init method
+    captions : { component : ExtendedCaptionsClass, config : {} },
+  }</pre>
+
+        <p class="code-caption">example of componentMap</p>
+    
+    <pre class="sunlight-highlight-javascript">{
+   &quot;component_key&quot; :  {
+      // the class to install as the component
+      component: NewComponentClass, 
+      // add the component to game scope using ( uses key )
+      gameKey: true,               
+      // add the component to scene scope using ( uses key ) 
+      sceneKey: true,      
+      // define component as option or a core component        
+      optional : false             
+    }
+  }</pre>
+
+
+    
+</dd>
+
         </dl>
-    
-
-    
-
-    
-
-    
-
     
 
     
@@ -226,7 +465,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2021-03-14T03:04:44+00:00
+		on 2021-03-14T02:42:13+00:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

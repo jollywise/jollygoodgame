@@ -1,6 +1,5 @@
 /**
- *
- * @class CaptionsPlugin
+ * @alias components.CaptionsPlugin
  * @classdesc Adds support for in game captions. Renders captions over the game within a dom element<br/><br/>
  * 
  * The dom element is styled following the below defaults
@@ -20,7 +19,8 @@
 
  * </code></pre>
  * <br>
- * ***This is a mandatory jgg component, and so will be available to any game extending {@link AppBase}.*** <br> see {@link ComponentManager|Component Manager}
+ * 
+ * ***This is a mandatory jgg component, and so will be available to any game extending {@link AppBase}.*** <br> see {@link components.ComponentManager|Component Manager}
  * <pre><code>
  * // access via scene
  * scene.captions
@@ -31,7 +31,7 @@
  * </code></pre>
  *
  */
-export class CaptionsPlugin extends Phaser.Plugins.BasePlugin {
+class CaptionsPlugin extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
     super(pluginManager);
     this._style = {
@@ -273,3 +273,5 @@ export class CaptionsPlugin extends Phaser.Plugins.BasePlugin {
     });
   }
 }
+
+export { CaptionsPlugin };

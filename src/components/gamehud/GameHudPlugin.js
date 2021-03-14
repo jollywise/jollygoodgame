@@ -2,8 +2,15 @@ import { ButtonSimple, VIEWPORT_EVENTS } from '@jollywise/jollygoodgame';
 import { GameHudButtonGroup } from './GameHudButtonGroup';
 
 const STATE_EMPTY = { modal: false, buttons: [] };
-
-export class GameHudPlugin extends Phaser.Plugins.BasePlugin {
+/**
+ *
+ * @alias components.GameHudPlugin
+ * @classdesc A GameHud component that displays UI buttons
+ * @todo write documentation
+ * @todo add ability to add UI buttons on the fly
+ * @todo add ability to add UI graphics
+ */
+class GameHudPlugin extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
     super(pluginManager);
 
@@ -226,3 +233,5 @@ export class GameHudPlugin extends Phaser.Plugins.BasePlugin {
     });
   }
 }
+
+export { GameHudPlugin };

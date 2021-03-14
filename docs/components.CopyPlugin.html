@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Tutorials</title>
+	<title>Documentation Class: CopyPlugin</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -37,13 +37,6 @@
 				</ul>
 			</li>
 			
-			<li class="dropdown">
-				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
-				<ul class="dropdown-menu ">
-					<li><a href="tutorial-ComponentManager.html">ComponentManager</a></li>
-				</ul>
-			</li>
-			
 		</ul>
         
             <div class="col-sm-3 col-md-3">
@@ -72,14 +65,25 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Tutorials</h1>
+	<h1 class="page-title">Class: CopyPlugin</h1>
 <section>
 
 <header>
     
         <h2>
-        
+        CopyPlugin
         </h2>
+        
+            <div class="class-description"><p>Manages in-game strings. Register a copy document ( xml or json ), and then you can use this for lookups within the game <br/><br/>
+<em><strong>This is a mandatory jgg component, and so will be available to any game extending <a href="AppBase.html">AppBase</a>.</strong></em> <br> see Component Manager</p>
+<pre><code>
+// access via scene
+scene.copy
+
+// access via game
+game.copy
+
+</code></pre></div>
         
     
 </header>
@@ -89,8 +93,24 @@
     <div class="container-overview">
     
         
+<hr>
+<dt>
+    <h4 class="name" id="CopyPlugin"><span class="type-signature"></span>new CopyPlugin()</h4>
+    
+    
+</dt>
+<dd>
 
-        
+    
+
+    
+
+    
+
+    
+    
+
+    
 <dl class="details">
     
 
@@ -130,7 +150,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -139,44 +173,446 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-            <dt><a href="AppBase.html">AppBase</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id="addCopyFromJSON"><span class="type-signature"></span>addCopyFromJSON(json)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>add copy from a json object containing id/value pairs</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
         
-            <dt><a href="components.CaptionsPlugin.html">CaptionsPlugin</a></dt>
-            <dd></dd>
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
         
-            <dt><a href="components.ComponentManager.html">ComponentManager</a></dt>
-            <dd></dd>
+        <th>Name</th>
         
-            <dt><a href="components.CopyPlugin.html">CopyPlugin</a></dt>
-            <dd></dd>
+
+        <th>Type</th>
+
         
-            <dt><a href="components.GameHudPlugin.html">GameHudPlugin</a></dt>
-            <dd></dd>
+
         
-            <dt><a href="components.SettingsPlugin.html">SettingsPlugin</a></dt>
-            <dd></dd>
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>json</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">JSON</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>json object containing copy</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
         
-            <dt><a href="components.SoundPlugin.html">SoundPlugin</a></dt>
-            <dd></dd>
+        <p class="code-caption">Example of expected json structure.</p>
+    
+    <pre class="sunlight-highlight-json"> 
+  
+  {
+    &quot;title_welcome&quot; : &quot;Game-Name&quot;,
+    &quot;title_complete&quot; : &quot;Game-Complete&quot;
+  }</pre>
+
+
+    
+</dd>
+
         
-            <dt><a href="components.VibratePlugin.html">VibratePlugin</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id="addCopyFromXML"><span class="type-signature"></span>addCopyFromXML(xml)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>add copy from an xml object containing item elements</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
         
-            <dt><a href="SceneControllerBase.html">SceneControllerBase</a></dt>
-            <dd></dd>
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>xml</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">XML</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>xml document containing copy</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h5>Example</h5>
+        
+        <p class="code-caption">Example of expected xml structure.</p>
+    
+    <pre class="sunlight-highlight-xml"> 
+      &lt;data&gt;
+        &lt;item id=&quot;title_welcome&quot;&gt;&lt;![CDATA[Game-Name]]&gt;&lt;/item&gt;
+        &lt;item id=&quot;title_complete&quot;&gt;&lt;![CDATA[Game-Complete]]&gt;&lt;/item&gt;
+      &lt;/data&gt;</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="get"><span class="type-signature"></span>get(copyId)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>copyId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>ID of copy to fetch, as reference in supplied xml or json configuration</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    <p>The paired copy if found, returns empty string if not.</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
         </dl>
-    
-
-    
-
-    
-
-    
-
     
 
     
@@ -226,7 +662,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2021-03-14T03:04:44+00:00
+		on 2021-03-14T03:15:57+00:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

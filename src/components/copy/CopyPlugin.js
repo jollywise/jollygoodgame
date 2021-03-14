@@ -1,6 +1,6 @@
 /**
  *
- * @class CopyPlugin
+ * @alias components.CopyPlugin
  * @classdesc Manages in-game strings. Register a copy document ( xml or json ), and then you can use this for lookups within the game <br/><br/>
  * ***This is a mandatory jgg component, and so will be available to any game extending {@link AppBase}.*** <br> see {@link ComponentManager|Component Manager}
  *
@@ -14,7 +14,7 @@
  * </code></pre>
  *
  */
-export class CopyPlugin extends Phaser.Plugins.BasePlugin {
+class CopyPlugin extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
     super(pluginManager);
     this._copy = {};
@@ -80,3 +80,5 @@ export class CopyPlugin extends Phaser.Plugins.BasePlugin {
     super.destroy();
   }
 }
+
+export { CopyPlugin };

@@ -11,7 +11,13 @@ const MUSIC_GROUP = 'music';
 const BUTTONAUDIO_GROUP = 'buttonAudio';
 const SCENE_ID = 'jggsoundcontroller';
 
-export class SoundPlugin extends Phaser.Plugins.BasePlugin {
+/**
+ *
+ * @alias components.SoundPlugin
+ * @classdesc A Sound Controller, used to manage game sounds
+ * @todo write documentation
+ */
+class SoundPlugin extends Phaser.Plugins.BasePlugin {
   constructor(pluginManager) {
     super(pluginManager);
     this._events = new Phaser.Events.EventEmitter();
@@ -338,3 +344,5 @@ export class SoundPlugin extends Phaser.Plugins.BasePlugin {
     }
   }
 }
+
+export { SoundPlugin };

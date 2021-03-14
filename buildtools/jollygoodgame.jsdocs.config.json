@@ -9,5 +9,6 @@
     "destination": "./docs/",
     "template": "node_modules/ink-docstrap/template",
     "recurse": true
-  }
+  },
+  "plugins": ["plugins/markdown"]
 }

@@ -34,7 +34,7 @@ export class AppBase extends Phaser.Game {
     });
 
     //  install components
-    ComponentManager.InstallGameComponents(this, components, {...componentMap, ...ComponentMap});
+    ComponentManager.InstallGameComponents(this, { ...componentMap, ...ComponentMap }, components);
   }
 
   init() {}

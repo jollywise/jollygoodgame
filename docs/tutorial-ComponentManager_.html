@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Tutorials</title>
+	<title>Documentation Tutorial: ComponentManager</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="AppBase.html">AppBase</a></li><li><a href="components.CaptionsPlugin.html">components.CaptionsPlugin</a></li><li><a href="components.ComponentManager.html">components.ComponentManager</a></li><li><a href="components.CopyPlugin.html">components.CopyPlugin</a></li><li><a href="components.GameHudPlugin.html">components.GameHudPlugin</a></li><li><a href="components.SettingsPlugin.html">components.SettingsPlugin</a></li><li><a href="components.SoundPlugin.html">components.SoundPlugin</a></li><li><a href="components.VibratePlugin.html">components.VibratePlugin</a></li><li><a href="SceneControllerBase.html">SceneControllerBase</a></li>
+					<li><a href="AppBase.html">AppBase</a></li><li><a href="component.CaptionsPlugin.html">component.CaptionsPlugin</a></li><li><a href="component.ComponentManager.html">component.ComponentManager</a></li><li><a href="component.CopyPlugin.html">component.CopyPlugin</a></li><li><a href="SceneControllerBase.html">SceneControllerBase</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="tutorials.list.html" class="dropdown-toggle" data-toggle="dropdown">Tutorials<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="tutorial-ComponentManager.html">ComponentManager</a></li>
+					<li><a href="tutorial-ComponentManager_.html">ComponentManager</a></li>
 				</ul>
 			</li>
 			
@@ -67,137 +67,96 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
-
-	<h1 class="page-title">Tutorials</h1>
-<section>
+			<section class="tutorial-section">
 
 <header>
     
-        <h2>
-        
-        </h2>
-        
-    
+
+    <h2>ComponentManager</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="AppBase.html">AppBase</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.CaptionsPlugin.html">CaptionsPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.ComponentManager.html">ComponentManager</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.CopyPlugin.html">CopyPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.GameHudPlugin.html">GameHudPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.SettingsPlugin.html">SettingsPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.SoundPlugin.html">SoundPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.VibratePlugin.html">VibratePlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="SceneControllerBase.html">SceneControllerBase</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+    <h2>summary</h2>
+<p>JollyGoodGame is built on a component system, providing access to a wide variety of pre-installed components.<br>
+Core components are mandatory and as such cannot be disabled, but can be extended and overwritten if needed.<br>
+Other components will only be included on request.</p>
+<h2>core components</h2>
+<ul>
+<li>copy</li>
+<li>settings</li>
+<li>soundController</li>
+<li>captions</li>
+</ul>
+<h2>optional components</h2>
+<ul>
+<li>vibrate</li>
+<li>gamehud</li>
+</ul>
+<h2>enabling optional components</h2>
+<p>Core components will always be installed. How-ever, you can turn optional ones on as desired.</p>
+<pre>
+const components = {
+  gamehud : true,
+  vibrate : true,
+}
+</pre>
+<h2>overwriting components</h2>
+<p>You can overwrite any of the components.<br>
+To do so, extend the default component class and pass through the extended class instead.</p>
+<p>You can also include a config object that will be passed to the components init method when it is installed.</p>
+<pre>
+const components = {
+  settings : ExtendedSettingsClass,
+  gamehud : { component : ExtendedGameHudClass, config : {} },
+  vibrate : true,
+}
+</pre>
+<h2>adding new components</h2>
+<p>Components are injected via the ComponentMap, which is used to define the core and optional components, along with their default classes to be used.</p>
+<p>A component should extend Phaser.Plugins.BasePlugin (https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.BasePlugin.html)</p>
+<p>It should then be added to either the CORE or OPTIONAL arrays of the component map.</p>
+<pre>
+const component_config = {
+    component: NewComponentClass,
+    gameKey: true, 
+    sceneKey: true,
+    optional : false
+}</pre>
+<ul>
+<li>component : The Component Class to install</li>
+<li>key : The key to use when adding to Phsers Plugin Manager</li>
+<li>gamekey : Optional, if true the key will be added to game scope</li>
+<li>sceneKey : Optional, if true the key will be added to scene scope</li>
+<li>optional : define if the plugin is a core component or can be turned off</li>
+</ul>
+<h2>extending the component map</h2>
+<p>JollyGoodGame has its own default component map that it will check component options against.</p>
+<p>How-ever, if you are extending JollyGoodGame for a new framework base ( eg/ PBS/BBC ), you can include a component map specific to the new framework.</p>
+<p>To do this, create a component map that follows the same structure as the base one, and pass that through along with your component configuration when extending AppBase.</p>
+<p>The game will merge your new component map into it's default base one, and so all components will become available.</p>
+<pre>
+const componentMap = {
+  key : { ...component_config }
+}
+</pre>
+<h2>AppBase</h2>
+<p>The App base is where the components are passed through.
+Append the options to the current arguements being passed through to the constructor</p>
+<pre>
+new AppBase( { ..originaloptions, components, componentMap } )
+</pre>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
@@ -226,7 +185,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.6.6</a>
 	
-		on 2021-03-14T03:04:44+00:00
+		on 2021-03-14T02:55:24+00:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
