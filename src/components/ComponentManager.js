@@ -97,6 +97,38 @@
   new AppBase( { ..originaloptions, components, componentMap } )
   </pre>
 
+  ## Game breaking changes
+
+  This new system will break any games of frameworks that update to it.
+  In theory these changes will be minor.
+
+  ### Extending AppBase : Framework Level
+
+  There should not be much to change here, apart from ensuring your default components are configured. <br><br>
+  A frameworks AppBase should set its default options, and apply any custom component maps they may have in the constructor.super().
+
+  ### Extending AppBase : Game Level
+
+  A game should only need to configure the component options and pass them through the constructor.super(). <br> <br>
+  The Component Map should be ignored at this level. In the event that it needs a custom component, it should install that component in the standard phaser way.
+  
+  ### components / plugins
+
+  A lot of pluginns are either added in extended AppBase or GameController, these comoponents should be updated to extend the default ones and injected via component options.
+
+  ### component scope
+
+  Previously a lot of scope has been on the game controller, these refrences will be removed and moved onto the game and/or scene scopes.
+  eg/
+
+  <pre>
+  // old scope...
+  game.controller.copyModel.get('id');
+  // new scope...
+  game.copy.get('id);
+  scene.copy.get('id);
+  </pre>
+
  * 
  */
 
