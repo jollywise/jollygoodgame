@@ -22,7 +22,7 @@ export const InstallGameComponents = (game, componentMap) => {
 };
 
 /**
- *
+ * @method
  * @param {ComponentMap} defaultMap The master component map
  * @param {Componentmap} optionalMap The optional component map to merge in
  * @returns {ComponentMap} a merged component map that maintains the requirements of the master map.
