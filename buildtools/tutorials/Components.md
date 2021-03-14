@@ -95,13 +95,9 @@ const FrameWorkApp extends AppBase {
 You can also create new components and add themto the Component Map.
 It is recommended that this is only done on a framework level, and a framework should have it's own default map to check options against.
 
-To add a new component - create a plugin extending either Phaser.Plugins.BasePlugin or Phaser.Plugins.ScenePlugin and add it to the map, be careful to use a unique component key.
+To add a new component - create a plugin extending either [Phaser.Plugins.BasePlugin](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.BasePlugin.html) or Phaser.[Plugins.ScenePlugin](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.ScenePlugin.html) and add it to the map, be careful to use a unique component key.
 
-Phasers plugin system can install plugins as global or scene plugins. Global plugins share their props accross the whole game, while scene plugins are specific to the scene.
-
-The plugin will be installed as either global or scene based on what you extended.
-
-example of component added to map
+The game will automatically detect which type of plugin is extended and install them accordingly as game components.
 
 <pre>
 {
@@ -121,3 +117,5 @@ example of component added to map
   }
 }
 </pre>
+
+You can still create and install Phaser Plugins via the standard way, and is reccomended to do so with any bespoke plugins being added at the game level.
