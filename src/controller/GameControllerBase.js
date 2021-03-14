@@ -10,10 +10,6 @@ export class GameControllerBase {
     this.rotatePaused = false;
   }
 
-  setSceneController(sceneController) {
-    this.sceneController = sceneController;
-  }
-
   // try to open external settings, if it fails we will need to show our own settings page
   showSettings() {
     return this.game.settings.showSettings();
@@ -48,8 +44,8 @@ export class GameControllerBase {
     }
     this.paused = true;
     this.game.scene.pause('soundController');
-    if (this.sceneController) {
-      this.sceneController.pause();
+    if (this.game.sceneController) {
+      this.game.sceneController.pause();
     }
     this.onPaused();
   }
@@ -61,8 +57,8 @@ export class GameControllerBase {
     }
     this.paused = false;
     this.game.scene.resume('soundController');
-    if (this.sceneController) {
-      this.sceneController.resume();
+    if (this.game.sceneController) {
+      this.game.sceneController.resume();
     }
     this.onResumed();
   }

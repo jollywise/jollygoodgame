@@ -53,6 +53,7 @@ export class BootBase extends Phaser.Scene {
     this.load.on('loaderror', this.handleLoadError);
     this.load.on('complete', this.handleLoadComplete);
     // override and add implementation
+    this.handleLoadComplete();
   }
 
   loadStart() {

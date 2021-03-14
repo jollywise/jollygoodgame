@@ -21,7 +21,6 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
     this._buttonGroups = {};
     this._savedStates = [];
     this._events = new Phaser.Events.EventEmitter();
-    this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.updatePosition, this);
   }
 
   // =============================================================================================
@@ -31,6 +30,10 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
   init(config) {
     this.setHudConfig(config);
     this.game.scene.add('Hud', {}, true);
+  }
+
+  start() {
+    this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.updatePosition, this);
   }
 
   setHudConfig(config) {
@@ -74,6 +77,7 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
     const stateconfig = stateid === 'EMPTY' ? STATE_EMPTY : this._hudConfig.states[stateid];
     if (stateconfig) {
       this._state = { id: stateid };
+      console.log('stateconfig.modal', stateconfig.modal);
       this.showModal(stateconfig.modal);
       this._createStateButtons(stateconfig.buttons);
     }
@@ -97,6 +101,7 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
   }
 
   _clearCurrentState() {
+    this.showModal(false);
     this._clearStateButtons();
   }
 
@@ -201,7 +206,7 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
   // =============================================================================================
 
   // public
-  showModal(value = true) {
+  showModal(value) {
     if (value) this._addModal();
     else this._removeModal();
   }
@@ -209,6 +214,7 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
   // private
   _addModal() {
     if (!this._modal) {
+      console.log('ADD MODAL');
       const { width, height } = this.game.scale;
       const { colour = 0x000000, alpha = 0.75 } = this._hudConfig.modal || {};
       this._modal = this.scene.add.rectangle(0, 0, width, height, colour, alpha);

@@ -37,7 +37,7 @@ class SoundPlugin extends Phaser.Plugins.BasePlugin {
 
   init() {}
 
-  boot() {
+  start() {
     this.game.scene.add(SCENE_ID, {}, true);
     this.game.settings.on(SETTINGS_EVENTS.AUDIO_CHANGED, this.handleAudioChanged, this);
     this.events.on('pause', this.onPaused, this);

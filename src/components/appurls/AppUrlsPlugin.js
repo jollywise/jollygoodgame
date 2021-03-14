@@ -1,8 +1,20 @@
-export class AppUrls {
-  constructor(game, paths = { base: './', assets: 'assets/' }) {
-    this.game = game;
-    this.basePath = paths.base;
-    this.assetsPath = paths.assets;
+class AppUrlsPlugin extends Phaser.Plugins.BasePlugin {
+  constructor(pluginManager) {
+    super(pluginManager);
+
+    this.basePath = './';
+    this.assetsPath = 'assets/';
+  }
+
+  init(config) {
+    config = config || {};
+    this.basePath = config.base || this.basePath;
+    this.assetsPath = config.assets || this._assetsPath;
+  }
+
+  setPaths(value = {}) {
+    this.basePath = value.base || this.basePath;
+    this.assetsPath = value.assets || this._assetsPath;
   }
 
   // get main directory
@@ -37,3 +49,5 @@ export class AppUrls {
     return this.getAssetsDirectory('fonts/' + urlSuffix);
   }
 }
+
+export { AppUrlsPlugin };

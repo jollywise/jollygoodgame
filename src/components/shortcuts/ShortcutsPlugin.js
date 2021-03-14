@@ -2,16 +2,22 @@ import * as dat from 'dat.gui';
 import { ShortcutTriggers } from './ShortcutTriggers';
 
 const TRIGGER = '↑ ↑ ↓ ↓ ← →';
+/**
+ *
+ * @alias components.ShortcutsPlugin
+ * @classdesc asy in game shortcuts
+ * @todo write documentation
+ */
+class ShortcutsPlugin extends Phaser.Plugins.BasePlugin {
+  constructor(pluginManager) {
+    super(pluginManager);
 
-export class Shortcuts {
-  constructor(game, containerId) {
-    this.game = game;
+    this._containerID = false;
     this.model = {};
     this.groups = {};
     this.defaultGroup = 'game';
     this.controls = [];
     this.isVisible = __WATCH__;
-
     this.boundToggle = this.toggleDisplay.bind(this);
     this.trigger = new ShortcutTriggers({
       sequence: TRIGGER,
@@ -20,8 +26,17 @@ export class Shortcuts {
         console.log('FAIL', val);
       },
     });
+  }
 
-    this.create(containerId);
+  init(config) {
+    if (config) {
+      this._containerID = config.containerId || false;
+      if (config.enabled) this.enable();
+    }
+  }
+
+  enable() {
+    if (!this.gui) this.create(this._containerID);
   }
 
   toggleDisplay() {
@@ -29,21 +44,21 @@ export class Shortcuts {
   }
 
   open() {
-    this.gui.open();
+    if (this.gui) this.gui.open();
   }
 
   close() {
-    this.gui.close();
+    if (this.gui) this.gui.close();
   }
 
   show() {
     this.isVisible = true;
-    this.gui.show();
+    if (this.gui) this.gui.show();
   }
 
   hide() {
     this.isVisible = false;
-    this.gui.hide();
+    if (this.gui) this.gui.hide();
   }
 
   setVisible() {
@@ -68,6 +83,7 @@ export class Shortcuts {
   }
 
   addShortcutGroup({ id = this.defaultGroup, title, open = false }) {
+    if (!this.gui) return;
     const group = this.gui.addFolder(title);
     this.groups[id] = group;
     open && group.open();
@@ -75,6 +91,7 @@ export class Shortcuts {
   }
 
   addDisplayField(opts) {
+    if (!this.gui) return;
     const control = this.addShortcut(opts);
     const el = control.domElement.getElementsByTagName('input')[0]; // make input read only
     el && (el.readOnly = true);
@@ -82,13 +99,24 @@ export class Shortcuts {
   }
 
   addShortcut({ group = this.defaultGroup, field, title, value = null }) {
+    if (!this.gui) return;
     this.model[field] = value;
     const control = this.groups[group].add(this.model, field).name(title);
     this.controls.push(control);
     return control;
   }
 
-  addSlider({ group = this.defaultGroup, field, title, value = false, min, max, step, onChange = null }) {
+  addSlider({
+    group = this.defaultGroup,
+    field,
+    title,
+    value = false,
+    min,
+    max,
+    step,
+    onChange = null,
+  }) {
+    if (!this.gui) return;
     this.model[field] = value;
     const control = this.groups[group].add(this.model, field, min, max, step).name(title);
     onChange && control.onChange(onChange);
@@ -97,6 +125,7 @@ export class Shortcuts {
   }
 
   addToggle({ group = this.defaultGroup, field, title, value = false, onChange = null }) {
+    if (!this.gui) return;
     this.model[field] = value;
     const control = this.groups[group].add(this.model, field).name(title);
     onChange && control.onChange(onChange);
@@ -108,6 +137,7 @@ export class Shortcuts {
    * this.shortcuts.addDropDown({ field: '', title: '', value: [array of data], onChange: (val) => { // do something with 'val' here } });
    */
   addDropDown({ group = this.defaultGroup, field, title, value = [], onChange = null }) {
+    if (!this.gui) return;
     this.model[field] = value;
     const control = this.groups[group].add(this.model, field, value).name(title);
     onChange && control.onChange(onChange);
@@ -130,7 +160,7 @@ export class Shortcuts {
     });
     this.controls = [];
     Object.keys(this.groups).forEach((id) => {
-      this.gui.removeFolder(this.groups[id]);
+      if (this.gui) this.gui.removeFolder(this.groups[id]);
     });
     this.groups = {};
   }
@@ -138,23 +168,16 @@ export class Shortcuts {
   destroy() {
     this.reset();
 
-    this.gui.destroy();
-    this.gui = null;
+    if (this.gui) {
+      this.gui.destroy();
+      this.gui = null;
+    }
 
-    this.trigger.destroy();
-    this.trigger = null;
+    if (this.trigger) {
+      this.trigger.destroy();
+      this.trigger = null;
+    }
   }
 }
 
-export class ShortcutStub {
-  constructor() {
-    this.model = {};
-  }
-  reset() {}
-  updateDisplay() {}
-  addShortcutGroup() {}
-  addDisplayField() {}
-  addShortcut() {}
-  addToggle() {}
-  addDropDown() {}
-}
+export { ShortcutsPlugin };

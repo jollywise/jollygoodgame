@@ -4,9 +4,14 @@ import { GameHudPlugin } from './gamehud/GameHudPlugin';
 import { VibratePlugin } from './vibrate/VibratePlugin';
 import { SettingsPlugin } from './settings/SettingsPlugin';
 import { SoundPlugin } from './sound/SoundPlugin';
-
+import { AppUrlsPlugin } from './appurls/AppUrlsPlugin';
+import { ViewportPlugin } from './viewport/ViewportPlugin';
+import { ShortcutsPlugin } from './shortcuts/ShortcutsPlugin';
+import { BoundsDebugPlugin } from './debug/BoundsDebugPlugin';
+import { SceneControllerPlugin } from '@jollywise/jollygoodgame/src/components/sceneController/SceneControllerPlugin';
 
 export const ComponentMap = {
+  // core components
   copy: {
     component: CopyPlugin,
     gameKey: true,
@@ -22,11 +27,32 @@ export const ComponentMap = {
     gameKey: true,
     sceneKey: true,
   },
+  sceneController: {
+    component: SceneControllerPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
   soundController: {
     component: SoundPlugin,
     gameKey: true,
     sceneKey: true,
   },
+  viewportController: {
+    component: ViewportPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  shortcuts: {
+    component: ShortcutsPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  appUrls: {
+    component: AppUrlsPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  // optional components
   gamehud: {
     component: GameHudPlugin,
     gameKey: true,
@@ -38,5 +64,10 @@ export const ComponentMap = {
     gameKey: true,
     sceneKey: true,
     optional: true,
+  },
+  boundsDebug: {
+    component: BoundsDebugPlugin,
+    optional: true,
+    isScenePlugin: true,
   },
 };

@@ -1,21 +1,57 @@
-import EventEmitter from 'eventemitter3';
-import { checkRects, checkPoint } from '../objects/Collision';
-import { VIEWPORT_EVENTS } from '../constants/Events';
+/**
+ *
+ * @alias components.ViewportPlugin
+ * @classdesc game viewport controller
+ * @todo write documentation
+ */
+
+import { VIEWPORT_EVENTS } from '@jollywise/jollygoodgame';
 
 export const VIEWPORT_TYPE = {
   DEFAULT: 'DEFAULT',
   CANVAS_BOUNDS: 'CANVAS_BOUNDS',
 };
-export class ViewportControllerBase extends EventEmitter {
-  constructor({ game, viewPortType = VIEWPORT_TYPE.DEFAULT }) {
-    super();
-    this.game = game;
-    this.viewPortType = viewPortType;
+
+class ViewportPlugin extends Phaser.Plugins.BasePlugin {
+  constructor(pluginManager) {
+    super(pluginManager);
+    this._viewPortType = VIEWPORT_TYPE.DEFAULT;
     this._viewport = { x: 0, y: 0, width: 0, height: 0, padding: 0, paddingBottom: 0 };
-    if (this.viewPortType === VIEWPORT_TYPE.DEFAULT) {
+    this._events = new Phaser.Events.EventEmitter();
+  }
+
+  init(config) {
+    config = config || {};
+    this.viewPortType = config.viewPortType || VIEWPORT_TYPE.DEFAULT;
+  }
+
+  set viewPortType(value) {
+    this.resetViewport();
+    this._viewPortType = value || VIEWPORT_TYPE.DEFAULT;
+    if (this._viewPortType === VIEWPORT_TYPE.DEFAULT) {
       this.game.scale.on('resize', this.updateViewport, this);
       this.updateViewport();
     }
+  }
+
+  get viewPortType() {
+    return this._viewPortType;
+  }
+
+  on(...args) {
+    this.events.on(...args);
+  }
+
+  once(...args) {
+    this.events.once(...args);
+  }
+
+  off(...args) {
+    this.events.off(...args);
+  }
+
+  get events() {
+    return this._events;
   }
 
   get viewport() {
@@ -100,6 +136,15 @@ export class ViewportControllerBase extends EventEmitter {
       this.game.defaultDimensions.width,
       this.game.defaultDimensions.height * windowAspect
     );
+    this._configureViewport(width, height);
+  }
+
+  resetViewport() {
+    this.game.scale.off('resize', this.updateViewport, this);
+    this._configureViewport(this.game.defaultDimensions.width, this.game.defaultDimensions.height);
+  }
+
+  _configureViewport(width, height) {
     const x = Math.max(0, this.game.centerPoint.x - width * 0.5);
     const y = Math.max(0, this.game.centerPoint.y - height * 0.5);
     const padding = Math.max(width * 0.02, height * 0.02);
@@ -118,7 +163,7 @@ export class ViewportControllerBase extends EventEmitter {
     this._viewport.paddingBottom = paddingBottom;
     this._viewport.landscape = width >= height;
 
-    this.emit(VIEWPORT_EVENTS.UPDATED, this._viewport);
+    this.events.emit(VIEWPORT_EVENTS.UPDATED, this._viewport);
   }
 
   // Springroll scaling
@@ -127,7 +172,7 @@ export class ViewportControllerBase extends EventEmitter {
       const { x, y, width, height } = opts.viewArea;
       const landscape = width >= height;
       this._viewport = { x, y, width, height, padding: 0, paddingBottom: 0, landscape };
-      this.emit(VIEWPORT_EVENTS.UPDATED, this._viewport);
+      this.events.emit(VIEWPORT_EVENTS.UPDATED, this._viewport);
     }
   }
 
@@ -144,3 +189,5 @@ export class ViewportControllerBase extends EventEmitter {
     this.game.scale.off('resize', this.updateViewport, this);
   }
 }
+
+export { ViewportPlugin };

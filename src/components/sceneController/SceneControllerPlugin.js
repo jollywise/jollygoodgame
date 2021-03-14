@@ -1,15 +1,18 @@
 /**
- * @class SceneControllerBase
- * @param {Phaser.Scenes.SceneManager} sceneManager The game scene manager
+ * @class components.SceneControllerBase
  * @description A scene controller for managing scenes used in game.
  * <br>
  * This controller provides easy ability to add scenes, as well as control which scenes are active and trigger overlays.
  */
-export class SceneControllerBase {
-  constructor(sceneManager) {
-    this.sceneManager = sceneManager;
+class SceneControllerPlugin extends Phaser.Plugins.BasePlugin {
+  constructor(pluginManager) {
+    super(pluginManager);
     this.currentSceneKey = null;
     this.paused = false;
+  }
+
+  get sceneManager() {
+    return this.game.scene;
   }
 
   /**
@@ -226,3 +229,5 @@ export class SceneControllerBase {
     this.resumeScene(this.overlaySceneKey ? this.overlaySceneKey : this.currentSceneKey);
   }
 }
+
+export { SceneControllerPlugin };

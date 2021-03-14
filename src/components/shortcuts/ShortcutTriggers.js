@@ -1,4 +1,4 @@
-import { isTouchDevice } from '../utils';
+import { isTouchDevice } from '../../utils';
 
 /* eslint-disable */
 const KEYS = {
