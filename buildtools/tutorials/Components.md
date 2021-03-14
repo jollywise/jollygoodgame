@@ -13,7 +13,7 @@ Core components are required, and as such cannot be disabled.
 
 This is so that the base framework can guarantee certain functionality.
 
-They can have their component classes overwritten to provide custom functionality, as well as the ability to pass through a custom config for their init methods.
+How-ever, you can overwrite the default component by extended it and adding your extended version via the component map options as well as provide a custom config.
 
 ## optional components
 
@@ -21,7 +21,9 @@ Optional components will only be enabled on request.
 
 These are generally top level features to provide some easy tools to use when developing games.
 
-They can have their default component classes overwritten and be provided custom config objects. While the base JGG framework may have these flagged as optional, an extended framework can configure it's own ComponentMap to force them at that level.
+You can overwrite the default component by extended it and adding your extended version via the component map options as well as provide a custom config.
+
+While the base JGG framework may have these flagged as optional, an extended framework can configure it's own ComponentMap to force them at that level.
 
 ## component map options
 
