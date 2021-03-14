@@ -16,58 +16,62 @@ export const ComponentMap = {
     component: CopyPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   captions: {
     component: CaptionsPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   settings: {
     component: SettingsPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   sceneController: {
     component: SceneControllerPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   soundController: {
     component: SoundPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   viewportController: {
     component: ViewportPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   shortcuts: {
     component: ShortcutsPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   appUrls: {
     component: AppUrlsPlugin,
     gameKey: true,
     sceneKey: true,
+    required : true
   },
   // optional components
   gamehud: {
     component: GameHudPlugin,
     gameKey: true,
     sceneKey: true,
-    optional: true,
   },
   vibrate: {
     component: VibratePlugin,
     gameKey: true,
     sceneKey: true,
-    optional: true,
   },
   boundsDebug: {
     component: BoundsDebugPlugin,
-    optional: true,
-    isScenePlugin: true,
   },
 };

@@ -8,11 +8,10 @@ export const InstallGameComponents = (game, componentMap) => {
     // set component defaults
     let componentClass = componentConfig.component;
     let componentData = componentConfig.data;
-
-    if (componentConfig.isScenePlugin) {
-      const installed = game.plugins.installScenePlugin(key, componentClass, key);
-      if (installed) console.log('\tinstalled component - scene - ' + key);
-    } else {
+    if(componentClass.prototype instanceof Phaser.Plugins.ScenePlugin){
+      game.plugins.installScenePlugin(key, componentClass, key);
+      console.log('\tinstalled component - scene - ' + key);
+    } else  if(componentClass.prototype instanceof Phaser.Plugins.BasePlugin) {
       const sceneKey = componentConfig.sceneKey ? key : false;
       const gameKey = componentConfig.gameKey ? key : false;
       const installed = game.plugins.install(key, componentClass, true, sceneKey, componentData);
@@ -35,16 +34,13 @@ export const MergeComponentMaps = (defaultMap, optionalMap) => {
 };
 
 export const MergeComponentConfig = (defaultConfig, optionalConfig) => {
+  if(defaultConfig === true && !optionalConfig) return defaultConfig;
   // config is optional and user option does not want it
-  if (defaultConfig.optional && !optionalConfig) return false;
+  if (!defaultConfig.required && !optionalConfig) return false;
   // user has requested default component and config
   if (optionalConfig === true) return defaultConfig;
   // component is not option, and user has ommited it - return default
-  if (!defaultConfig.optional && !optionalConfig) return defaultConfig;
+  if (defaultConfig.required && !optionalConfig) return defaultConfig;
   // user has some custom configuration
-  const { component, config } = optionalConfig;
-  const merged = { ...defaultConfig };
-  if (component && component.prototype instanceof defaultConfig.component)
-    merged.component = component;
-  if (config) merged.config = { ...(defaultConfig || {}), ...merged.config };
+  return  { ...defaultConfig, ...optionalConfig };
 };
