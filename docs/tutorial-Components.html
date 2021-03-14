@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Documentation Classes</title>
+	<title>Documentation Tutorial: Components</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,140 +67,87 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
-			
-
-	<h1 class="page-title">Classes</h1>
-<section>
+			<section class="tutorial-section">
 
 <header>
     
-        <h2>
-        
-        </h2>
-        
-    
+
+    <h2>Components</h2>
 </header>
 
-
 <article>
-    <div class="container-overview">
-    
-        
+    <h2>summary</h2>
+<p>The system is built up of components that are installed via Phasers plugin system.<br>
+Allowing the components to be scoped at game and scene levels if desired.</p>
+<p>The Component system provides a wide variety of pre-built components ready for use, all of which can be extended to provide any custom behaviour needed in framework extensions and games.</p>
+<p>The components are split into <strong><em>core</em></strong> and <strong><em>optional</em></strong> components.</p>
+<h2>core components</h2>
+<p>Core components are required, and as such cannot be disabled.</p>
+<p>This is so that the base framework can guarantee certain functionality.</p>
+<p>They can have their component classes overwritten to provide custom functionality, as well as the ability to pass through a custom config for their init methods.</p>
+<h2>optional components</h2>
+<p>Optional components will only be enabled on request.</p>
+<p>These are generally top level features to provide some easy tools to use when developing games.</p>
+<p>They can have their default component classes overwritten and be provided custom config objects. While the base JGG framework may have these flagged as optional, an extended framework can configure it's own ComponentMap to force them at that level.</p>
+<h2>component map options</h2>
+<p>When initializing AppBase, you can pass through a Component Map with the configuration requirements needed for that game or framework.</p>
+<p>The AppBase will compare the options with the default Component Map and install the components a needed.</p>
+<p>example component map config</p>
+<pre>
+  {
+    // enable component, using default class
+    component_key : true,
 
-        
-<dl class="details">
-    
+    // force a previoulsy optional component to be required
+    component_key : { required : true },
 
-	
+    // enable component, using custom class
+    component_key : { component : CustomClass },
 
-	
+    // enable component, using custom config
+    component_key : { config : {} },
 
-	
+    // enable component, using custom class and config
+    component_key : { component : CustomClass, config : {} }
+  }
+</pre>
+<h2>creating new components</h2>
+<p>You can also create new components and add themto the Component Map.
+It is recommended that this is only done on a framework level, and a framework should have it's own default map to check options against.</p>
+<p>To add a new component - create a plugin extending either Phaser.Plugins.BasePlugin or Phaser.Plugins.ScenePlugin and add it to the map, be careful to use a unique component key.</p>
+<p>Phasers plugin system can install plugins as global or scene plugins. Global plugins share their props accross the whole game, while scene plugins are specific to the scene.</p>
+<p>The plugin will be installed as either global or scene based on what you extended.</p>
+<p>example of component added to map</p>
+<pre>
+{
+  component_key : {
 
-    
+    // the component class to install
+    component: ComponentClass,
 
-    
+    // add to game scope using key
+    gameKey: true,
 
-    
+    // add to scene scope using key
+    sceneKey: true,
 
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="AppBase.html">AppBase</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.BoundsDebugPlugin.html">BoundsDebugPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.CaptionsPlugin.html">CaptionsPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.CopyPlugin.html">CopyPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.GameHudPlugin.html">GameHudPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.SceneControllerBase.html">SceneControllerBase</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.SettingsPlugin.html">SettingsPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.ShortcutsPlugin.html">ShortcutsPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.SoundPlugin.html">SoundPlugin</a></dt>
-            <dd></dd>
-        
-            <dt><a href="components.VibratePlugin.html">VibratePlugin</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
+    // flag as core component
+    required : true
+  }
+}
+</pre>
 </article>
 
 </section>
-
-
-
 
 		</div>
 	</div>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
