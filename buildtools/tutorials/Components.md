@@ -52,6 +52,44 @@ example component map config
   }
 </pre>
 
+Once configured, add the component config to your App config using the key **_components_**, and pass through in the constructor.super() call as normal.
+
+<pre>
+
+const App extends AppBase {
+
+  constructor( { ...usualprops, components } ){
+
+    super( { ...usualprops, components })
+  }
+
+}
+
+</pre>
+
+**Framework Component Map**
+
+If configuring a component map for a frame-work base, you should merge this is with the optional component config before calling super.
+This will ensure the default framework components remain configured, while still provoding the game the same level of configuration.
+
+A handy method has been created to assist with this.
+
+[MergeComponentMaps](global.html#MergeComponentMaps)
+MergeComponentMaps will take the default map, and the configure map and merge them in ensuring everything remains configured as needed at the frame-work level.
+
+<pre>
+const FrameWorkApp extends AppBase {
+
+  constructor( { ...usualprops, components } ){
+
+    components = MergeComponentMaps(FrameworkComponentMap, components);
+
+    super( { ...usualprops, components })
+  }
+
+}
+</pre>
+
 ## creating new components
 
 You can also create new components and add themto the Component Map.

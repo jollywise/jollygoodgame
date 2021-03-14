@@ -8,10 +8,10 @@ export const InstallGameComponents = (game, componentMap) => {
     // set component defaults
     let componentClass = componentConfig.component;
     let componentData = componentConfig.data;
-    if(componentClass.prototype instanceof Phaser.Plugins.ScenePlugin){
+    if (componentClass.prototype instanceof Phaser.Plugins.ScenePlugin) {
       game.plugins.installScenePlugin(key, componentClass, key);
       console.log('\tinstalled component - scene - ' + key);
-    } else  if(componentClass.prototype instanceof Phaser.Plugins.BasePlugin) {
+    } else if (componentClass.prototype instanceof Phaser.Plugins.BasePlugin) {
       const sceneKey = componentConfig.sceneKey ? key : false;
       const gameKey = componentConfig.gameKey ? key : false;
       const installed = game.plugins.install(key, componentClass, true, sceneKey, componentData);
@@ -21,6 +21,12 @@ export const InstallGameComponents = (game, componentMap) => {
   });
 };
 
+/**
+ *
+ * @param {ComponentMap} defaultMap The master component map
+ * @param {Componentmap} optionalMap The optional component map to merge in
+ * @returns {ComponentMap} a merged component map that maintains the requirements of the master map.
+ */
 export const MergeComponentMaps = (defaultMap, optionalMap) => {
   const mergedMap = {};
   Object.keys(defaultMap).forEach((key) => {
@@ -34,7 +40,7 @@ export const MergeComponentMaps = (defaultMap, optionalMap) => {
 };
 
 export const MergeComponentConfig = (defaultConfig, optionalConfig) => {
-  if(defaultConfig === true && !optionalConfig) return defaultConfig;
+  if (defaultConfig === true && !optionalConfig) return defaultConfig;
   // config is optional and user option does not want it
   if (!defaultConfig.required && !optionalConfig) return false;
   // user has requested default component and config
@@ -42,5 +48,5 @@ export const MergeComponentConfig = (defaultConfig, optionalConfig) => {
   // component is not option, and user has ommited it - return default
   if (defaultConfig.required && !optionalConfig) return defaultConfig;
   // user has some custom configuration
-  return  { ...defaultConfig, ...optionalConfig };
+  return { ...defaultConfig, ...optionalConfig };
 };
