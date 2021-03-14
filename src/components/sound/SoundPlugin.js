@@ -29,7 +29,9 @@ export class SoundPlugin extends Phaser.Plugins.BasePlugin {
     this.audioGroups[BUTTONAUDIO_GROUP] = { sounds: [], volume: this.buttonAudioVolume };
   }
 
-  init() {
+  init() {}
+
+  boot() {
     this.game.scene.add(SCENE_ID, {}, true);
     this.game.settings.on(SETTINGS_EVENTS.AUDIO_CHANGED, this.handleAudioChanged, this);
     this.events.on('pause', this.onPaused, this);

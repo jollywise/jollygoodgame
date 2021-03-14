@@ -5,45 +5,38 @@ import { VibratePlugin } from './vibrate/VibratePlugin';
 import { SettingsPlugin } from './settings/SettingsPlugin';
 import { SoundPlugin } from './sound/SoundPlugin';
 
+
 export const ComponentMap = {
-  CORE: [
-    {
-      key: 'copy',
-      component: CopyPlugin,
-      gameKey: true,
-      sceneKey: true,
-    },
-    {
-      key: 'captions',
-      component: CaptionsPlugin,
-      gameKey: true,
-      sceneKey: true,
-    },
-    {
-      key: 'settings',
-      component: SettingsPlugin,
-      gameKey: true,
-      sceneKey: true,
-    },
-    {
-      key: 'soundController',
-      component: SoundPlugin,
-      gameKey: true,
-      sceneKey: true,
-    },
-  ],
-  OPTIONAL: [
-    {
-      key: 'gamehud',
-      component: GameHudPlugin,
-      gameKey: true,
-      sceneKey: true,
-    },
-    {
-      key: 'vibrate',
-      component: VibratePlugin,
-      gameKey: true,
-      sceneKey: true,
-    },
-  ],
+  copy: {
+    component: CopyPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  captions: {
+    component: CaptionsPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  settings: {
+    component: SettingsPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  soundController: {
+    component: SoundPlugin,
+    gameKey: true,
+    sceneKey: true,
+  },
+  gamehud: {
+    component: GameHudPlugin,
+    gameKey: true,
+    sceneKey: true,
+    optional: true,
+  },
+  vibrate: {
+    component: VibratePlugin,
+    gameKey: true,
+    sceneKey: true,
+    optional: true,
+  },
 };
