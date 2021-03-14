@@ -75,10 +75,10 @@ example of component added to map
     // add to game scope using key
     gameKey: true,
 
-    // add to scene scope using key
+    // add to scene scope using key ( global plugins only )
     sceneKey: true,
 
-    // flag as core component
+    // flag as core component ( global plugins only )
     required : true
   }
 }
