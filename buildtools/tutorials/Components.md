@@ -119,3 +119,14 @@ The game will automatically detect which type of plugin is extended and install 
 </pre>
 
 You can still create and install Phaser Plugins via the standard way, and is reccomended to do so with any bespoke plugins being added at the game level.
+
+## breaking changes
+
+Any framework extension or game that updates to use this system would have some unavoidable game breaking changes. These should be minimal, and easily remedied.
+
+Frameworks will need to have their existing plugins and components updated to extend defaults, ensure that it's component map is configured to used the extended components or have new ones appended. You would also need to ensure that any games using this framework are brought up to date.
+
+There may also be some issues where the base components are no longer initialized in game, and so instaces of new COMPONENT() will either need removing or updated as needed.
+Most of these instances will be resolved by the plugin/component updates.
+
+Both games and frameworks will likely experience scoping issues as a lot of the default components will have been moved from the GameController to the game/scene scopes. This should be easily remedied with some find-replace.
