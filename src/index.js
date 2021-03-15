@@ -12,3 +12,4 @@ export * from './utils';
 export * from './hud';
 export * from './plugins';
 export * from './AppBase';
+export * from './config';
