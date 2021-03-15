@@ -21,10 +21,8 @@ export const getConfigBase = ({
   height = GAME_HEIGHT_DEFAULT,
   safeWidth = GAME_WIDTH_SAFE,
   safeHeight = GAME_HEIGHT_SAFE,
-  shortcutsEnabled = false,
   physics = true,
 }) => {
-  const maxParallelDownloads = 32;
   const conf = {
     gameURL: '',
     gameVersion: '2',
@@ -36,7 +34,7 @@ export const getConfigBase = ({
     safeHeight,
     banner: false,
     fps: 60,
-    maxParallelDownloads,
+    maxParallelDownloads: 32,
     audio: {
       disableWebAudio: false,
     },
@@ -60,7 +58,6 @@ export const getConfigBase = ({
     dom: {
       createContainer: true,
     },
-    shortcutsEnabled,
   };
   if (physics) {
     conf.physics = {
