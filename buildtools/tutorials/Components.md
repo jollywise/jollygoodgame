@@ -106,13 +106,13 @@ The game will automatically detect which type of plugin is extended and install 
     // the component class to install
     component: ComponentClass,
 
-    // add to game scope using key
+    // add to game scope using key ( global plugins only )
     gameKey: true,
 
     // add to scene scope using key ( global plugins only )
     sceneKey: true,
 
-    // flag as core component ( global plugins only )
+    // flag as core component
     required : true
   }
 }
