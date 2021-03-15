@@ -16,7 +16,9 @@
           left: '50%',
           transform: 'translateX(-50%)',
           textAlign:'center',
-          maxWidth : '100%'
+          width : 'fit-content',
+          maxWidth : '80%',
+          display : 'inline-block'
         };
         this._timeout = false;
         this._enabled = false;
@@ -226,7 +228,7 @@
             showDuration = Math.min(showDuration, this._durationMax);
           }
     
-          this._timeout = setTimeout(this._showNextCaption.bind(this), showDuration);
+         this._timeout = setTimeout(this._showNextCaption.bind(this), showDuration);
         } else {
           this.hide();
         }
