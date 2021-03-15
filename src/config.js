@@ -8,14 +8,20 @@ import * as SpinePlugin from 'phaser/plugins/spine/dist/SpinePlugin';
  * none — set the canvas scale to 100%.
  */
 
+const GAME_WIDTH_DEFAULT = 1680;
+const GAME_HEIGHT_DEFAULT = 720;
+const GAME_WIDTH_SAFE = 960;
+const GAME_HEIGHT_SAFE = 720;
+const GAME_DIV_ID = 'game-holder';
+
 export const getConfigBase = ({
-  type,
-  parent,
-  width,
-  height,
-  safeWidth,
-  safeHeight,
-  shortcutsEnabled,
+  type = Phaser.AUTO,
+  parent = GAME_DIV_ID,
+  width = GAME_WIDTH_DEFAULT,
+  height = GAME_HEIGHT_DEFAULT,
+  safeWidth = GAME_WIDTH_SAFE,
+  safeHeight = GAME_HEIGHT_SAFE,
+  shortcutsEnabled = false,
   physics = true,
 }) => {
   const maxParallelDownloads = 32;
