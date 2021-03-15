@@ -8,3 +8,4 @@ export * from './storage';
 export * from './utils';
 export * from './components';
 export * from './AppBase';
+export * from './config';
