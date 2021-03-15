@@ -11,7 +11,7 @@ import { Shortcuts, ShortcutStub } from './shortcuts';
  * @class AppBase
  * @classdesc AppBase extends {@link https://photonstorm.github.io/phaser3-docs/Phaser.Game.html|Phaser.Game}, plugging in core components and providing them in scope.
  * @extends Phaser.Game
- * @property {AppBaseOptions} settings
+ * @property {AppBaseOptions} settings The game configuration
  */
 export class AppBase extends Phaser.Game {
   constructor({ config, paths, options = {} }) {
