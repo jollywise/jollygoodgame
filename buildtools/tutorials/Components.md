@@ -74,8 +74,7 @@ This will ensure the default framework components remain configured, while still
 
 A handy method has been created to assist with this.
 
-[MergeComponentMaps](global.html#MergeComponentMaps)
-MergeComponentMaps will take the default map, and the configure map and merge them in ensuring everything remains configured as needed at the frame-work level.
+[MergeComponentMaps](global.html#MergeComponentMaps) will take the default map, and the configure map and merge them in ensuring everything remains configured as needed at the frame-work level.
 
 <pre>
 const FrameWorkApp extends AppBase {
@@ -93,6 +92,7 @@ const FrameWorkApp extends AppBase {
 ## creating new components
 
 You can also create new components and add themto the Component Map.
+
 It is recommended that this is only done on a framework level, and a framework should have it's own default map to check options against.
 
 To add a new component - create a plugin extending either [Phaser.Plugins.BasePlugin](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.BasePlugin.html) or [Phaser.Plugins.ScenePlugin](https://photonstorm.github.io/phaser3-docs/Phaser.Plugins.ScenePlugin.html) and add it to the map, be careful to use a unique component key.
