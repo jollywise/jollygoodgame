@@ -26,9 +26,9 @@ import { getPlatform } from './platformDetection';
 /**
  * @constant PERFORMANCE_CATEGORY
  * @description constants representing performance level
- * @property {string} PERFORMANCE_CATEGORY.LOW_END Is a low end device and should be served the minimal experience
- * @property {string} PERFORMANCE_CATEGORY.MID_END  Is a medium end device and should be served a medium experience
- * @property {string} PERFORMANCE_CATEGORY.HIGH_ENDIs Is a high end device and should be served a maximum experience
+ * @property {string} LOW_END=LOW_END string representing low end device and should be served the minimal experience
+ * @property {string} MID_END=MID_END string representingedium end device and should be served a medium experience
+ * @property {string} HIGH_END=HIGH_END string representing high end device and should be served a maximum experience
  * @see getDeviceMetric
  *
  */
