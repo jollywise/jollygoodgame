@@ -1,15 +1,9 @@
 import Phaser from 'phaser';
 import { getDeviceMetric } from './utils/deviceDetection';
-import { Saves } from './model';
-import {
-  InstallGameComponents,
-  MergeComponentMaps,
-} from '@jollywise/jollygoodgame/src/components/ComponentManager';
-import { ComponentMap } from '@jollywise/jollygoodgame/src/components/ComponentMap';
 
 /** */
 export class AppBase extends Phaser.Game {
-  constructor({ config, paths, components = {} }) {
+  constructor({ config }) {
     super(config);
     this._gameConfig = config;
     this._deviceMetric = getDeviceMetric();
@@ -17,13 +11,7 @@ export class AppBase extends Phaser.Game {
     this._safeDimensions = { width: config.safeWidth, height: config.safeHeight };
     this._gameController = null;
 
-    this._saves = new Saves();
-
-    //  install components
-    InstallGameComponents(this, MergeComponentMaps(ComponentMap, components));
-
-    // set paths
-    this.appUrls.setPaths(paths);
+    this._installComponents(config.components);
 
     // enable shortcuts
     if (__SHORTCUTS_ENABLED__) this.shortcuts.enable();
@@ -59,34 +47,39 @@ export class AppBase extends Phaser.Game {
     return this._gameController;
   }
 
-  get saves() {
-    return this._saves;
+  _installComponents(components) {
+    console.log('[Installing Components]');
+
+    const installedComponents = [];
+    const installComponent = (global, key, component, data) => {
+      if (global) {
+        const installed = this.plugins.install(key, component, true, null, data);
+        if (installed) {
+          this[key] = installed;
+          console.log('\t installed : ' + key);
+          installedComponents.push(installed);
+        }
+      } else {
+        const installed = this.plugins.installScenePlugin(key, components, key);
+        if (installed) console.log('\t installed : ' + key);
+      }
+    };
+
+    // install the components
+    Object.keys(components).forEach((key) => {
+      if (components[key].prototype instanceof Phaser.Plugins.BasePlugin) {
+        const global = components[key].prototype instanceof Phaser.Plugins.ScenePlugin != true;
+        installComponent(global, key, components[key]);
+      } else {
+        const { component, data } = components[key];
+        if (component && component.prototype instanceof Phaser.Plugins.BasePlugin) {
+          const global = component.prototype instanceof Phaser.Plugins.ScenePlugin != true;
+          installComponent(global, key, component, data);
+        } else console.error('Component is not a Phaser plugin : ' + key);
+      }
+    });
+
+    // run start - all components shuld be installed and ready to use
+    installedComponents.forEach((c) => (c.onGameReady ? c.onGameReady() : null));
   }
-
-  // mergeComponentMaps(defaultMap, optionalMap) {
-  //   const mergedMap = {};
-  //   Object.keys(defaultMap).forEach((key) => {
-  //     const merged = this.mergeComponentConfig(defaultMap[key], optionalMap[key]);
-  //     if (merged) mergedMap[key] = merged;
-  //   });
-  //   const additionalComponents = Object.keys(optionalMap).filter((k) => !mergedMap[k]);
-  //   additionalComponents.forEach((key) => (mergedMap[key] = optionalMap[key]));
-  //   console.log(mergedMap);
-  //   return mergedMap;
-  // }
-
-  // mergeComponentConfig(defaultConfig, optionalConfig) {
-  //   // config is optional and user option does not want it
-  //   if (defaultConfig.optional && !optionalConfig) return false;
-  //   // user has requested default component and config
-  //   if (optionalConfig === true) return defaultConfig;
-  //   // component is not option, and user has ommited it - return default
-  //   if (!defaultConfig.optional && !optionalConfig) return defaultConfig;
-  //   // user has some custom configuration
-  //   const { component, config } = optionalConfig;
-  //   const merged = { ...defaultConfig };
-  //   if (component && component.prototype instanceof defaultConfig.component)
-  //     merged.component = component;
-  //   if (config) merged.config = { ...(defaultConfig || {}), ...merged.config };
-  // }
 }

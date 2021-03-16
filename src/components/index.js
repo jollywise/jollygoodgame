@@ -8,5 +8,5 @@ export * from './shortcuts/ShortcutsPlugin';
 export * from './viewport/ViewportPlugin';
 export * from './appurls/AppUrlsPlugin';
 export * from './sceneController/SceneControllerPlugin';
+export * from './saves/SavesPlugin';
 export * from './debug';
-export * from './ComponentManager';

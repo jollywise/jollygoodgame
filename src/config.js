@@ -1,4 +1,16 @@
 // eslint-disable-next-line no-unused-vars
+
+import { SavesPlugin } from '@jollywise/jollygoodgame/src/components';
+import { AppUrlsPlugin } from '@jollywise/jollygoodgame/src/components/appurls/AppUrlsPlugin';
+import { CaptionsPlugin } from '@jollywise/jollygoodgame/src/components/captions/CaptionsPlugin';
+import { CopyPlugin } from '@jollywise/jollygoodgame/src/components/copy/CopyPlugin';
+import { GameHudPlugin } from '@jollywise/jollygoodgame/src/components/gamehud/GameHudPlugin';
+import { SceneControllerPlugin } from '@jollywise/jollygoodgame/src/components/sceneController/SceneControllerPlugin';
+import { SettingsPlugin } from '@jollywise/jollygoodgame/src/components/settings/SettingsPlugin';
+import { ShortcutsPlugin } from '@jollywise/jollygoodgame/src/components/shortcuts/ShortcutsPlugin';
+import { SoundPlugin } from '@jollywise/jollygoodgame/src/components/sound/SoundPlugin';
+import { VibratePlugin } from '@jollywise/jollygoodgame/src/components/vibrate/VibratePlugin';
+import { ViewportPlugin } from '@jollywise/jollygoodgame/src/components/viewport/ViewportPlugin';
 import * as SpinePlugin from 'phaser/plugins/spine/dist/SpinePlugin';
 /*
  * https://github.com/samme/phaser-plugin-game-scale
@@ -22,6 +34,8 @@ export const getConfigBase = ({
   safeWidth = GAME_WIDTH_SAFE,
   safeHeight = GAME_HEIGHT_SAFE,
   physics = true,
+  gameURL = './',
+  assetsRoot = 'assets/',
 } = {}) => {
   const conf = {
     gameURL: '',
@@ -50,10 +64,24 @@ export const getConfigBase = ({
     },
     scale: {
       mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
-      autoCenter: Phaser.Scale.CENTER_BOTH
+      autoCenter: Phaser.Scale.CENTER_BOTH,
     },
     dom: {
       createContainer: true,
+    },
+    // AppBase components
+    components: {
+      copy: CopyPlugin,
+      settings: SettingsPlugin,
+      sceneController: SceneControllerPlugin,
+      soundController: SoundPlugin,
+      viewportController: ViewportPlugin,
+      shortcuts: ShortcutsPlugin,
+      hud: GameHudPlugin,
+      vibrate: VibratePlugin,
+      captions: CaptionsPlugin,
+      saves: SavesPlugin,
+      appUrls: { component: AppUrlsPlugin, data: { base: gameURL, assets: assetsRoot } },
     },
   };
   if (physics) {

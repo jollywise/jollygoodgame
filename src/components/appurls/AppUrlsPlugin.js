@@ -10,6 +10,7 @@ class AppUrlsPlugin extends Phaser.Plugins.BasePlugin {
     config = config || {};
     this.basePath = config.base || this.basePath;
     this.assetsPath = config.assets || this._assetsPath;
+    console.log('AppUrlsPlugin', this.basePath, this.assetsPath);
   }
 
   setPaths(value = {}) {

@@ -32,7 +32,9 @@ class GameHudPlugin extends Phaser.Plugins.BasePlugin {
     this.game.scene.add('Hud', {}, true);
   }
 
-  start() {
+  start() {}
+
+  onGameReady() {
     this.game.viewportController.on(VIEWPORT_EVENTS.UPDATED, this.updatePosition, this);
   }
 

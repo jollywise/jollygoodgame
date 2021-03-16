@@ -21,11 +21,15 @@ class CopyPlugin extends Phaser.Plugins.BasePlugin {
   }
 
   init(config) {
-    if (config instanceof XMLDocument) {
-      this.addCopyFromXML(config);
-    } else if (config) {
-      this.addCopyFromJSON(config);
-    }
+    // if (config instanceof XMLDocument) {
+    //   this.addCopyFromXML(config);
+    // } else if (config) {
+    //   this.addCopyFromJSON(config);
+    // }
+  }
+
+  start() {
+    console.log('COMPONENT STARTED');
   }
 
   /**

@@ -21,6 +21,7 @@ export class BootBase extends Phaser.Scene {
   }
 
   preload({ fonts }) {
+    console.log('BOOT BASE', this.game);
     const loadFonts = fonts.reduce(
       (obj, font) => {
         for (const i in font) {
