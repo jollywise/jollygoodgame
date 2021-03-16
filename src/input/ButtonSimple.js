@@ -145,7 +145,7 @@ export class ButtonSimple extends Phaser.GameObjects.Sprite {
   enterButtonHoverState() {
     if (this.buttonEnabled) {
       if (this.gelvo) {
-        this.scene.sys.game.soundController.playVO('gelvo', this.gelvo);
+        this.scene.sys.game.soundController.playButtonAudio('gelvo', this.gelvo);
       }
       this.setDisplay(this.costume + OVER);
       if (this.scaleOnHover) {

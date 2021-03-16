@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title><%= htmlWebpackPlugin.options.title %></title>
+    <meta name="title" content="" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+
+    <% for (var css in htmlWebpackPlugin.files.css) { %>
+    <link href="<%= htmlWebpackPlugin.files.css[css] %>" rel="stylesheet" />
+    <% } %>
+  </head>
+
+  <body>
+    <div id="game-holder" style="position: fixed"></div>
+    <div id="shortcuts-container"></div>
+    <div class="game-rotate"></div>
+    <%= htmlWebpackPlugin.files.runtime %> <% for (var key in htmlWebpackPlugin.files.chunks) { %>
+    <script src="<%= htmlWebpackPlugin.files.chunks[key].entry %>" defer></script>
+    <% } %>
+  </body>
+</html>

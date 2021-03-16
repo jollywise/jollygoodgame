@@ -23,7 +23,15 @@ const TESCO_HUDL = /hudl/;
 
 // prettier-ignore
 import { getPlatform } from './platformDetection';
-
+/**
+ * @constant PERFORMANCE_CATEGORY
+ * @description constants representing performance level
+ * @property {string} LOW_END=LOW_END string representing low end device and should be served the minimal experience
+ * @property {string} MID_END=MID_END string representingedium end device and should be served a medium experience
+ * @property {string} HIGH_END=HIGH_END string representing high end device and should be served a maximum experience
+ * @see getDeviceMetric
+ *
+ */
 export const PERFORMANCE_CATEGORY = {
   LOW_END: 'LOW_END',
   MID_END: 'MID_END',
@@ -205,13 +213,13 @@ const getIosCategory = (platform) => {
   return category;
 };
 
+/**
+ * @method getDeviceMetric
+ * @description get an estimated device performance level
+ * @returns PERFORMANCE_CATEGORY.LOW_END, PERFORMANCE_CATEGORY.MID_END or PERFORMANCE_CATEGORY.HIGH_END
+ * @see PERFORMANCE_CATEGORY
+ */
 export const getDeviceMetric = () => {
-  /*
-   * Returns LOW_END, MID_END or HIGH_END
-   * LOW_END = oldest - served slim experience
-   * MID_END = oldish and popular - served 32 bit audio
-   * HIGH_END = newer devices, served full experience
-   */
   let category = PERFORMANCE_CATEGORY.MID_END;
   const platform = getPlatform();
   if (platform.type === 'desktop') {

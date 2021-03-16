@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import * as SpinePlugin from 'phaser/plugins/spine/dist/SpinePlugin';
-/**
+/*
  * https://github.com/samme/phaser-plugin-game-scale
  * fit — scale the canvas up or down to fit the container, and within min/max lengths (if set).
  * resize — change the game dimensions to fit the container, and within min/max lengths (if set).
@@ -22,7 +22,7 @@ export const getConfigBase = ({
   safeWidth = GAME_WIDTH_SAFE,
   safeHeight = GAME_HEIGHT_SAFE,
   physics = true,
-}) => {
+} = {}) => {
   const conf = {
     gameURL: '',
     gameVersion: '2',
@@ -50,10 +50,7 @@ export const getConfigBase = ({
     },
     scale: {
       mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
-      parent,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
-      width,
-      height,
+      autoCenter: Phaser.Scale.CENTER_BOTH
     },
     dom: {
       createContainer: true,
