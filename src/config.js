@@ -50,10 +50,7 @@ export const getConfigBase = ({
     },
     scale: {
       mode: Phaser.Scale.HEIGHT_CONTROLS_WIDTH,
-      parent,
-      autoCenter: Phaser.Scale.CENTER_BOTH,
-      width,
-      height,
+      autoCenter: Phaser.Scale.CENTER_BOTH
     },
     dom: {
       createContainer: true,
