@@ -22,7 +22,7 @@ export const getConfigBase = ({
   safeWidth = GAME_WIDTH_SAFE,
   safeHeight = GAME_HEIGHT_SAFE,
   physics = true,
-}) => {
+} = {}) => {
   const conf = {
     gameURL: '',
     gameVersion: '2',
